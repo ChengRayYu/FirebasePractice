@@ -88,6 +88,9 @@
                                         <state key="normal" title="Not a member yet. Sign up now.">
                                             <color key="titleColor" name="Grey700"/>
                                         </state>
+                                        <connections>
+                                            <action selector="signUpOnTap:" destination="s7P-9J-okj" eventType="touchUpInside" id="1uj-On-rqP"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" name="Grey50"/>
@@ -137,16 +140,16 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ww2-7g-FiR" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tapGestureRecognizer id="WPR-Wy-HLp">
                     <connections>
-                        <action selector="backgroundTap:" destination="s7P-9J-okj" id="0Q2-wD-cAW"/>
+                        <action selector="backgroundOnTap:" destination="s7P-9J-okj" id="n2r-rh-FH3"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="31.884057971014496" y="772.01086956521749"/>
         </scene>
-        <!--View Controller-->
+        <!--Sign Up Scene-->
         <scene sceneID="MT7-D1-xRy">
             <objects>
-                <viewController id="HCb-j8-Lmx" sceneMemberID="viewController">
+                <viewController id="HCb-j8-Lmx" customClass="SignUpScene" customModule="FirebasePractice" customModuleProvider="target" sceneMemberID="viewController">
                     <scrollView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" id="nAR-lv-qiy">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -154,6 +157,17 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hTI-MO-0dp">
                                 <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                                 <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zop-QM-DVz">
+                                        <rect key="frame" x="20" y="20" width="24" height="24"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="24" id="9hK-fe-q8G"/>
+                                            <constraint firstAttribute="height" constant="24" id="qEl-ew-jEN"/>
+                                        </constraints>
+                                        <state key="normal" image="ic_close"/>
+                                        <connections>
+                                            <action selector="closeOnTap:" destination="HCb-j8-Lmx" eventType="touchUpInside" id="Pea-c0-oVA"/>
+                                        </connections>
+                                    </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign Up for Health Life" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kRv-ME-1qa">
                                         <rect key="frame" x="60" y="120" width="255" height="25"/>
                                         <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="18"/>
@@ -229,10 +243,10 @@
                                         <rect key="frame" x="60" y="367" width="254" height="104"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lsU-r9-bcV">
-                                                <rect key="frame" x="0.0" y="52" width="254" height="1"/>
+                                                <rect key="frame" x="0.0" y="52" width="254" height="0.5"/>
                                                 <color key="backgroundColor" name="Grey700"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="1" id="JaC-pO-CGr"/>
+                                                    <constraint firstAttribute="height" constant="0.5" id="JaC-pO-CGr"/>
                                                 </constraints>
                                             </view>
                                         </subviews>
@@ -246,6 +260,7 @@
                                 </subviews>
                                 <color key="backgroundColor" name="Grey50"/>
                                 <constraints>
+                                    <constraint firstItem="zop-QM-DVz" firstAttribute="leading" secondItem="hTI-MO-0dp" secondAttribute="leading" constant="20" id="3Ob-H8-VBB"/>
                                     <constraint firstItem="Jew-is-axp" firstAttribute="top" secondItem="kRv-ME-1qa" secondAttribute="bottom" constant="30" id="8gx-Bf-80C"/>
                                     <constraint firstItem="xDd-gc-QkD" firstAttribute="leading" secondItem="kRv-ME-1qa" secondAttribute="leading" id="93l-px-bqc"/>
                                     <constraint firstItem="EtS-Lu-onR" firstAttribute="leading" secondItem="kRv-ME-1qa" secondAttribute="leading" id="99H-ev-dDC"/>
@@ -273,6 +288,7 @@
                                     <constraint firstItem="kRv-ME-1qa" firstAttribute="leading" secondItem="hTI-MO-0dp" secondAttribute="leading" constant="60" id="oSA-iI-GpL"/>
                                     <constraint firstItem="TvO-Tl-Qf8" firstAttribute="leading" secondItem="kRv-ME-1qa" secondAttribute="leading" id="oYv-LP-HBs"/>
                                     <constraint firstItem="DlQ-tU-HAQ" firstAttribute="top" secondItem="EtS-Lu-onR" secondAttribute="bottom" constant="36" id="qBa-hz-5x3"/>
+                                    <constraint firstItem="zop-QM-DVz" firstAttribute="top" secondItem="hTI-MO-0dp" secondAttribute="top" constant="20" id="yWB-OF-AhI"/>
                                     <constraint firstItem="Boj-2A-hsx" firstAttribute="centerX" secondItem="hTI-MO-0dp" secondAttribute="centerX" id="ybJ-JL-1Af"/>
                                 </constraints>
                             </view>
@@ -286,6 +302,10 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="skh-Kz-M0d"/>
                     </scrollView>
+                    <connections>
+                        <outlet property="accTxtField" destination="TvO-Tl-Qf8" id="lvP-Sw-gs0"/>
+                        <outlet property="passwordTxtField" destination="xDd-gc-QkD" id="C1m-KS-wwc"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zzp-I9-jvx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -293,6 +313,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="ic_close" width="24" height="24"/>
         <namedColor name="Grey200">
             <color red="0.93333333330000001" green="0.93333333330000001" blue="0.93333333330000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

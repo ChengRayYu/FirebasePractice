@@ -9,21 +9,23 @@
 /* Begin PBXBuildFile section */
 		663D8C03C21EF7B7C9E0A7DF /* Pods_FirebasePractice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A53616A81AC9C42C763CCD91 /* Pods_FirebasePractice.framework */; };
 		712EEB951FB3902E00CF71B5 /* SignUpScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712EEB941FB3902E00CF71B5 /* SignUpScene.swift */; };
+		712EEB981FB3A9BA00CF71B5 /* Color.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 712EEB971FB3A9BA00CF71B5 /* Color.xcassets */; };
 		71E6F7741FB2245E0030AA0C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E6F7731FB2245E0030AA0C /* AppDelegate.swift */; };
 		71E6F7761FB2245E0030AA0C /* MainEntrance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E6F7751FB2245E0030AA0C /* MainEntrance.swift */; };
 		71E6F7791FB2245E0030AA0C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71E6F7771FB2245E0030AA0C /* Main.storyboard */; };
-		71E6F77B1FB2245E0030AA0C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 71E6F77A1FB2245E0030AA0C /* Assets.xcassets */; };
+		71E6F77B1FB2245E0030AA0C /* Drawable.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 71E6F77A1FB2245E0030AA0C /* Drawable.xcassets */; };
 		71E6F77E1FB2245E0030AA0C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71E6F77C1FB2245E0030AA0C /* LaunchScreen.storyboard */; };
 		71E6F7861FB2A2930030AA0C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 71E6F7851FB2A2930030AA0C /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		712EEB941FB3902E00CF71B5 /* SignUpScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpScene.swift; sourceTree = "<group>"; };
+		712EEB971FB3A9BA00CF71B5 /* Color.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Color.xcassets; sourceTree = "<group>"; };
 		71E6F7701FB2245E0030AA0C /* FirebasePractice.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FirebasePractice.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		71E6F7731FB2245E0030AA0C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		71E6F7751FB2245E0030AA0C /* MainEntrance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainEntrance.swift; sourceTree = "<group>"; };
 		71E6F7781FB2245E0030AA0C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		71E6F77A1FB2245E0030AA0C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		71E6F77A1FB2245E0030AA0C /* Drawable.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Drawable.xcassets; sourceTree = "<group>"; };
 		71E6F77D1FB2245E0030AA0C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		71E6F77F1FB2245E0030AA0C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		71E6F7851FB2A2930030AA0C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -69,7 +71,8 @@
 				71E6F7751FB2245E0030AA0C /* MainEntrance.swift */,
 				712EEB941FB3902E00CF71B5 /* SignUpScene.swift */,
 				71E6F7771FB2245E0030AA0C /* Main.storyboard */,
-				71E6F77A1FB2245E0030AA0C /* Assets.xcassets */,
+				71E6F77A1FB2245E0030AA0C /* Drawable.xcassets */,
+				712EEB971FB3A9BA00CF71B5 /* Color.xcassets */,
 				71E6F77C1FB2245E0030AA0C /* LaunchScreen.storyboard */,
 				71E6F77F1FB2245E0030AA0C /* Info.plist */,
 				71E6F7851FB2A2930030AA0C /* GoogleService-Info.plist */,
@@ -158,7 +161,8 @@
 			files = (
 				71E6F77E1FB2245E0030AA0C /* LaunchScreen.storyboard in Resources */,
 				71E6F7861FB2A2930030AA0C /* GoogleService-Info.plist in Resources */,
-				71E6F77B1FB2245E0030AA0C /* Assets.xcassets in Resources */,
+				71E6F77B1FB2245E0030AA0C /* Drawable.xcassets in Resources */,
+				712EEB981FB3A9BA00CF71B5 /* Color.xcassets in Resources */,
 				71E6F7791FB2245E0030AA0C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
