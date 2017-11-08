@@ -54,12 +54,17 @@ PODS:
   - nanopb/decode (0.3.8)
   - nanopb/encode (0.3.8)
   - Protobuf (3.4.0)
+  - RxCocoa (4.0.0):
+    - RxSwift (~> 4.0)
+  - RxSwift (4.0.0)
 
 DEPENDENCIES:
   - Firebase/Auth
   - Firebase/Core
   - Firebase/Database
   - Firebase/Messaging
+  - RxCocoa (~> 4.0)
+  - RxSwift (~> 4.0)
 
 SPEC CHECKSUMS:
   Firebase: d83d287bdb6b1c78320561482706d1fcfc8ddfc1
@@ -74,7 +79,9 @@ SPEC CHECKSUMS:
   leveldb-library: 9e29a1d913f922444127a7d0f28b025a0e2ba053
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   Protobuf: 03eef2ee0b674770735cf79d9c4d3659cf6908e8
+  RxCocoa: d62846ca96495d862fa4c59ea7d87e5031d7340e
+  RxSwift: fd680d75283beb5e2559486f3c0ff852f0d35334
 
-PODFILE CHECKSUM: b0f70dc4ba82ab237867500a8bbbfe999d0f4829
+PODFILE CHECKSUM: 019719d6c4e6a2cc4392c3a1ec7cf8bc10259c28
 
 COCOAPODS: 1.3.1
