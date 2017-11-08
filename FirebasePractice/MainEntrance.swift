@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MainEntrance.swift
 //  FirebasePractice
 //
 //  Created by Ray on 07/11/2017.
@@ -8,7 +8,10 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class MainEntrance: UIViewController {
+
+    @IBOutlet weak var accTxtField: UITextField!
+    @IBOutlet weak var passwordTxtField: UITextField!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,6 +21,13 @@ class ViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+
+    // MARK: IBAction Events
+    @IBAction func backgroundTap(_ sender: UITapGestureRecognizer) {
+        print(#function)
+        _ = accTxtField.resignFirstResponder()
+        _ = passwordTxtField.resignFirstResponder()
     }
 
 
