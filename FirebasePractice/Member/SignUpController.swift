@@ -1,5 +1,5 @@
 //
-//  SignUpScene.swift
+//  SignUpStep1Controller.swift
 //  FirebasePractice
 //
 //  Created by Ray on 08/11/2017.
@@ -10,7 +10,10 @@ import UIKit
 import FirebaseAuth
 import GoogleSignIn
 
-class SignUpScene: UIViewController {
+class SignUpStep1Controller: UIViewController {
+
+    // For both SignIn and SignUp
+    // identidied by 2 different viewmodels
 
     @IBOutlet weak var accTxtField: UITextField!
     @IBOutlet weak var passwordTxtField: UITextField!
@@ -33,7 +36,24 @@ class SignUpScene: UIViewController {
 
 // MARK: -  IBAction Events
 
-extension SignUpScene {
+
+// MARK: -  IBAction Events
+
+extension WelcomeController {
+
+    @IBAction func signUpOnTap(_ sender: Any) {
+        performSegue(withIdentifier: "mainEntrance_signUp", sender: self)
+    }
+}
+
+
+
+extension SignUpStep1Controller {
+
+    @IBAction func backgroundOnTap(_ sender: UITapGestureRecognizer) {
+        _ = accTxtField.resignFirstResponder()
+        _ = passwordTxtField.resignFirstResponder()
+    }
 
     @IBAction func closeOnTap(_ sender: Any) {
         dismiss(animated: true, completion: nil)
@@ -46,7 +66,7 @@ extension SignUpScene {
 
 // MARK: -  GIDSignInDelegate
 
-extension SignUpScene: GIDSignInDelegate {
+extension SignUpStep1Controller: GIDSignInDelegate {
 
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
 
@@ -79,7 +99,7 @@ extension SignUpScene: GIDSignInDelegate {
 
 // MARK: -  GIDSignInUIDelegate
 
-extension SignUpScene: GIDSignInUIDelegate {
+extension SignUpStep1Controller: GIDSignInUIDelegate {
     func sign(inWillDispatch signIn: GIDSignIn!, error: Error!) {
     }
 
