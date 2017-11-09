@@ -228,17 +228,6 @@
                                             <color key="titleColor" name="Grey200"/>
                                         </state>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EtS-Lu-onR">
-                                        <rect key="frame" x="60" y="471" width="255" height="40"/>
-                                        <color key="backgroundColor" name="Grey800"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="40" id="4E4-AN-6Bg"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="14"/>
-                                        <state key="normal" title="Sign-up with Google">
-                                            <color key="titleColor" name="Grey200"/>
-                                        </state>
-                                    </button>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WpU-Uh-Pbb">
                                         <rect key="frame" x="60" y="367" width="254" height="104"/>
                                         <subviews>
@@ -257,22 +246,32 @@
                                             <constraint firstItem="lsU-r9-bcV" firstAttribute="centerY" secondItem="WpU-Uh-Pbb" secondAttribute="centerY" id="Jgf-tj-4GO"/>
                                         </constraints>
                                     </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Fi-4V-iNW" customClass="GIDSignInButton">
+                                        <rect key="frame" x="60" y="471" width="255" height="40"/>
+                                        <color key="backgroundColor" red="0.0075593856163322926" green="0.99629801511764526" blue="0.85055452585220337" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="Mrv-oP-EnB"/>
+                                        </constraints>
+                                        <connections>
+                                            <action selector="googleSignInOnTap:" destination="HCb-j8-Lmx" eventType="touchUpInside" id="Wq4-2J-Ya8"/>
+                                        </connections>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" name="Grey50"/>
                                 <constraints>
                                     <constraint firstItem="zop-QM-DVz" firstAttribute="leading" secondItem="hTI-MO-0dp" secondAttribute="leading" constant="20" id="3Ob-H8-VBB"/>
                                     <constraint firstItem="Jew-is-axp" firstAttribute="top" secondItem="kRv-ME-1qa" secondAttribute="bottom" constant="30" id="8gx-Bf-80C"/>
                                     <constraint firstItem="xDd-gc-QkD" firstAttribute="leading" secondItem="kRv-ME-1qa" secondAttribute="leading" id="93l-px-bqc"/>
-                                    <constraint firstItem="EtS-Lu-onR" firstAttribute="leading" secondItem="kRv-ME-1qa" secondAttribute="leading" id="99H-ev-dDC"/>
                                     <constraint firstItem="vE5-2R-ULu" firstAttribute="top" secondItem="TvO-Tl-Qf8" secondAttribute="bottom" constant="16" id="9VF-JF-f5W"/>
                                     <constraint firstItem="DlQ-tU-HAQ" firstAttribute="leading" secondItem="kRv-ME-1qa" secondAttribute="leading" id="9vz-jP-aSy"/>
+                                    <constraint firstItem="5Fi-4V-iNW" firstAttribute="centerX" secondItem="hTI-MO-0dp" secondAttribute="centerX" id="Ben-h9-cwx"/>
                                     <constraint firstItem="Jew-is-axp" firstAttribute="leading" secondItem="kRv-ME-1qa" secondAttribute="leading" id="Bir-dB-sS8"/>
                                     <constraint firstItem="DlQ-tU-HAQ" firstAttribute="centerX" secondItem="hTI-MO-0dp" secondAttribute="centerX" id="DHF-YX-0bY"/>
                                     <constraint firstItem="TvO-Tl-Qf8" firstAttribute="top" secondItem="Jew-is-axp" secondAttribute="bottom" constant="4" id="JYu-dA-Dym"/>
                                     <constraint firstItem="vE5-2R-ULu" firstAttribute="centerX" secondItem="hTI-MO-0dp" secondAttribute="centerX" id="KDq-ED-ln0"/>
-                                    <constraint firstItem="EtS-Lu-onR" firstAttribute="centerX" secondItem="hTI-MO-0dp" secondAttribute="centerX" id="KyV-dE-6Nn"/>
                                     <constraint firstItem="vE5-2R-ULu" firstAttribute="leading" secondItem="kRv-ME-1qa" secondAttribute="leading" id="RBg-jE-EQD"/>
                                     <constraint firstItem="Boj-2A-hsx" firstAttribute="leading" secondItem="kRv-ME-1qa" secondAttribute="leading" id="RZj-Bg-SgD"/>
+                                    <constraint firstItem="DlQ-tU-HAQ" firstAttribute="top" secondItem="5Fi-4V-iNW" secondAttribute="bottom" constant="36" id="TdU-Lv-IKi"/>
                                     <constraint firstItem="kRv-ME-1qa" firstAttribute="centerX" secondItem="hTI-MO-0dp" secondAttribute="centerX" id="Tul-IN-orN"/>
                                     <constraint firstItem="xDd-gc-QkD" firstAttribute="centerX" secondItem="hTI-MO-0dp" secondAttribute="centerX" id="VQl-G3-Kqq"/>
                                     <constraint firstAttribute="bottom" secondItem="DlQ-tU-HAQ" secondAttribute="bottom" constant="60" id="XPP-42-A6O"/>
@@ -283,11 +282,11 @@
                                     <constraint firstItem="Boj-2A-hsx" firstAttribute="top" secondItem="xDd-gc-QkD" secondAttribute="bottom" constant="36" id="bxY-Co-AC4"/>
                                     <constraint firstItem="TvO-Tl-Qf8" firstAttribute="centerX" secondItem="hTI-MO-0dp" secondAttribute="centerX" id="cLv-ff-4XW"/>
                                     <constraint firstItem="WpU-Uh-Pbb" firstAttribute="centerX" secondItem="hTI-MO-0dp" secondAttribute="centerX" id="gg7-Ye-AIo"/>
+                                    <constraint firstItem="5Fi-4V-iNW" firstAttribute="leading" secondItem="kRv-ME-1qa" secondAttribute="leading" id="lsj-Tn-RBf"/>
                                     <constraint firstItem="Jew-is-axp" firstAttribute="centerX" secondItem="hTI-MO-0dp" secondAttribute="centerX" id="mnq-kU-fPV"/>
-                                    <constraint firstItem="EtS-Lu-onR" firstAttribute="top" secondItem="WpU-Uh-Pbb" secondAttribute="bottom" id="nFm-2P-3Dq"/>
                                     <constraint firstItem="kRv-ME-1qa" firstAttribute="leading" secondItem="hTI-MO-0dp" secondAttribute="leading" constant="60" id="oSA-iI-GpL"/>
                                     <constraint firstItem="TvO-Tl-Qf8" firstAttribute="leading" secondItem="kRv-ME-1qa" secondAttribute="leading" id="oYv-LP-HBs"/>
-                                    <constraint firstItem="DlQ-tU-HAQ" firstAttribute="top" secondItem="EtS-Lu-onR" secondAttribute="bottom" constant="36" id="qBa-hz-5x3"/>
+                                    <constraint firstItem="5Fi-4V-iNW" firstAttribute="top" secondItem="WpU-Uh-Pbb" secondAttribute="bottom" id="rZv-xA-10x"/>
                                     <constraint firstItem="zop-QM-DVz" firstAttribute="top" secondItem="hTI-MO-0dp" secondAttribute="top" constant="20" id="yWB-OF-AhI"/>
                                     <constraint firstItem="Boj-2A-hsx" firstAttribute="centerX" secondItem="hTI-MO-0dp" secondAttribute="centerX" id="ybJ-JL-1Af"/>
                                 </constraints>
@@ -304,6 +303,7 @@
                     </scrollView>
                     <connections>
                         <outlet property="accTxtField" destination="TvO-Tl-Qf8" id="lvP-Sw-gs0"/>
+                        <outlet property="googleSingInBtn" destination="5Fi-4V-iNW" id="2bg-qi-DFg"/>
                         <outlet property="passwordTxtField" destination="xDd-gc-QkD" id="C1m-KS-wwc"/>
                     </connections>
                 </viewController>
@@ -314,9 +314,6 @@
     </scenes>
     <resources>
         <image name="ic_close" width="24" height="24"/>
-        <namedColor name="Grey200">
-            <color red="0.93333333330000001" green="0.93333333330000001" blue="0.93333333330000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <namedColor name="Grey200">
             <color red="0.93333333330000001" green="0.93333333330000001" blue="0.93333333330000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -345,13 +342,10 @@
             <color red="0.38039215686274508" green="0.38039215686274508" blue="0.38039215686274508" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Grey800">
+            <color red="0.25882352939999997" green="0.25882352939999997" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Grey800">
             <color red="0.25882352941176473" green="0.25882352941176473" blue="0.25882352941176473" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Grey800">
-            <color red="0.25882352939999997" green="0.25882352939999997" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Grey800">
-            <color red="0.25882352939999997" green="0.25882352939999997" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Grey800">
             <color red="0.25882352939999997" green="0.25882352939999997" blue="0.25882352939999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

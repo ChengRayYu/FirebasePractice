@@ -22,14 +22,20 @@ class MainEntrance: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+}
 
-    // MARK: IBAction Events
-    @IBAction func backgroundTap(_ sender: UITapGestureRecognizer) {
-        print(#function)
+// MARK: -  IBAction Events
+
+extension MainEntrance {
+
+    @IBAction func backgroundOnTap(_ sender: UITapGestureRecognizer) {
         _ = accTxtField.resignFirstResponder()
         _ = passwordTxtField.resignFirstResponder()
     }
 
-
+    @IBAction func signUpOnTap(_ sender: Any) {
+        performSegue(withIdentifier: "mainEntrance_signUp", sender: self)
+    }
 }
+
 
