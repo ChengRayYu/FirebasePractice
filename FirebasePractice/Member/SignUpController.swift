@@ -1,5 +1,5 @@
 //
-//  SignUpStep1Controller.swift
+//  SignUpController.swift
 //  FirebasePractice
 //
 //  Created by Ray on 08/11/2017.
@@ -8,106 +8,90 @@
 
 import UIKit
 import FirebaseAuth
-import GoogleSignIn
 
-class SignUpStep1Controller: UIViewController {
+class SignUpController: UIViewController {
 
-    // For both SignIn and SignUp
-    // identidied by 2 different viewmodels
-
-    @IBOutlet weak var accTxtField: UITextField!
+    @IBOutlet weak var emailTxtField: UITextField!
+    @IBOutlet weak var emailErrLabel: UILabel!
     @IBOutlet weak var passwordTxtField: UITextField!
-    @IBOutlet weak var googleSingInBtn: GIDSignInButton!
+    @IBOutlet weak var passwordErrLabel: UILabel!
+    
+    var viewModel: SignUpViewModel?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        GIDSignIn.sharedInstance().delegate = self
-        GIDSignIn.sharedInstance().uiDelegate = self
-
-        googleSingInBtn.colorScheme = .dark
-        googleSingInBtn.style = .wide
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 }
 
-// MARK: -  IBAction Events
+// MARK: -  Private Methods
 
+extension SignUpController {
 
-// MARK: -  IBAction Events
-
-extension WelcomeController {
-
-    @IBAction func signUpOnTap(_ sender: Any) {
-        performSegue(withIdentifier: "mainEntrance_signUp", sender: self)
-    }
-}
-
-
-
-extension SignUpStep1Controller {
-
-    @IBAction func backgroundOnTap(_ sender: UITapGestureRecognizer) {
-        _ = accTxtField.resignFirstResponder()
+    fileprivate func hideKeybooard() {
+        _ = emailTxtField.resignFirstResponder()
         _ = passwordTxtField.resignFirstResponder()
     }
 
-    @IBAction func closeOnTap(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
-    }
+    fileprivate func emailSignUp() {
 
-    @IBAction func googleSignInOnTap(_ sender: Any) {
-        GIDSignIn.sharedInstance().signIn()
-   }
-}
-
-// MARK: -  GIDSignInDelegate
-
-extension SignUpStep1Controller: GIDSignInDelegate {
-
-    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
-
-        if let error = error {
-            print("GIDSingIn Failed")
-            print(error.localizedDescription)
+        guard let email = emailTxtField.text, let pw = passwordTxtField.text else {
+            emailErrLabel.text = (emailTxtField.text != nil) ? "" : "Please enter your email."
+            passwordErrLabel.text = (passwordTxtField.text != nil) ? "" : "Please enter your password."
             return
         }
 
-        guard let authentication = user.authentication else { return }
+        self.emailErrLabel.text = ""
+        self.passwordErrLabel.text = ""
 
-        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
-                                                       accessToken: authentication.accessToken)
-        print(credential)
-        print("""
-            GIDSingIn Succeed
-            idToken: \(authentication.idToken)
-            accessToken: \(authentication.accessToken)
-            """)
-    }
+        Auth.auth().createUser(withEmail: email, password: pw) { (user, err) in
 
-    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
+            if let error = err {
+                print("\(error._code)")
 
-        guard let authentication = user.authentication else { return }
-        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
-                                                       accessToken: authentication.accessToken)
-        print(credential)
-    }
-}
+                if let errCode = AuthErrorCode(rawValue: error._code) {
+                    switch errCode {
 
-// MARK: -  GIDSignInUIDelegate
+                    case .userDisabled, .emailAlreadyInUse, .invalidEmail:
+                        self.emailErrLabel.text = error.localizedDescription
 
-extension SignUpStep1Controller: GIDSignInUIDelegate {
-    func sign(inWillDispatch signIn: GIDSignIn!, error: Error!) {
-    }
+                    case .weakPassword:
+                        self.passwordErrLabel.text = error.localizedDescription
 
-    func sign(_ signIn: GIDSignIn!, present viewController: UIViewController!) {
-        present(viewController, animated: true, completion: nil)
-    }
-    func sign(_ signIn: GIDSignIn!, dismiss viewController: UIViewController!) {
-        dismiss(animated: false, completion: nil)
+                    default:
+                        print("PROMPT ALERT : \(error.localizedDescription) ")
+                    }
+                }
+                return
+            }
+
+            print("""
+                Firebase Auth Succeed
+                user: \(user?.displayName ?? "TBD")
+                email: \(user?.email ?? "email")
+                """)
+        }
     }
 }
 
+// MARK: -  IBAction Events
+
+extension SignUpController {
+
+    @IBAction func backgroundOnTap(_ sender: UITapGestureRecognizer) {
+        hideKeybooard()
+    }
+
+    @IBAction func cancelBtnOnTap(_ sender: Any) {
+        dismiss(animated: true) {
+            self.hideKeybooard()
+        }
+    }
+
+    @IBAction func signUpOnTap(_ sender: Any) {
+        emailSignUp()
+    }
+}

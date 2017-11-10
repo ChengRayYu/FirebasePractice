@@ -37,6 +37,10 @@ class WelcomeController: UIViewController {
         case "segue_emailSignIn":
             let vc = segue.destination as! SignInController
             vc.viewModel = SignInViewModel()
+
+        case "segue_emailSignUp":
+            let vc = segue.destination as! SignUpController
+            vc.viewModel = SignUpViewModel()
         default:
             break
         }
