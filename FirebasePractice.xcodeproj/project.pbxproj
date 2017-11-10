@@ -65,6 +65,7 @@
 		717AD6DE1FB4D7240060DAB6 /* Member */ = {
 			isa = PBXGroup;
 			children = (
+				71E6F7751FB2245E0030AA0C /* WelcomeController.swift */,
 				7185E4B81FB61E5600A83692 /* SignUpController.swift */,
 				7185E4BA1FB6217E00A83692 /* SignUpViewModel.swift */,
 				7162170F1FB4E59200CF9C3F /* SignInController.swift */,
@@ -95,9 +96,8 @@
 			isa = PBXGroup;
 			children = (
 				71E6F7731FB2245E0030AA0C /* AppDelegate.swift */,
-				71E6F7751FB2245E0030AA0C /* WelcomeController.swift */,
-				717AD6DE1FB4D7240060DAB6 /* Member */,
 				716217141FB5016300CF9C3F /* BMI */,
+				717AD6DE1FB4D7240060DAB6 /* Member */,
 				71E6F7771FB2245E0030AA0C /* Main.storyboard */,
 				71E6F77A1FB2245E0030AA0C /* Drawable.xcassets */,
 				712EEB971FB3A9BA00CF71B5 /* Color.xcassets */,

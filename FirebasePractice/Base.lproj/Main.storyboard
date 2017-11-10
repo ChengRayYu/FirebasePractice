@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="F4J-tb-BM7">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="4gs-4Q-qMI">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -94,7 +94,7 @@
                                             <color key="titleColor" name="Grey200"/>
                                         </state>
                                         <connections>
-                                            <segue destination="s7P-9J-okj" kind="presentation" identifier="segue_emailSignIn" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="zbg-hR-fjh"/>
+                                            <segue destination="s7P-9J-okj" kind="presentation" identifier="segue_welcome_emailSignIn" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="zbg-hR-fjh"/>
                                         </connections>
                                     </button>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PV4-gs-mZp">
@@ -115,7 +115,7 @@
                                             <color key="titleColor" name="Grey200"/>
                                         </state>
                                         <connections>
-                                            <segue destination="HCb-j8-Lmx" kind="presentation" identifier="segue_signUpStepOne" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="abr-m7-fOk"/>
+                                            <segue destination="HCb-j8-Lmx" kind="presentation" identifier="segue_welcome_emailSignUp" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="abr-m7-fOk"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -156,7 +156,6 @@
                         <outlet property="fbSignInBtn" destination="2af-ex-vSv" id="P4Z-gH-Gv3"/>
                         <outlet property="googleSignInBtn" destination="aSI-iJ-vqF" id="SG8-li-gjw"/>
                         <outlet property="signUpBtn" destination="S1Y-AA-Pdc" id="81j-lx-osS"/>
-                        <segue destination="4gs-4Q-qMI" kind="presentation" identifier="segue_BMI" id="CVD-NR-imb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UQm-NO-SFx" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -323,11 +322,12 @@
                     </view>
                     <connections>
                         <outlet property="signOutBtn" destination="lWD-nb-cHP" id="qVr-tG-kWn"/>
+                        <segue destination="F4J-tb-BM7" kind="presentation" identifier="segue_BMI_requestAuth" id="FyU-oM-xff"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6lr-N2-wc5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-859" y="2257"/>
+            <point key="canvasLocation" x="-1815" y="771"/>
         </scene>
         <!--Sign Up Controller-->
         <scene sceneID="MT7-D1-xRy">

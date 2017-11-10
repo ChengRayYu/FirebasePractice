@@ -19,26 +19,20 @@ class WelcomeController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        Auth.auth().addStateDidChangeListener { (auth, user) in
-            if user != nil  {
-                self.performSegue(withIdentifier: "segue_BMI", sender: nil)
-            }
-        }
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier else { return }
         switch identifier {
-        case "segue_emailSignIn":
+        case "segue_welcome_emailSignIn":
             let vc = segue.destination as! SignInController
             vc.viewModel = SignInViewModel()
 
-        case "segue_emailSignUp":
+        case "segue_welcome_emailSignUp":
             let vc = segue.destination as! SignUpController
             vc.viewModel = SignUpViewModel()
         default:
