@@ -288,10 +288,10 @@
             </objects>
             <point key="canvasLocation" x="32" y="771"/>
         </scene>
-        <!--View Controller-->
+        <!--Controller-->
         <scene sceneID="PHL-db-qJN">
             <objects>
-                <viewController id="4gs-4Q-qMI" sceneMemberID="viewController">
+                <viewController id="4gs-4Q-qMI" customClass="BMIController" customModule="FirebasePractice" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="NeL-NX-KwQ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -306,6 +306,9 @@
                                 <state key="normal" title="Sign Out">
                                     <color key="titleColor" name="Grey200"/>
                                 </state>
+                                <connections>
+                                    <action selector="signOutBtnOnClick:" destination="4gs-4Q-qMI" eventType="touchUpInside" id="VEo-Cv-hMQ"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" name="Grey800"/>
@@ -315,6 +318,9 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="TLB-Kt-NjB"/>
                     </view>
+                    <connections>
+                        <outlet property="signOutBtn" destination="lWD-nb-cHP" id="qVr-tG-kWn"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6lr-N2-wc5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

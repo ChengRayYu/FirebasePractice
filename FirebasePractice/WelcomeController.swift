@@ -19,7 +19,11 @@ class WelcomeController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        Auth.auth().addStateDidChangeListener { (auth, user) in
+            if user != nil  {
+                self.performSegue(withIdentifier: "segue_BMI", sender: nil)
+            }
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -85,11 +89,13 @@ extension WelcomeController: GIDSignInDelegate {
                 user: \(user?.displayName ?? "name")
                 email: \(user?.email ?? "email")
                 """)
-            self.performSegue(withIdentifier: "segue_BMI", sender: nil)
         }
     }
 
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
+
+        print(#function)
+        print(error)
 
         guard let authentication = user.authentication else { return }
         let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
@@ -109,4 +115,3 @@ extension WelcomeController: GIDSignInUIDelegate {
         dismiss(animated: false, completion: nil)
     }
 }
-
