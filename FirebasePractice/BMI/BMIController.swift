@@ -11,13 +11,12 @@ import FirebaseAuth
 
 class BMIController: UIViewController {
 
-    @IBOutlet weak var signOutBtn: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
 
         Auth.auth().addStateDidChangeListener { (auth, user) in
             guard user != nil else {
-                self.performSegue(withIdentifier: "segue_BMI_requestAuth", sender: self)
+                self.performSegue(withIdentifier: "segue_BMI_requestAuth", sender: nil)
                 return
             }
             self.dismiss(animated: true, completion: nil)
@@ -36,7 +35,6 @@ extension BMIController {
     @IBAction func signOutBtnOnClick(_ sender: Any) {
         do {
             try Auth.auth().signOut()
-            dismiss(animated: true, completion: nil)
         }catch {
             print(error)
         }

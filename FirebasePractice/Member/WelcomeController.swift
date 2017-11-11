@@ -12,10 +12,7 @@ import GoogleSignIn
 
 class WelcomeController: UIViewController {
 
-    @IBOutlet weak var googleSignInBtn: UIButton!
-    @IBOutlet weak var fbSignInBtn: UIButton!
-    @IBOutlet weak var emailSignInBtn: UIButton!
-    @IBOutlet weak var signUpBtn: UIButton!
+    var emailAuthController: EmailAuthController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,13 +25,8 @@ class WelcomeController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let identifier = segue.identifier else { return }
         switch identifier {
-        case "segue_welcome_emailSignIn":
-            let vc = segue.destination as! SignInController
-            vc.viewModel = SignInViewModel()
-
-        case "segue_welcome_emailSignUp":
-            let vc = segue.destination as! SignUpController
-            vc.viewModel = SignUpViewModel()
+        case "segue_welcome_emailAuth":
+            emailAuthController = segue.destination as? EmailAuthController
         default:
             break
         }
@@ -49,6 +41,18 @@ extension WelcomeController {
         GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().uiDelegate = self
         GIDSignIn.sharedInstance().signIn()
+    }
+
+    @IBAction func emailSignUpBtnOnClick(_ sender: Any) {
+        performSegue(withIdentifier: "segue_welcome_emailAuth", sender: nil)
+        guard let authCtrl = emailAuthController else { return }
+        authCtrl.purpose = .signUp
+    }
+
+    @IBAction func emailSignInBtnOnClick(_ sender: Any) {
+        performSegue(withIdentifier: "segue_welcome_emailAuth", sender: nil)
+        guard let authCtrl = emailAuthController else { return }
+        authCtrl.purpose = .signIn
     }
 }
 
