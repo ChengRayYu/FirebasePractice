@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		663D8C03C21EF7B7C9E0A7DF /* Pods_FirebasePractice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A53616A81AC9C42C763CCD91 /* Pods_FirebasePractice.framework */; };
 		712EEB981FB3A9BA00CF71B5 /* Color.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 712EEB971FB3A9BA00CF71B5 /* Color.xcassets */; };
+		714AEEDC1FB75B760071FBF9 /* RxFirebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714AEEDB1FB75B760071FBF9 /* RxFirebase.swift */; };
 		716217161FB501A300CF9C3F /* BMIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716217151FB501A300CF9C3F /* BMIController.swift */; };
 		7185E4B91FB61E5600A83692 /* EmailAuthController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7185E4B81FB61E5600A83692 /* EmailAuthController.swift */; };
 		7185E4BB1FB6217E00A83692 /* EmailAuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7185E4BA1FB6217E00A83692 /* EmailAuthViewModel.swift */; };
@@ -22,6 +23,7 @@
 
 /* Begin PBXFileReference section */
 		712EEB971FB3A9BA00CF71B5 /* Color.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Color.xcassets; sourceTree = "<group>"; };
+		714AEEDB1FB75B760071FBF9 /* RxFirebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxFirebase.swift; sourceTree = "<group>"; };
 		716217151FB501A300CF9C3F /* BMIController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BMIController.swift; sourceTree = "<group>"; };
 		7185E4B81FB61E5600A83692 /* EmailAuthController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailAuthController.swift; sourceTree = "<group>"; };
 		7185E4BA1FB6217E00A83692 /* EmailAuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthViewModel.swift; sourceTree = "<group>"; };
@@ -50,6 +52,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		714AEEDA1FB75B340071FBF9 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				714AEEDB1FB75B760071FBF9 /* RxFirebase.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		716217141FB5016300CF9C3F /* BMI */ = {
 			isa = PBXGroup;
 			children = (
@@ -92,6 +102,7 @@
 				71E6F7731FB2245E0030AA0C /* AppDelegate.swift */,
 				716217141FB5016300CF9C3F /* BMI */,
 				717AD6DE1FB4D7240060DAB6 /* Member */,
+				714AEEDA1FB75B340071FBF9 /* Utils */,
 				71E6F7771FB2245E0030AA0C /* Main.storyboard */,
 				71E6F77A1FB2245E0030AA0C /* Drawable.xcassets */,
 				712EEB971FB3A9BA00CF71B5 /* Color.xcassets */,
@@ -269,6 +280,7 @@
 			files = (
 				71E6F7761FB2245E0030AA0C /* WelcomeController.swift in Sources */,
 				716217161FB501A300CF9C3F /* BMIController.swift in Sources */,
+				714AEEDC1FB75B760071FBF9 /* RxFirebase.swift in Sources */,
 				71E6F7741FB2245E0030AA0C /* AppDelegate.swift in Sources */,
 				7185E4B91FB61E5600A83692 /* EmailAuthController.swift in Sources */,
 				7185E4BB1FB6217E00A83692 /* EmailAuthViewModel.swift in Sources */,
