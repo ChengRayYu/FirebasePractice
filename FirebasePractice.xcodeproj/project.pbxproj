@@ -11,6 +11,7 @@
 		712EEB981FB3A9BA00CF71B5 /* Color.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 712EEB971FB3A9BA00CF71B5 /* Color.xcassets */; };
 		714AEEDC1FB75B760071FBF9 /* RxFirebase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714AEEDB1FB75B760071FBF9 /* RxFirebase.swift */; };
 		716217161FB501A300CF9C3F /* BMIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716217151FB501A300CF9C3F /* BMIController.swift */; };
+		717786091FBF526900E2485B /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 717786081FBF526800E2485B /* ActivityIndicator.swift */; };
 		7185E4B91FB61E5600A83692 /* EmailAuthController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7185E4B81FB61E5600A83692 /* EmailAuthController.swift */; };
 		7185E4BB1FB6217E00A83692 /* EmailAuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7185E4BA1FB6217E00A83692 /* EmailAuthViewModel.swift */; };
 		71E6F7741FB2245E0030AA0C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E6F7731FB2245E0030AA0C /* AppDelegate.swift */; };
@@ -25,6 +26,7 @@
 		712EEB971FB3A9BA00CF71B5 /* Color.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Color.xcassets; sourceTree = "<group>"; };
 		714AEEDB1FB75B760071FBF9 /* RxFirebase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxFirebase.swift; sourceTree = "<group>"; };
 		716217151FB501A300CF9C3F /* BMIController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BMIController.swift; sourceTree = "<group>"; };
+		717786081FBF526800E2485B /* ActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		7185E4B81FB61E5600A83692 /* EmailAuthController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailAuthController.swift; sourceTree = "<group>"; };
 		7185E4BA1FB6217E00A83692 /* EmailAuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthViewModel.swift; sourceTree = "<group>"; };
 		71E6F7701FB2245E0030AA0C /* FirebasePractice.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FirebasePractice.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -55,6 +57,7 @@
 		714AEEDA1FB75B340071FBF9 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				717786081FBF526800E2485B /* ActivityIndicator.swift */,
 				714AEEDB1FB75B760071FBF9 /* RxFirebase.swift */,
 			);
 			path = Utils;
@@ -282,6 +285,7 @@
 				716217161FB501A300CF9C3F /* BMIController.swift in Sources */,
 				714AEEDC1FB75B760071FBF9 /* RxFirebase.swift in Sources */,
 				71E6F7741FB2245E0030AA0C /* AppDelegate.swift in Sources */,
+				717786091FBF526900E2485B /* ActivityIndicator.swift in Sources */,
 				7185E4B91FB61E5600A83692 /* EmailAuthController.swift in Sources */,
 				7185E4BB1FB6217E00A83692 /* EmailAuthViewModel.swift in Sources */,
 			);
