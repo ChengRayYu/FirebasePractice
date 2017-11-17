@@ -71,16 +71,16 @@ class EmailAuthViewModel: EmailAuthRes {
         actionCompleted = Observable.never()
         actionProcessing = activityIndicator.asObservable()
 
-        errorPublisher = errorResponse.asObserver()
+        errorPublisher = errorResponse.asObservable()
             .takeWhile({ (error) -> Bool in
                 guard let errCode = AuthErrorCode(rawValue: error._code) else {
-                    return false
+                    return true
                 }
                 let allowance: [AuthErrorCode] = [.userDisabled, .emailAlreadyInUse, .invalidEmail, .userNotFound, .weakPassword, .wrongPassword]
                 guard allowance.contains(errCode) else {
-                    return false
+                    return true
                 }
-                return true
+                return false
             })
             .map({ (error) -> String in
                 error.localizedDescription

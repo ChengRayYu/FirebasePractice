@@ -75,6 +75,12 @@ class EmailAuthController: UIViewController {
             .bind(to: passwordErrLabel.rx.text)
             .disposed(by: disposeBag)
 
+        viewModel?.errorPublisher
+            .subscribe(onNext: { (errStr) in
+                self.showAlert(message: errStr)
+            })
+            .disposed(by: disposeBag)
+
         viewModel?.actionProcessing
             .bind(onNext: { (flag) in
                 if flag {
@@ -96,10 +102,13 @@ class EmailAuthController: UIViewController {
                     user: \(user?.displayName ?? "TBD")
                     email: \(user?.email ?? "email")
                     """)
-
-            }, onError: { (err) in
-                print("PROMPT ALERT : \(err.localizedDescription) ")
             })
             .disposed(by: disposeBag)
+    }
+
+    func showAlert(message: String) {
+        let alertView = UIAlertController(title: "FirebasePractice", message: message, preferredStyle: .alert)
+        alertView.addAction(UIAlertAction(title: "OK", style: .cancel))
+        self.present(alertView, animated: true, completion: nil)
     }
 }
