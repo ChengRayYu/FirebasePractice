@@ -9,13 +9,17 @@
 import UIKit
 import FirebaseAuth
 import GoogleSignIn
+import RxSwift
+import RxCocoa
 
 class WelcomeController: UIViewController {
 
     var emailAuthController: EmailAuthController?
+    var disposeBag = DisposeBag()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -38,9 +42,25 @@ class WelcomeController: UIViewController {
 extension WelcomeController {
 
     @IBAction func googleSignInBtnOnClick(_ sender: Any?) {
-        GIDSignIn.sharedInstance().delegate = self
         GIDSignIn.sharedInstance().uiDelegate = self
         GIDSignIn.sharedInstance().signIn()
+
+        GIDSignIn.sharedInstance().rx.didSignIn
+            .subscribe(onNext: { (input) in
+                if let err = input.error {
+                    print("GIDSingIn Failed")
+                    print(err.localizedDescription)
+                    return
+                }
+                let credential = GoogleAuthProvider.credential(withIDToken: input.user.authentication.idToken,
+                                                               accessToken: input.user.authentication.accessToken)
+                print(credential)
+                print("""
+                    GIDSingIn Succeed
+                    idToken: \(input.user.authentication.idToken)
+                    accessToken: \(input.user.authentication.accessToken)
+                    """)
+            }).disposed(by: disposeBag)
     }
 
     @IBAction func emailSignUpBtnOnClick(_ sender: Any) {
@@ -58,6 +78,7 @@ extension WelcomeController {
 
 // MARK: -  GIDSignInDelegate
 
+/*
 extension WelcomeController: GIDSignInDelegate {
 
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
@@ -105,7 +126,7 @@ extension WelcomeController: GIDSignInDelegate {
         print(credential)
     }
 }
-
+*/
 // MARK: -  GIDSignInUIDelegate
 
 extension WelcomeController: GIDSignInUIDelegate {

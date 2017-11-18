@@ -176,7 +176,7 @@ class SignInViewModel: EmailAuthViewModel {
         actionCompleted = input.actionTap.withLatestFrom(emailAndPw)
             .flatMap { (pair) in
                 return Auth.auth().rx_signIn(email: pair.email, password: pair.password)
-                    .catchError({ (err) -> Observable<(User?)> in
+                    .catchError({ (err) -> Observable<User?> in
                         self.errorResponse.onNext(err)
                         return Observable.just(nil)
                     })
