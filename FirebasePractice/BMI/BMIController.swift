@@ -11,6 +11,8 @@ import FirebaseAuth
 
 class BMIController: UIViewController {
 
+    var welcomeController: WelcomeController?
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -20,6 +22,17 @@ class BMIController: UIViewController {
                 return
             }
             self.dismiss(animated: true, completion: nil)
+        }
+    }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let identifier = segue.identifier else { return }
+        switch identifier {
+        case "segue_BMI_requestAuth":
+            welcomeController = segue.destination as? WelcomeController
+            welcomeController?.viewModel = WelcomeViewModel()
+        default:
+            return
         }
     }
 

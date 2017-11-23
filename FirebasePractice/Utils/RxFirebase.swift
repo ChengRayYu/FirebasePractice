@@ -25,7 +25,7 @@ extension Auth {
         })
     }
 
-    func rx_createUser(email: String, password: String) -> Observable<(User?)> {
+    func rx_createUser(email: String, password: String) -> Observable<User?> {
 
         return Observable.create({ (observer: AnyObserver<(User?)>) -> Disposable in
 
@@ -41,7 +41,7 @@ extension Auth {
         })
     }
 
-    func rx_signIn(email: String, password: String) -> Observable<(User?)> {
+    func rx_signIn(email: String, password: String) -> Observable<User?> {
 
         return Observable.create({ (observer: AnyObserver<(User?)>) -> Disposable in
             self.signIn(withEmail: email, password: password, completion: { (user, error) in
@@ -56,7 +56,7 @@ extension Auth {
         })
     }
 
-    func rx_signIn(credential: AuthCredential) -> Observable<(User?)> {
+    func rx_signIn(credential: AuthCredential) -> Observable<User?> {
 
         return Observable.create({ (observer: AnyObserver<(User?)>) -> Disposable in
             self.signIn(with: credential, completion: { (user, error) in

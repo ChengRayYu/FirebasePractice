@@ -16,8 +16,13 @@ typealias GIDSignInResult = (user: GIDGoogleUser, error: Error?)
 extension Reactive where Base: GIDSignIn {
 
     var didSignIn: Observable<GIDSignInResult> {
+        let proxy  = RxGoogleSignInDelegateProxy.proxy(for: base)
+        return proxy.didSignInSubject
+    }
+
+    var didDisconnect: Observable<GIDSignInResult> {
         let proxy = RxGoogleSignInDelegateProxy.proxy(for: base)
-        return proxy.didSignInSubject.asObservable()
+        return proxy.didDisconnectSubject
     }
 }
 
@@ -29,6 +34,7 @@ class RxGoogleSignInDelegateProxy
     private(set) weak var googleSignIn: GIDSignIn?
 
     private init(googleSignIn: GIDSignIn) {
+        self.googleSignIn = googleSignIn
         super.init(parentObject: googleSignIn, delegateProxy: RxGoogleSignInDelegateProxy.self)
     }
 
@@ -44,61 +50,49 @@ class RxGoogleSignInDelegateProxy
         object.delegate = delegate
     }
 
+    private var _didSignInSubject: PublishSubject<GIDSignInResult>?
+    private var _didDisconnectSubject: PublishSubject<GIDSignInResult>?
 
-    lazy var didSignInSubject = PublishSubject<GIDSignInResult>()
-    lazy var didDisconnectSubject = PublishSubject<GIDSignInResult>()
+    var didSignInSubject: PublishSubject<GIDSignInResult> {
+        if let subject = _didSignInSubject {
+            return subject
+        }
+        let subject = PublishSubject<GIDSignInResult>()
+        _didSignInSubject = subject
+        return subject
+    }
+
+    var didDisconnectSubject: PublishSubject<GIDSignInResult> {
+        if let subject = _didDisconnectSubject {
+            return subject
+        }
+        let subject = PublishSubject<GIDSignInResult>()
+        _didDisconnectSubject = subject
+        return subject
+    }
 
     func sign(_ signIn: GIDSignIn, didSignInFor user: GIDGoogleUser, withError error: Error?) {
-        didSignInSubject.onNext((user: user, error: error))
+        print(#function)
+        
+        if let subject = _didSignInSubject {
+            subject.on(.next((user: user, error: error)))
+            subject.on(.completed)
+            subject.dispose()
+        }
         _forwardToDelegate?.sign(signIn, didSignInFor: user, withError: error)
+        _didSignInSubject = PublishSubject<GIDSignInResult>()
     }
 
     func sign(_ signIn: GIDSignIn, didDisconnectWith user: GIDGoogleUser, withError error: Error) {
-        didDisconnectSubject.onNext((user: user, error: error))
+        if let subject = _didDisconnectSubject {
+            subject.on(.next((user: user, error: error)))
+        }
         _forwardToDelegate?.sign(signIn, didDisconnectWith: user, withError: error)
     }
 
     deinit {
-        self.didSignInSubject.on(.completed)
-        self.didDisconnectSubject.on(.completed)
-    }
-}
-
-class RxGoogleSignInUIDelegateProxy
-    : DelegateProxy<GIDSignIn, GIDSignInUIDelegate>
-    , DelegateProxyType
-    , GIDSignInUIDelegate {
-
-    private init(googleSignIn: GIDSignIn) {
-        super.init(parentObject: googleSignIn, delegateProxy: RxGoogleSignInUIDelegateProxy.self)
-    }
-
-    static func registerKnownImplementations() {
-        self.register { RxGoogleSignInUIDelegateProxy(googleSignIn: $0) }
-    }
-
-    static func currentDelegate(for object: GIDSignIn) -> GIDSignInUIDelegate? {
-        return object.uiDelegate
-    }
-
-    static func setCurrentDelegate(_ delegate: GIDSignInUIDelegate?, to object: GIDSignIn) {
-        object.uiDelegate = delegate
-    }
-
-    lazy var signInPresent = PublishSubject<UIViewController>()
-    lazy var signInDismiss = PublishSubject<UIViewController>()
-
-    func sign(_ signIn: GIDSignIn!, present viewController: UIViewController!) {
-        signInPresent.onNext(viewController)
-        _forwardToDelegate?.sign(signIn, present: viewController)
-    }
-    func sign(_ signIn: GIDSignIn!, dismiss viewController: UIViewController!) {
-        signInDismiss.onNext(viewController)
-        _forwardToDelegate?.sign(signIn, dismiss: viewController)
-    }
-
-    deinit {
-        self.signInPresent.on(.completed)
-        self.signInDismiss.on(.completed)
+        print(#function)
+        _didSignInSubject?.on(.completed)
+        _didDisconnectSubject?.on(.completed)
     }
 }
