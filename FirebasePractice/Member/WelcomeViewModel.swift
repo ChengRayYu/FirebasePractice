@@ -27,17 +27,14 @@ class WelcomeViewModel {
 
         signInProcessing = activityIndicator.asDriver()
 
-        googleSignInTap.subscribe(onNext: {
-            GIDSignIn.sharedInstance().signIn()
-        })
-        .disposed(by: disposeBag)
-
         googleSignedIn = googleSignInTap
             .asDriver(onErrorJustReturn: ())
             .map { _ in
                 GIDSignIn.sharedInstance().signIn()
             }
-            .withLatestFrom(dependency.gidAuth.signed)
+            .flatMapLatest { _ in
+                return dependency.gidAuth.signed
+            }
             .map({ (result) -> AuthCredential? in
                 guard let res = result else { return nil }
                 guard res.error == nil else { return nil }
@@ -55,59 +52,7 @@ class WelcomeViewModel {
                     .debug("[FIR]", trimOutput: false)
                     .asDriver(onErrorJustReturn: nil)
             })
-
-
-            /*
-            .flatMapLatest({ result -> Driver<User?> in
-
-                guard let res = result else { return Driver<User?>.empty() }
-                guard res.error == nil else { return Driver<User?>.empty() }
-
-                guard let authentication = res.user.authentication,
-                    let idToken = authentication.idToken,
-                    let accessToken = authentication.accessToken else {
-                        return Driver<User?>.empty()
-                }
-                let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
-                return Auth.auth().rx_signIn(credential: credential)
-                    .debug("[FIR]", trimOutput: false)
-                    //.trackActivity(self.activityIndicator)
-                    .asDriver(onErrorJustReturn: nil)
-            })
-            */
-            //.asDriver(onErrorJustReturn: nil)
-
     }
-
-    /*
-    func googleIDSignIn() -> Driver<User?> {
-
-        return tap
-            .map { _ in
-                GIDSignIn.sharedInstance().signIn()
-            }
-            .flatMapLatest { _ in
-                return GIDSignIn.sharedInstance().rx.didSignIn.asDriver(onErrorJustReturn: nil).debug("[GID]", trimOutput: false)
-            }
-            .flatMapLatest({ result -> Driver<User?> in
-
-                guard let res = result else { return Driver<User?>.empty() }
-                guard res.error == nil else { return Driver<User?>.empty() }
-
-                guard let authentication = res.user.authentication,
-                    let idToken = authentication.idToken,
-                    let accessToken = authentication.accessToken else {
-                        return Driver<User?>.empty()
-                }
-                let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
-                return Auth.auth().rx_signIn(credential: credential).share(replay: 1)
-                    .debug("[FIR]", trimOutput: false)
-                    .trackActivity(self.activityIndicator)
-                    .asDriver(onErrorJustReturn: nil)
-            })
-
-    }
-    */
 
     func googleIDDisconnected() -> Driver<GIDSignInResult?> {
         return GIDSignIn.sharedInstance().rx.didDisconnect
