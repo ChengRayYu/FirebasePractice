@@ -53,21 +53,25 @@ extension WelcomeController {
     func bindViewModel() {
         guard let vm = viewModel else { return }
 
-        vm.googleIDSignIn(tap: googleSignInBtn.rx.tap.asObservable())
-            .subscribe(onNext: { (user) in
+        vm.googleSignedIn
+            .drive(onNext: { (user) in
                 print("USER: \(user?.displayName ?? "NULL")")
             })
             .disposed(by: disposeBag)
 
-        vm.googleIDDisconnected()
-            .subscribe(onNext: { (result) in
-                print(#function)
-                print(result.error.debugDescription)
-            })
-            .disposed(by: disposeBag)
+//        vm.googleIDDisconnected()
+//            .drive(onNext: { (result) in
+//                print("\(result?.error.debugDescription ?? "ERROR")")
+//            })
+//            .disposed(by: disposeBag)
     }
 
     func bindViewAction() {
+        guard let vm = viewModel else { return }
+
+        googleSignInBtn.rx.tap
+            .bind(to: vm.googleSignInTap)
+            .disposed(by: disposeBag)
 
         emailSignInBtn.rx.tap.asObservable()
             .subscribe(onNext: { _ in

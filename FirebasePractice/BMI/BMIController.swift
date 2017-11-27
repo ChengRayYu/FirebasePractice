@@ -12,9 +12,12 @@ import FirebaseAuth
 class BMIController: UIViewController {
 
     var welcomeController: WelcomeController?
+    let gidAuthService = GIDAuthService.instance
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        print("\(gidAuthService)")
 
         Auth.auth().addStateDidChangeListener { (auth, user) in
             guard user != nil else {
@@ -30,7 +33,8 @@ class BMIController: UIViewController {
         switch identifier {
         case "segue_BMI_requestAuth":
             welcomeController = segue.destination as? WelcomeController
-            welcomeController?.viewModel = WelcomeViewModel()
+            welcomeController?.viewModel = WelcomeViewModel(dependency: (gidAuth: gidAuthService, fbAuth: nil))
+
         default:
             return
         }
