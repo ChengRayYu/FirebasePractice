@@ -8,6 +8,8 @@
 
 import UIKit
 import FirebaseAuth
+import RxSwift
+import RxCocoa
 
 class EmailAuthController: UIViewController {
 
@@ -17,17 +19,20 @@ class EmailAuthController: UIViewController {
     @IBOutlet weak var passwordTxtField: UITextField!
     @IBOutlet weak var passwordErrLabel: UILabel!
     @IBOutlet weak var actionBtn: UIButton!
+    @IBOutlet weak var cancelBtn: UIButton!
+    @IBOutlet weak var backgroundTapGesture: UITapGestureRecognizer!
 
-    var viewModel: AnyObject?
+    var viewModel: EmailAuthViewModel?
+    var disposeBag = DisposeBag()
 
-    enum Purpose { case signIn, signUp }
-    var purpose: Purpose? {
+    var purpose: EmailAuthViewModel.Purpose? {
         willSet {
             guard let value = newValue else { return }
-            switch value {
-            case .signIn:   viewModel = SignInViewModel()
-            case .signUp:   viewModel = SignUpViewModel()
-            }
+            viewModel = EmailAuthViewModel.create(purpose: value,
+                                                  input: (
+                                                    email: emailTxtField.rx.text.orEmpty.asObservable(),
+                                                    password: passwordTxtField .rx.text.orEmpty.asObservable(),
+                                                    actionTap: actionBtn.rx.tap.asObservable()))
         }
     }
 
@@ -37,114 +42,73 @@ class EmailAuthController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let emailAuthRes = self.viewModel as! EmailAuthRes
-        titleLabel.text = emailAuthRes.pageTitle
-        actionBtn.setTitle(emailAuthRes.functionTitle, for: .normal)
+        titleLabel.text = viewModel?.pageTitle
+        actionBtn.setTitle(viewModel?.functionTitle, for: .normal)
+        rx()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-}
 
-// MARK: -  Private Methods
+    func rx() {
+        cancelBtn.rx.tap
+            .subscribe(onNext: { [weak self] _ in
+                self?.dismiss(animated: true, completion: {
+                    self?.view.endEditing(true)
+                })
+            }).disposed(by: disposeBag)
 
-extension EmailAuthController {
+        backgroundTapGesture.rx.event
+            .subscribe(onNext: { (tap) in
+                self.view.endEditing(true)
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel?.emailValidation
+            .map { $0.description }
+            .bind(to: emailErrLabel.rx.text)
+            .disposed(by: disposeBag)
 
-    fileprivate func hideKeybooard() {
-        _ = emailTxtField.resignFirstResponder()
-        _ = passwordTxtField.resignFirstResponder()
+        viewModel?.passwordValidation
+            .map { $0.description }
+            .bind(to: passwordErrLabel.rx.text)
+            .disposed(by: disposeBag)
+
+        viewModel?.errorPublisher
+            .subscribe(onNext: { (errStr) in
+                self.showAlert(message: errStr)
+            })
+            .disposed(by: disposeBag)
+
+        viewModel?.actionProcessing
+            .bind(onNext: { (flag) in
+                if flag {
+                    self.emailErrLabel.text = ""
+                    self.passwordErrLabel.text = ""
+                }
+                self.emailTxtField.isEnabled = !flag
+                self.passwordTxtField.isEnabled = !flag
+                self.cancelBtn.isEnabled = !flag
+                self.actionBtn.isEnabled = !flag
+                print("ACTIVITY INDICATION IS - \((flag) ? "ON" : "OFF")")
+            })
+            .disposed(by: disposeBag)
+
+        viewModel?.actionCompleted
+            .subscribe(onNext: { (user) in
+                print("""
+                    Firebase Auth Succeed
+                    user: \(user?.displayName ?? "TBD")
+                    email: \(user?.email ?? "email")
+                    """)
+            })
+            .disposed(by: disposeBag)
     }
 
-    fileprivate func emailSignIn() {
-
-        guard let email = emailTxtField.text, let pw = passwordTxtField.text else {
-            emailErrLabel.text = (emailTxtField.text != nil) ? "" : "Please enter your email."
-            passwordErrLabel.text = (passwordTxtField.text != nil) ? "" : "Please enter your password."
-            return
-        }
-
-        self.emailErrLabel.text = ""
-        self.passwordErrLabel.text = ""
-
-        Auth.auth().signIn(withEmail: email, password: pw) { (user, err) in
-
-            if let error = err {
-                self.promptError(error)
-                return
-            }
-            print("""
-                Firebase Auth Succeed
-                user: \(user?.displayName ?? "TBD")
-                email: \(user?.email ?? "email")
-                """)
-        }
-
-    }
-
-    fileprivate func emailSignUp() {
-
-        guard let email = emailTxtField.text, let pw = passwordTxtField.text else {
-            emailErrLabel.text = (emailTxtField.text != nil) ? "" : "Please enter your email."
-            passwordErrLabel.text = (passwordTxtField.text != nil) ? "" : "Please enter your password."
-            return
-        }
-
-        self.emailErrLabel.text = ""
-        self.passwordErrLabel.text = ""
-
-        Auth.auth().createUser(withEmail: email, password: pw) { (user, err) in
-
-            if let error = err {
-                self.promptError(error)
-                return
-            }
-            print("""
-                Firebase Auth Succeed
-                user: \(user?.displayName ?? "TBD")
-                email: \(user?.email ?? "email")
-                """)
-        }
-    }
-
-    fileprivate func promptError(_ err: Error) {
-        print("\(err._code)")
-
-        if let errCode = AuthErrorCode(rawValue: err._code) {
-            switch errCode {
-
-            case .userDisabled, .emailAlreadyInUse, .invalidEmail, .userNotFound, .userDisabled:
-                self.emailErrLabel.text = err.localizedDescription
-
-            case .weakPassword, .wrongPassword:
-                self.passwordErrLabel.text = err.localizedDescription
-
-            default:
-                print("PROMPT ALERT : \(err.localizedDescription) ")
-            }
-        }
-    }
-}
-
-// MARK: -  IBAction Events
-
-extension EmailAuthController {
-
-    @IBAction func backgroundOnClick(_ sender: UITapGestureRecognizer) {
-        hideKeybooard()
-    }
-
-    @IBAction func cancelBtnOnClick(_ sender: Any) {
-        dismiss(animated: true) {
-            self.hideKeybooard()
-        }
-    }
-
-    @IBAction func actionBtnOnClick(_ sender: Any) {
-        guard let p = purpose else { return }
-        switch p {
-        case .signIn:   emailSignIn()
-        case .signUp:   emailSignUp()
-        }
+    func showAlert(message: String) {
+        let alertView = UIAlertController(title: "FirebasePractice", message: message, preferredStyle: .alert)
+        alertView.addAction(UIAlertAction(title: "OK", style: .cancel))
+        self.present(alertView, animated: true, completion: nil)
     }
 }

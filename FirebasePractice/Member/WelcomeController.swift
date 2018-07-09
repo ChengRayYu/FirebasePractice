@@ -9,13 +9,26 @@
 import UIKit
 import FirebaseAuth
 import GoogleSignIn
+import RxSwift
+import RxCocoa
 
 class WelcomeController: UIViewController {
 
+    @IBOutlet weak var googleSignInBtn: UIButton!
+    @IBOutlet weak var emailSignInBtn: UIButton!
+    @IBOutlet weak var emailSignUpBtn: UIButton!
+
     var emailAuthController: EmailAuthController?
+
+    var viewModel: WelcomeViewModel?
+    var disposeBag = DisposeBag()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        GIDSignIn.sharedInstance().uiDelegate = self
+
+        bindViewModel()
+        bindViewAction()
     }
 
     override func didReceiveMemoryWarning() {
@@ -33,80 +46,43 @@ class WelcomeController: UIViewController {
     }
 }
 
-// MARK: -  IBAction
-
+// MARK: - Private Methods
 extension WelcomeController {
 
-    @IBAction func googleSignInBtnOnClick(_ sender: Any?) {
-        GIDSignIn.sharedInstance().delegate = self
-        GIDSignIn.sharedInstance().uiDelegate = self
-        GIDSignIn.sharedInstance().signIn()
+    func bindViewModel() {
+        guard let vm = viewModel else { return }
+
+        vm.googleSignedIn
+            .drive(onNext: { (user) in
+                print("USER: \(user?.displayName ?? "NULL")")
+            })
+            .disposed(by: disposeBag)
     }
 
-    @IBAction func emailSignUpBtnOnClick(_ sender: Any) {
-        performSegue(withIdentifier: "segue_welcome_emailAuth", sender: nil)
-        guard let authCtrl = emailAuthController else { return }
-        authCtrl.purpose = .signUp
-    }
+    func bindViewAction() {
+        guard let vm = viewModel else { return }
 
-    @IBAction func emailSignInBtnOnClick(_ sender: Any) {
-        performSegue(withIdentifier: "segue_welcome_emailAuth", sender: nil)
-        guard let authCtrl = emailAuthController else { return }
-        authCtrl.purpose = .signIn
-    }
-}
+        googleSignInBtn.rx.tap
+            .bind(to: vm.googleSignInTap)
+            .disposed(by: disposeBag)
 
-// MARK: -  GIDSignInDelegate
+        emailSignInBtn.rx.tap.asObservable()
+            .subscribe(onNext: { _ in
+                 self.performSegue(withIdentifier: "segue_welcome_emailAuth", sender: nil)
+                 guard let authCtrl = self.emailAuthController else { return }
+                 authCtrl.purpose = .signIn
+            })
+            .disposed(by: disposeBag)
 
-extension WelcomeController: GIDSignInDelegate {
-
-    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
-
-        if let error = error {
-            print("GIDSingIn Failed")
-            print(error.localizedDescription)
-            return
-        }
-
-        guard let authentication = user.authentication else { return }
-
-        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
-                                                       accessToken: authentication.accessToken)
-        print(credential)
-        print("""
-            GIDSingIn Succeed
-            idToken: \(authentication.idToken)
-            accessToken: \(authentication.accessToken)
-            """)
-
-        Auth.auth().signIn(with: credential) { (user, error) in
-
-            if let error = error {
-                print("Firebase Auth Failed")
-                print(error.localizedDescription)
-                return
-            }
-            print("""
-                Firebase Auth Succeed
-                user: \(user?.displayName ?? "name")
-                email: \(user?.email ?? "email")
-                """)
-        }
-    }
-
-    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
-
-        print(#function)
-        print(error)
-
-        guard let authentication = user.authentication else { return }
-        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
-                                                       accessToken: authentication.accessToken)
-        print(credential)
+        emailSignUpBtn.rx.tap.asObservable()
+            .subscribe(onNext: { _ in
+                self.performSegue(withIdentifier: "segue_welcome_emailAuth", sender: nil)
+                guard let authCtrl = self.emailAuthController else { return }
+                authCtrl.purpose = .signUp
+            })
+            .disposed(by: disposeBag)
     }
 }
-
-// MARK: -  GIDSignInUIDelegate
 
 extension WelcomeController: GIDSignInUIDelegate {
 
@@ -114,6 +90,7 @@ extension WelcomeController: GIDSignInUIDelegate {
         present(viewController, animated: true, completion: nil)
     }
     func sign(_ signIn: GIDSignIn!, dismiss viewController: UIViewController!) {
-        dismiss(animated: false, completion: nil)
+        dismiss(animated:  true, completion: nil)
     }
 }
+
