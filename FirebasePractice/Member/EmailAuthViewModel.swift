@@ -15,25 +15,6 @@ protocol EmailAuthRes {
     var functionTitle: String { get }
 }
 
-enum ValidationResult {
-    case valid
-    case empty
-    case failed(message: String)
-}
-
-extension ValidationResult: CustomStringConvertible {
-    var description: String {
-        switch self {
-        case .valid:
-            return ""
-        case .empty:
-            return "Please enter something"
-        case let .failed(message):
-            return message
-        }
-    }
-}
-
 class EmailAuthViewModel: EmailAuthRes {
 
     enum Purpose { case signIn, signUp }
@@ -55,7 +36,7 @@ class EmailAuthViewModel: EmailAuthRes {
                        input: (
                             email: Observable<String>,
                             password: Observable<String>,
-                            actionTap: Observable<Void>)) -> EmailAuthViewModel{
+                            actionTap: Observable<Void>)) -> EmailAuthViewModel {
 
         switch purpose {
         case .signIn:   return SignInViewModel(input: input)
@@ -95,41 +76,6 @@ class EmailAuthViewModel: EmailAuthRes {
         passwordValidation = actionProcessing.withLatestFrom(pwAndErr, resultSelector: { (flag, content) -> ValidationResult in
             return ValidationService.validatePassword(content.passwd, authError: content.err)
         })
-    }
-}
-
-class ValidationService {
-
-    static func validateEmail(_ email: String, authError err: Error) -> ValidationResult {
-        if email.isEmpty {
-            return .empty
-        }
-
-        if let errCode = AuthErrorCode(rawValue: err._code) {
-            switch errCode {
-            case .userDisabled, .emailAlreadyInUse, .invalidEmail, .userNotFound:
-                return .failed(message: err.localizedDescription)
-            default:
-                break
-            }
-        }
-        return .valid
-    }
-
-    static func validatePassword(_ password: String, authError err: Error) -> ValidationResult {
-        if password.isEmpty {
-            return .empty
-        }
-
-        if let errCode = AuthErrorCode(rawValue: err._code) {
-            switch errCode {
-            case .weakPassword, .wrongPassword:
-                return .failed(message: err.localizedDescription)
-            default:
-                break
-            }
-        }
-        return .valid
     }
 }
 

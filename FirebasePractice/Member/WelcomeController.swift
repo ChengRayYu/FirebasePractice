@@ -15,7 +15,6 @@ import RxCocoa
 class WelcomeController: UIViewController {
 
     @IBOutlet weak var googleSignInBtn: UIButton!
-    @IBOutlet weak var fbSignInBtn: UIButton!
     @IBOutlet weak var emailSignInBtn: UIButton!
     @IBOutlet weak var emailSignUpBtn: UIButton!
 
@@ -58,12 +57,6 @@ extension WelcomeController {
                 print("USER: \(user?.displayName ?? "NULL")")
             })
             .disposed(by: disposeBag)
-
-//        vm.googleIDDisconnected()
-//            .drive(onNext: { (result) in
-//                print("\(result?.error.debugDescription ?? "ERROR")")
-//            })
-//            .disposed(by: disposeBag)
     }
 
     func bindViewAction() {

@@ -17,13 +17,9 @@ class WelcomeViewModel {
     let signInProcessing: Driver<Bool>
     let googleSignedIn: Driver<User?>
     let googleSignInTap: PublishSubject<Void> = .init()
-
     private let activityIndicator: ActivityIndicator = .init()
-    private let disposeBag: DisposeBag = .init()
 
-    init(dependency: (
-        gidAuth: GIDAuthService,
-        fbAuth: AnyObject?)) {
+    init(gidAuth: GIDAuthService) {
 
         signInProcessing = activityIndicator.asDriver()
 
@@ -33,7 +29,7 @@ class WelcomeViewModel {
                 GIDSignIn.sharedInstance().signIn()
             }
             .flatMapLatest { _ in
-                return dependency.gidAuth.signed
+                return gidAuth.signed
             }
             .map({ (result) -> AuthCredential? in
                 guard let res = result else { return nil }
