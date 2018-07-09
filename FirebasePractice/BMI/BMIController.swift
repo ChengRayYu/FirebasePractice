@@ -41,13 +41,16 @@ class BMIController: UIViewController {
                 }
             }).disposed(by: disposeBag)
 
-        Auth.auth().rx_authStateChangeDidChange().subscribe(onNext: { (auth, user) in
-            guard user != nil else {
-                self.performSegue(withIdentifier: "segue_BMI_requestAuth", sender: nil)
-                return
-            }
-            self.dismiss(animated: true, completion: nil)
-        }).disposed(by: disposeBag)
+        Auth.auth().rx
+            .authStateChangeDidChange()
+            .subscribe(onNext: { (result) in
+                guard result.1 != nil else {
+                    self.performSegue(withIdentifier: "segue_BMI_requestAuth", sender: nil)
+                    return
+                }
+                self.dismiss(animated: true, completion: nil)
+            })
+            .disposed(by: disposeBag)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

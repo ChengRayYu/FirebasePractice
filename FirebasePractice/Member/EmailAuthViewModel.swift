@@ -94,7 +94,8 @@ class SignUpViewModel: EmailAuthViewModel {
         let emailAndPw = Observable.combineLatest(input.email, input.password) { (email: $0, password: $1) }
         actionCompleted = input.actionTap.withLatestFrom(emailAndPw)
             .flatMap { (pair) in
-                return Auth.auth().rx_createUser(email: pair.email, password: pair.password)
+                return Auth.auth().rx
+                    .createUser(email: pair.email, password: pair.password)
                     .catchError({ (err) -> Observable<(User?)> in
                         self.errorResponse.onNext(err)
                         return Observable.just(nil)
@@ -121,7 +122,8 @@ class SignInViewModel: EmailAuthViewModel {
         let emailAndPw = Observable.combineLatest(input.email, input.password) { (email: $0, password: $1) }
         actionCompleted = input.actionTap.withLatestFrom(emailAndPw)
             .flatMap { (pair) in
-                return Auth.auth().rx_signIn(email: pair.email, password: pair.password)
+                return Auth.auth().rx
+                    .signIn(email: pair.email, password: pair.password)
                     .catchError({ (err) -> Observable<User?> in
                         self.errorResponse.onNext(err)
                         return Observable.just(nil)

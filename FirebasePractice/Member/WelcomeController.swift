@@ -66,7 +66,8 @@ extension WelcomeController {
             .bind(to: vm.googleSignInTap)
             .disposed(by: disposeBag)
 
-        emailSignInBtn.rx.tap.asObservable()
+        emailSignInBtn.rx.tap
+            .asObservable()
             .subscribe(onNext: { _ in
                  self.performSegue(withIdentifier: "segue_welcome_emailAuth", sender: nil)
                  guard let authCtrl = self.emailAuthController else { return }
@@ -74,7 +75,8 @@ extension WelcomeController {
             })
             .disposed(by: disposeBag)
 
-        emailSignUpBtn.rx.tap.asObservable()
+        emailSignUpBtn.rx.tap
+            .asObservable()
             .subscribe(onNext: { _ in
                 self.performSegue(withIdentifier: "segue_welcome_emailAuth", sender: nil)
                 guard let authCtrl = self.emailAuthController else { return }
