@@ -44,7 +44,8 @@ class WelcomeViewModel {
             })
             .flatMapLatest({ (credential) -> Driver<User?> in
                 guard let cred = credential else { return Driver.empty()}
-                return Auth.auth().rx_signIn(credential: cred)
+                return Auth.auth().rx
+                    .signIn(credential: cred)
                     .debug("[FIR]", trimOutput: false)
                     .asDriver(onErrorJustReturn: nil)
             })

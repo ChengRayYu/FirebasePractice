@@ -7,33 +7,33 @@
 //
 
 import Foundation
-import FirebaseAuth
 import RxSwift
+import FirebaseAuth
 
-extension Auth {
+extension Reactive where Base: Auth {
 
-    func rx_authStateChangeDidChange() -> Observable<(Auth, User?)> {
+    func authStateChangeDidChange() -> Observable<(Auth, User?)> {
 
         return Observable.create({ (observer: AnyObserver<(Auth, User?)>) -> Disposable in
 
-            let listener = self.addStateDidChangeListener({ (auth, user) in
+            let listener = self.base.addStateDidChangeListener({ (auth, user) in
                 observer.onNext((auth, user))
             })
             return Disposables.create(with: {
-                self.removeStateDidChangeListener(listener)
+                self.base.removeStateDidChangeListener(listener)
             })
         })
     }
 
-    func rx_createUser(email: String, password: String) -> Observable<User?> {
+    func createUser(email: String, password: String) -> Observable<User?> {
 
         return Observable.create({ (observer: AnyObserver<(User?)>) -> Disposable in
 
-            self.createUser(withEmail: email, password: password, completion: { (user, error) in
+            self.base.createUser(withEmail: email, password: password, completion: { (authResult, error) in
                 if let err = error {
                     observer.onError(err)
-                } else {
-                    observer.onNext(user)
+                } else  {
+                    observer.onNext(authResult?.user)
                     observer.onCompleted()
                 }
             })
@@ -41,14 +41,14 @@ extension Auth {
         })
     }
 
-    func rx_signIn(email: String, password: String) -> Observable<User?> {
+    func signIn(email: String, password: String) -> Observable<User?> {
 
         return Observable.create({ (observer: AnyObserver<(User?)>) -> Disposable in
-            self.signIn(withEmail: email, password: password, completion: { (user, error) in
+            self.base.signIn(withEmail: email, password: password, completion: { (authResult, error) in
                 if let err = error {
                     observer.onError(err)
-                } else {
-                    observer.onNext(user)
+                } else  {
+                    observer.onNext(authResult?.user)
                     observer.onCompleted()
                 }
             })
@@ -56,14 +56,14 @@ extension Auth {
         })
     }
 
-    func rx_signIn(credential: AuthCredential) -> Observable<User?> {
+    func signIn(credential: AuthCredential) -> Observable<User?> {
 
         return Observable.create({ (observer: AnyObserver<(User?)>) -> Disposable in
-            self.signIn(with: credential, completion: { (user, error) in
+            self.base.signInAndRetrieveData(with: credential, completion: { (authResult, error) in
                 if let err = error {
                     observer.onError(err)
-                } else {
-                    observer.onNext(user)
+                } else  {
+                    observer.onNext(authResult?.user)
                     observer.onCompleted()
                 }
             })
@@ -71,10 +71,10 @@ extension Auth {
         })
     }
 
-    func rx_signInForData(credential: AuthCredential) -> Observable<AuthDataResult?> {
+    func signInForData(credential: AuthCredential) -> Observable<AuthDataResult?> {
 
         return Observable.create({ (observer: AnyObserver<AuthDataResult?>) -> Disposable in
-            self.signInAndRetrieveData(with: credential) { (data, error) in
+            self.base.signInAndRetrieveData(with: credential) { (data, error) in
                 if let err = error {
                     observer.onError(err)
                 } else {
@@ -86,10 +86,11 @@ extension Auth {
         })
     }
 
-    func rx_signOut() -> Observable<Void> {
+    func signOut() -> Observable<Void> {
+
         return Observable.create({ (observer: AnyObserver<Void>) -> Disposable in
             do {
-                try self.signOut()
+                try self.base.signOut()
                 observer.onCompleted()
             } catch {
                 observer.onError(error)
