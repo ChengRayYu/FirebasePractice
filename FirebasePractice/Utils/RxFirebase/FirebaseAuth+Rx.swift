@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import FirebaseAuth
 import RxSwift
+import FirebaseAuth
 
 extension Reactive where Base: Auth {
 
@@ -87,6 +87,7 @@ extension Reactive where Base: Auth {
     }
 
     func signOut() -> Observable<Void> {
+
         return Observable.create({ (observer: AnyObserver<Void>) -> Disposable in
             do {
                 try self.base.signOut()
