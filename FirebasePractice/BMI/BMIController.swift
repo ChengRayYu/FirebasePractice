@@ -13,16 +13,14 @@ import FirebaseAuth
 
 class BMIController: UIViewController {
 
-    @IBOutlet weak var signOutBarBtn: UIBarButtonItem!
     @IBOutlet weak var bmiCollections: UICollectionView!
 
-    var welcomeController: WelcomeController?
-    let gidAuthService = GIDAuthService.instance
-    let disposeBag = DisposeBag()
+    fileprivate var welcomeController: WelcomeController?
+    fileprivate let disposeBag = DisposeBag()
 
     fileprivate var items: [String] {
         var collection: [String] = .init()
-        for i in 1...80 {
+        for i in 1...20 {
             collection.append("BMI-\(i)")
         }
         return collection
@@ -30,27 +28,7 @@ class BMIController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-
-        signOutBarBtn.rx.tap.asObservable()
-            .subscribe(onNext: { _ in
-                do {
-                    try Auth.auth().signOut()
-                }catch {
-                    print(error)
-                }
-            }).disposed(by: disposeBag)
-
-        Auth.auth().rx
-            .authStateChangeDidChange()
-            .subscribe(onNext: { (result) in
-                guard result.1 != nil else {
-                    self.performSegue(withIdentifier: "segue_BMI_requestAuth", sender: nil)
-                    return
-                }
-                self.dismiss(animated: true, completion: nil)
-            })
-            .disposed(by: disposeBag)
+        rx()
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -59,8 +37,6 @@ class BMIController: UIViewController {
         switch identifier {
         case "segue_BMI_requestAuth":
             welcomeController = segue.destination as? WelcomeController
-            welcomeController?.viewModel = WelcomeViewModel(gidAuth: gidAuthService)
-
         default:
             return
         }
@@ -71,6 +47,29 @@ class BMIController: UIViewController {
     }
 }
 
+extension BMIController {
+
+    fileprivate func rx() {
+        bmiCollections.rx.setDelegate(self).disposed(by: disposeBag)
+        bmiCollections.rx.setDataSource(self).disposed(by: disposeBag)
+
+        Auth.auth().rx
+            .authStateChangeDidChange()
+            .subscribe(onNext: { (result) in
+                guard result.1 != nil else {
+                    self.dismiss(animated: true, completion: nil)
+                    self.performSegue(withIdentifier: "segue_BMI_requestAuth", sender: nil)
+                    return
+                }
+                self.dismiss(animated: true, completion: nil)
+
+                // RELOAD BMI !!!
+
+            })
+            .disposed(by: disposeBag)
+    }
+}
+
 extension BMIController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -78,13 +77,9 @@ extension BMIController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let reuseIdentifier = "BMICell"
-
-        let cell: BMICell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! BMICell
-        cell.backgroundColor = UIColor.gray
+        let cell: BMICell = collectionView.dequeueReusableCell(withReuseIdentifier: "BMICell", for: indexPath) as! BMICell
         return cell
     }
-
 
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
 
@@ -95,9 +90,15 @@ extension BMIController: UICollectionViewDataSource {
         case UICollectionElementKindSectionHeader:
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "BMIHeader", for: indexPath) as! BMIHeader
             return headerView
-
         default:
             assert(false, "Unexpected element kind")
         }
+    }
+}
+
+extension BMIController: UICollectionViewDelegateFlowLayout {
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collectionView.frame.size.width - 24.0, height: 88.0)
     }
 }

@@ -7,9 +7,9 @@
 //
 
 import UIKit
-import FirebaseAuth
 import RxSwift
 import RxCocoa
+import FirebaseAuth
 
 class EmailAuthController: UIViewController {
 
@@ -22,8 +22,8 @@ class EmailAuthController: UIViewController {
     @IBOutlet weak var cancelBtn: UIButton!
     @IBOutlet weak var backgroundTapGesture: UITapGestureRecognizer!
 
-    var viewModel: EmailAuthViewModel?
-    var disposeBag = DisposeBag()
+    fileprivate var viewModel: EmailAuthViewModel?
+    fileprivate let disposeBag = DisposeBag()
 
     var purpose: EmailAuthViewModel.Purpose? {
         willSet {

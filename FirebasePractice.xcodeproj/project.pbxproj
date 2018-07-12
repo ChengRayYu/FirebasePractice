@@ -21,12 +21,15 @@
 		7185E4B91FB61E5600A83692 /* EmailAuthController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7185E4B81FB61E5600A83692 /* EmailAuthController.swift */; };
 		7185E4BB1FB6217E00A83692 /* EmailAuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7185E4BA1FB6217E00A83692 /* EmailAuthViewModel.swift */; };
 		719F09B920F51AB300861108 /* FirebaseDatabase+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 719F09B820F51AB300861108 /* FirebaseDatabase+Rx.swift */; };
+		719F09BF20F569BF00861108 /* Auth.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 719F09BD20F569BF00861108 /* Auth.storyboard */; };
+		719F09C220F599F600861108 /* Account.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 719F09C020F599F600861108 /* Account.storyboard */; };
+		719F09C520F59AAF00861108 /* AccountController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 719F09C420F59AAF00861108 /* AccountController.swift */; };
 		71C3A2401FCF1FC400A8D276 /* BMIHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C3A23F1FCF1FC400A8D276 /* BMIHeader.swift */; };
 		71D8FABE1FC8B3C70027C24C /* GIDAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D8FABD1FC8B3C70027C24C /* GIDAuthService.swift */; };
 		71E6F7741FB2245E0030AA0C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E6F7731FB2245E0030AA0C /* AppDelegate.swift */; };
 		71E6F7761FB2245E0030AA0C /* WelcomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E6F7751FB2245E0030AA0C /* WelcomeController.swift */; };
-		71E6F7791FB2245E0030AA0C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71E6F7771FB2245E0030AA0C /* Main.storyboard */; };
-		71E6F77B1FB2245E0030AA0C /* Drawable.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 71E6F77A1FB2245E0030AA0C /* Drawable.xcassets */; };
+		71E6F7791FB2245E0030AA0C /* BMI.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71E6F7771FB2245E0030AA0C /* BMI.storyboard */; };
+		71E6F77B1FB2245E0030AA0C /* Image.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 71E6F77A1FB2245E0030AA0C /* Image.xcassets */; };
 		71E6F77E1FB2245E0030AA0C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71E6F77C1FB2245E0030AA0C /* LaunchScreen.storyboard */; };
 		71E6F7861FB2A2930030AA0C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 71E6F7851FB2A2930030AA0C /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
@@ -45,13 +48,16 @@
 		7185E4B81FB61E5600A83692 /* EmailAuthController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailAuthController.swift; sourceTree = "<group>"; };
 		7185E4BA1FB6217E00A83692 /* EmailAuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthViewModel.swift; sourceTree = "<group>"; };
 		719F09B820F51AB300861108 /* FirebaseDatabase+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "FirebaseDatabase+Rx.swift"; path = "/Users/ray/Google Drive/Development/iOS:MacOS/Swift/FirebasePractice/FirebasePractice/Utils/RxFirebase/FirebaseDatabase+Rx.swift"; sourceTree = "<absolute>"; };
+		719F09BE20F569BF00861108 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Auth.storyboard; sourceTree = "<group>"; };
+		719F09C120F599F600861108 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Account.storyboard; sourceTree = "<group>"; };
+		719F09C420F59AAF00861108 /* AccountController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountController.swift; sourceTree = "<group>"; };
 		71C3A23F1FCF1FC400A8D276 /* BMIHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BMIHeader.swift; sourceTree = "<group>"; };
 		71D8FABD1FC8B3C70027C24C /* GIDAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIDAuthService.swift; sourceTree = "<group>"; };
 		71E6F7701FB2245E0030AA0C /* FirebasePractice.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FirebasePractice.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		71E6F7731FB2245E0030AA0C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		71E6F7751FB2245E0030AA0C /* WelcomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeController.swift; sourceTree = "<group>"; };
-		71E6F7781FB2245E0030AA0C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		71E6F77A1FB2245E0030AA0C /* Drawable.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Drawable.xcassets; sourceTree = "<group>"; };
+		71E6F7781FB2245E0030AA0C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/BMI.storyboard; sourceTree = "<group>"; };
+		71E6F77A1FB2245E0030AA0C /* Image.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Image.xcassets; sourceTree = "<group>"; };
 		71E6F77D1FB2245E0030AA0C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		71E6F77F1FB2245E0030AA0C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		71E6F7851FB2A2930030AA0C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -94,7 +100,7 @@
 			path = BMI;
 			sourceTree = "<group>";
 		};
-		717AD6DE1FB4D7240060DAB6 /* Member */ = {
+		717AD6DE1FB4D7240060DAB6 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
 				71E6F7751FB2245E0030AA0C /* WelcomeController.swift */,
@@ -102,7 +108,7 @@
 				7185E4B81FB61E5600A83692 /* EmailAuthController.swift */,
 				7185E4BA1FB6217E00A83692 /* EmailAuthViewModel.swift */,
 			);
-			path = Member;
+			path = Auth;
 			sourceTree = "<group>";
 		};
 		719F09B720F51A5800861108 /* RxFirebase */ = {
@@ -112,6 +118,14 @@
 				719F09B820F51AB300861108 /* FirebaseDatabase+Rx.swift */,
 			);
 			path = RxFirebase;
+			sourceTree = "<group>";
+		};
+		719F09C320F59A8300861108 /* Account */ = {
+			isa = PBXGroup;
+			children = (
+				719F09C420F59AAF00861108 /* AccountController.swift */,
+			);
+			path = Account;
 			sourceTree = "<group>";
 		};
 		71D8FABC1FC8B2AC0027C24C /* Service */ = {
@@ -146,11 +160,14 @@
 			children = (
 				71E6F7731FB2245E0030AA0C /* AppDelegate.swift */,
 				716217141FB5016300CF9C3F /* BMI */,
-				717AD6DE1FB4D7240060DAB6 /* Member */,
+				717AD6DE1FB4D7240060DAB6 /* Auth */,
+				719F09C320F59A8300861108 /* Account */,
 				714AEEDA1FB75B340071FBF9 /* Utils */,
 				71D8FABC1FC8B2AC0027C24C /* Service */,
-				71E6F7771FB2245E0030AA0C /* Main.storyboard */,
-				71E6F77A1FB2245E0030AA0C /* Drawable.xcassets */,
+				71E6F7771FB2245E0030AA0C /* BMI.storyboard */,
+				719F09BD20F569BF00861108 /* Auth.storyboard */,
+				719F09C020F599F600861108 /* Account.storyboard */,
+				71E6F77A1FB2245E0030AA0C /* Image.xcassets */,
 				712EEB971FB3A9BA00CF71B5 /* Color.xcassets */,
 				71E6F77C1FB2245E0030AA0C /* LaunchScreen.storyboard */,
 				71E6F77F1FB2245E0030AA0C /* Info.plist */,
@@ -238,11 +255,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				719F09BF20F569BF00861108 /* Auth.storyboard in Resources */,
 				71E6F77E1FB2245E0030AA0C /* LaunchScreen.storyboard in Resources */,
 				71E6F7861FB2A2930030AA0C /* GoogleService-Info.plist in Resources */,
-				71E6F77B1FB2245E0030AA0C /* Drawable.xcassets in Resources */,
+				71E6F77B1FB2245E0030AA0C /* Image.xcassets in Resources */,
 				712EEB981FB3A9BA00CF71B5 /* Color.xcassets in Resources */,
-				71E6F7791FB2245E0030AA0C /* Main.storyboard in Resources */,
+				71E6F7791FB2245E0030AA0C /* BMI.storyboard in Resources */,
+				719F09C220F599F600861108 /* Account.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,6 +351,7 @@
 				716217161FB501A300CF9C3F /* BMIController.swift in Sources */,
 				7130B8B6207065F20054125F /* UIView+Extension.swift in Sources */,
 				715847131FCC5E8D009162C3 /* BMIViewModel.swift in Sources */,
+				719F09C520F59AAF00861108 /* AccountController.swift in Sources */,
 				71D8FABE1FC8B3C70027C24C /* GIDAuthService.swift in Sources */,
 				7152A1D81FCDBCBA006A6C61 /* BMICell.swift in Sources */,
 				71C3A2401FCF1FC400A8D276 /* BMIHeader.swift in Sources */,
@@ -350,12 +370,28 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		71E6F7771FB2245E0030AA0C /* Main.storyboard */ = {
+		719F09BD20F569BF00861108 /* Auth.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				719F09BE20F569BF00861108 /* Base */,
+			);
+			name = Auth.storyboard;
+			sourceTree = "<group>";
+		};
+		719F09C020F599F600861108 /* Account.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				719F09C120F599F600861108 /* Base */,
+			);
+			name = Account.storyboard;
+			sourceTree = "<group>";
+		};
+		71E6F7771FB2245E0030AA0C /* BMI.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				71E6F7781FB2245E0030AA0C /* Base */,
 			);
-			name = Main.storyboard;
+			name = BMI.storyboard;
 			sourceTree = "<group>";
 		};
 		71E6F77C1FB2245E0030AA0C /* LaunchScreen.storyboard */ = {

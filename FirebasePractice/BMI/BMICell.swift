@@ -9,7 +9,8 @@
 import UIKit
 
 class BMICell: UICollectionViewCell {
-
+    @IBOutlet weak var dateLbl: UILabel!
+    @IBOutlet weak var heightLbl: UILabel!
+    @IBOutlet weak var weightLbl: UILabel!
     @IBOutlet weak var resultLbl: UILabel!
-
 }
