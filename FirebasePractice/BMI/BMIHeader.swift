@@ -9,9 +9,5 @@
 import UIKit
 
 class BMIHeader: UICollectionReusableView {
-
-    @IBOutlet weak var userNameLbl: UILabel!
-    @IBOutlet weak var emailLbl: UILabel!
-    @IBOutlet weak var addBtn: UIButton!
-
+    @IBOutlet weak var createBtn: UIButton!
 }

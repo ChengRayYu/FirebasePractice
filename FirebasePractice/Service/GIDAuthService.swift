@@ -6,7 +6,7 @@
 //  Copyright © 2017 ycray.net. All rights reserved.
 //
 
-import UIKit
+import Foundation
 import RxSwift
 import RxCocoa
 import GoogleSignIn

@@ -9,7 +9,6 @@
 import UIKit
 import RxSwift
 import RxCocoa
-import FirebaseAuth
 
 class BMIController: UIViewController {
 
@@ -28,7 +27,7 @@ class BMIController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        rx()
+        setup(withModel: BMIViewModel())
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -49,22 +48,27 @@ class BMIController: UIViewController {
 
 extension BMIController {
 
-    fileprivate func rx() {
+    fileprivate func setup(withModel viewModel: BMIViewModel) {
+
         bmiCollections.rx.setDelegate(self).disposed(by: disposeBag)
         bmiCollections.rx.setDataSource(self).disposed(by: disposeBag)
 
-        Auth.auth().rx
-            .authStateChangeDidChange()
-            .subscribe(onNext: { (result) in
-                guard result.1 != nil else {
-                    self.dismiss(animated: true, completion: nil)
-                    self.performSegue(withIdentifier: "segue_BMI_requestAuth", sender: nil)
-                    return
-                }
+        viewModel.loggedInDrv
+            .asObservable()
+            .subscribe(onNext: { (flag) in
                 self.dismiss(animated: true, completion: nil)
+                if flag != true {
+                    self.performSegue(withIdentifier: "segue_BMI_requestAuth", sender: nil)
+                }
+            })
+            .disposed(by: disposeBag)
 
-                // RELOAD BMI !!!
 
+        viewModel.recordsDrv
+            .asObservable()
+            .subscribe(onNext: { (records) in
+                print("RELOAD DATA - VIA BINDING TO COLLECTIONVIEW")
+                print(records)
             })
             .disposed(by: disposeBag)
     }
@@ -90,6 +94,7 @@ extension BMIController: UICollectionViewDataSource {
         case UICollectionElementKindSectionHeader:
             let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "BMIHeader", for: indexPath) as! BMIHeader
             return headerView
+
         default:
             assert(false, "Unexpected element kind")
         }

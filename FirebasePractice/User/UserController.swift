@@ -1,5 +1,5 @@
 //
-//  AccountController.swift
+//  UserController.swift
 //  FirebasePractice
 //
 //  Created by Ray on 2018/7/10.
@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 import FirebaseAuth
 
-class AccountController: UIViewController {
+class UserController: UIViewController {
 
     @IBOutlet weak var signOutBtn: UIButton!
 

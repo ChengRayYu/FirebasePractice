@@ -6,7 +6,7 @@
 //  Copyright © 2018 ycray.net. All rights reserved.
 //
 
-import UIKit
+import Foundation
 import FirebaseAuth
 
 enum ValidationResult {
