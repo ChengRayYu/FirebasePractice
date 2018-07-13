@@ -11,10 +11,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Account-->
+        <!--User-->
         <scene sceneID="6Xm-Kn-5Mo">
             <objects>
-                <viewControllerPlaceholder storyboardName="Account" id="9nt-zj-kyr" sceneMemberID="viewController"/>
+                <viewControllerPlaceholder storyboardName="User" id="9nt-zj-kyr" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a1d-Zy-6hZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1231" y="736"/>
@@ -211,7 +211,7 @@
                                         <constraint firstItem="ofI-QX-vTa" firstAttribute="leading" secondItem="IPD-9h-oPj" secondAttribute="leading" constant="12" id="lC2-u9-QO3"/>
                                     </constraints>
                                     <connections>
-                                        <outlet property="addBtn" destination="EQ8-v8-dQc" id="nqR-WS-U1x"/>
+                                        <outlet property="createBtn" destination="EQ8-v8-dQc" id="znu-Dh-a3o"/>
                                     </connections>
                                 </collectionReusableView>
                             </collectionView>
@@ -259,9 +259,6 @@
         <image name="ic_user" width="20" height="20"/>
         <namedColor name="Grey200">
             <color red="0.93300002813339233" green="0.93300002813339233" blue="0.93300002813339233" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Grey200">
-            <color red="0.93300002810000005" green="0.93300002810000005" blue="0.93300002810000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Grey300">
             <color red="0.87800002099999996" green="0.87800002099999996" blue="0.87800002099999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
