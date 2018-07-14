@@ -32,10 +32,9 @@ class BMIRecordService {
             .rx
             .observeEvent(.value)
             .map({ (snapshot) -> [Record] in
-
-                print(snapshot)
-
-                return []
+                return (1...4).map({ (index) -> Record in
+                    return Record(Date().timeIntervalSinceNow, Double(arc4random_uniform(200) + 1), Double(arc4random_uniform(150) + 1))
+                })
             })
             .asDriver(onErrorJustReturn: [])
     }

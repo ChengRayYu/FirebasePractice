@@ -9,6 +9,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import RxDataSources
 
 class BMIController: UIViewController {
 
@@ -16,14 +17,6 @@ class BMIController: UIViewController {
 
     fileprivate var welcomeController: WelcomeController?
     fileprivate let disposeBag = DisposeBag()
-
-    fileprivate var items: [String] {
-        var collection: [String] = .init()
-        for i in 1...20 {
-            collection.append("BMI-\(i)")
-        }
-        return collection
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,7 +44,6 @@ extension BMIController {
     fileprivate func setup(withModel viewModel: BMIViewModel) {
 
         bmiCollections.rx.setDelegate(self).disposed(by: disposeBag)
-        bmiCollections.rx.setDataSource(self).disposed(by: disposeBag)
 
         viewModel.loggedInDrv
             .asObservable()
@@ -64,40 +56,33 @@ extension BMIController {
             .disposed(by: disposeBag)
 
 
+        let bmiCollectionDataSrc = RxCollectionViewSectionedReloadDataSource<SectionModel<String, BMIRecordService.Record>>(
+            configureCell: { (data, cv, indexPath, item) -> UICollectionViewCell in
+                let cell = cv.dequeueReusableCell(withReuseIdentifier: "BMICell", for: indexPath) as! BMICell
+                cell.heightLbl.text = String(item.height)
+                cell.weightLbl.text = String(item.weight)
+                return cell
+            },
+            configureSupplementaryView: { (dataSrc, cv, kind, indexPath) -> UICollectionReusableView in
+                let collectionViewLayout = cv.collectionViewLayout as? UICollectionViewFlowLayout
+                collectionViewLayout?.sectionHeadersPinToVisibleBounds = true
+
+                switch kind {
+                case UICollectionElementKindSectionHeader:
+                    let headerView = cv.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "BMIHeader", for: indexPath) as! BMIHeader
+                    return headerView
+                default:
+                    assert(false, "Unexpected element kind")
+                }
+            })
+
         viewModel.recordsDrv
             .asObservable()
-            .subscribe(onNext: { (records) in
-                print("RELOAD DATA - VIA BINDING TO COLLECTIONVIEW")
-                print(records)
+            .map({ (records) -> [SectionModel<String, BMIRecordService.Record>] in
+                return [SectionModel(model: "", items: records)]
             })
+            .bind(to: bmiCollections.rx.items(dataSource: bmiCollectionDataSrc))
             .disposed(by: disposeBag)
-    }
-}
-
-extension BMIController: UICollectionViewDataSource {
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return items.count
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell: BMICell = collectionView.dequeueReusableCell(withReuseIdentifier: "BMICell", for: indexPath) as! BMICell
-        return cell
-    }
-
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-
-        let collectionViewLayout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout
-        collectionViewLayout?.sectionHeadersPinToVisibleBounds = true
-
-        switch kind {
-        case UICollectionElementKindSectionHeader:
-            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "BMIHeader", for: indexPath) as! BMIHeader
-            return headerView
-
-        default:
-            assert(false, "Unexpected element kind")
-        }
     }
 }
 
