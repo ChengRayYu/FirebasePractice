@@ -10,6 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import RxDataSources
+import FirebaseDatabase
 
 class BMIController: UIViewController {
 
@@ -20,7 +21,7 @@ class BMIController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup(withModel: BMIViewModel())
+        setup(withViewModel: BMIViewModel())
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -41,7 +42,7 @@ class BMIController: UIViewController {
 
 extension BMIController {
 
-    fileprivate func setup(withModel viewModel: BMIViewModel) {
+    fileprivate func setup(withViewModel viewModel: BMIViewModel) {
 
         bmiCollections.rx.setDelegate(self).disposed(by: disposeBag)
 
@@ -55,12 +56,13 @@ extension BMIController {
             })
             .disposed(by: disposeBag)
 
-
         let bmiCollectionDataSrc = RxCollectionViewSectionedReloadDataSource<SectionModel<String, BMIRecordService.Record>>(
             configureCell: { (data, cv, indexPath, item) -> UICollectionViewCell in
                 let cell = cv.dequeueReusableCell(withReuseIdentifier: "BMICell", for: indexPath) as! BMICell
-                cell.heightLbl.text = String(item.height)
-                cell.weightLbl.text = String(item.weight)
+                cell.resultLbl.text = String(format: "%2.2f", item.weight / pow(item.height / 100, 2.0))
+                cell.heightLbl.text = String(format: "%.2f m", item.height / 100)
+                cell.weightLbl.text = String(format: "%.0f kg", item.weight)
+                cell.dateLbl.text = item.timestamp
                 return cell
             },
             configureSupplementaryView: { (dataSrc, cv, kind, indexPath) -> UICollectionReusableView in
@@ -69,10 +71,16 @@ extension BMIController {
 
                 switch kind {
                 case UICollectionElementKindSectionHeader:
-                    let headerView = cv.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "BMIHeader", for: indexPath) as! BMIHeader
-                    return headerView
-                default:
-                    assert(false, "Unexpected element kind")
+                    let header = cv.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "BMIHeader", for: indexPath) as! BMIHeader
+                    viewModel.createRecordOnTap(
+                        header.createBtn.rx.tap.asObservable()
+                            .map({ _ -> (h: Double, w: Double) in
+                                return (182.0, 82)
+                            }))
+                        .disposed(by: header.disposeBag)
+                    return header
+
+                default:    assert(false, "Unexpected element kind")
                 }
             })
 

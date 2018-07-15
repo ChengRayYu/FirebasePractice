@@ -13,7 +13,7 @@ import FirebaseDatabase
 
 class BMIRecordService {
 
-    typealias Record = (timestamp: TimeInterval, height: Double, weight: Double)
+    typealias Record = (timestamp: String, height: Double, weight: Double)
     static let reference = Database.database().reference()
 
     static func setupProfile(ofUser uid: String, email: String) {
@@ -28,19 +28,29 @@ class BMIRecordService {
     }
 
     static func fetchBMIRecords(ofUser uid: String) -> Driver<[Record]> {
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM-dd-yyyy\tHH:mm"
+
         return reference.child("records/\(uid)")
             .rx
             .observeEvent(.value)
             .map({ (snapshot) -> [Record] in
-                return (1...4).map({ (index) -> Record in
-                    return Record(Date().timeIntervalSinceNow, Double(arc4random_uniform(200) + 1), Double(arc4random_uniform(150) + 1))
+                return snapshot.children.map({ (child) -> Record in
+                    let childSnapshot = child as! DataSnapshot
+                    let entry = childSnapshot.value as! [String: AnyObject]
+
+                    return (formatter.string(from: Date(timeIntervalSince1970: (Double(childSnapshot.key) ?? 0) / 1000)),
+                            entry["h"]?.doubleValue ?? 0,
+                            entry["w"]?.doubleValue ?? 0)
                 })
             })
             .asDriver(onErrorJustReturn: [])
     }
 
-    static func addBMIRecord(forUser uid: String, height: Double, weight: Double) {
-
+    static func createBMIRecord(forUser uid: String, height: Double, weight: Double) {
+        let userRecordRef = reference.child("records/\(uid)")
+        let timestamp = String(format: "%.0f", Date().timeIntervalSince1970 * 1000)
+        userRecordRef.child(timestamp).setValue(["h": NSNumber(value: height), "w": NSNumber(value: weight)])
     }
-
 }
