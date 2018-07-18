@@ -16,20 +16,23 @@ class BMIController: UIViewController {
 
     @IBOutlet weak var bmiCollections: UICollectionView!
 
-    fileprivate var welcomeController: WelcomeController?
+    fileprivate var bmiViewModel: BMIViewModel?
     fileprivate let disposeBag = DisposeBag()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup(withViewModel: BMIViewModel())
+        setupBMIViewModel(BMIViewModel())
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
         guard let identifier = segue.identifier else { return }
         switch identifier {
-        case "segue_BMI_requestAuth":
-            welcomeController = segue.destination as? WelcomeController
+        case "segue_BMI_CreateRecord":
+            let vc = segue.destination as? CreateBMIController
+            vc?.loadView()
+            setupCreateBMIViewModel(vc?.generateViewModel())
+
         default:
             return
         }
@@ -42,9 +45,9 @@ class BMIController: UIViewController {
 
 extension BMIController {
 
-    fileprivate func setup(withViewModel viewModel: BMIViewModel) {
-
+    fileprivate func setupBMIViewModel(_ viewModel: BMIViewModel) {
         bmiCollections.rx.setDelegate(self).disposed(by: disposeBag)
+        bmiViewModel = viewModel
 
         viewModel.loggedInDrv
             .asObservable()
@@ -71,16 +74,9 @@ extension BMIController {
 
                 switch kind {
                 case UICollectionElementKindSectionHeader:
-                    let header = cv.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "BMIHeader", for: indexPath) as! BMIHeader
-                    viewModel.createRecordOnTap(
-                        header.createBtn.rx.tap.asObservable()
-                            .map({ _ -> (h: Double, w: Double) in
-                                return (182.0, 82)
-                            }))
-                        .disposed(by: header.disposeBag)
-                    return header
-
-                default:    assert(false, "Unexpected element kind")
+                    return cv.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "BMIHeader", for: indexPath) as! BMIHeader
+                default:
+                    assert(false, "Unexpected element kind")
                 }
             })
 
@@ -91,6 +87,20 @@ extension BMIController {
             })
             .bind(to: bmiCollections.rx.items(dataSource: bmiCollectionDataSrc))
             .disposed(by: disposeBag)
+    }
+
+    fileprivate func setupCreateBMIViewModel(_ creationVM: CreateBMIViewModel?) {
+
+        guard let vm = bmiViewModel, let cvm = creationVM else { return }
+        vm.submitRecordOnTap(
+            cvm.submittedDrv.asObservable()
+                .skipWhile({ (data) -> Bool in
+                    if data != nil {
+                        self.dismiss(animated: true, completion: nil)
+                    }
+                    return data == nil
+                })
+            ).disposed(by: disposeBag)           
     }
 }
 

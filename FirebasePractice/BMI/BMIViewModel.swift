@@ -12,14 +12,13 @@ import RxCocoa
 import FirebaseAuth
 import FirebaseDatabase
 
-class BMIViewModel: NSObject {
+class BMIViewModel {
 
     var loggedInDrv: Driver<Bool> = Driver.never()
     var recordsDrv: Driver<[BMIRecordService.Record]> = Driver.never()
     fileprivate var currentUserObs: Observable<User?> = Observable.never()
 
-    override init() {
-
+    init() {
         currentUserObs = Auth.auth().rx
             .authStateChangeDidChange()
             .map({ (result) -> User? in
@@ -47,12 +46,12 @@ class BMIViewModel: NSObject {
 
 extension BMIViewModel {
 
-    func createRecordOnTap(_ event: Observable<(Double, Double)>) -> Disposable {
+    func submitRecordOnTap(_ event: Observable<(height: Double, weight: Double)?>) -> Disposable {
 
         return event
-            .withLatestFrom(currentUserObs, resultSelector: { (bmi, user) -> (user: String, h: Double, w: Double)? in
-                guard let uid = user?.uid else { return nil }
-                return (uid, bmi.0, bmi.1)
+            .withLatestFrom(currentUserObs, resultSelector: { (bmiInfo, user) -> (user: String, h: Double, w: Double)? in
+                guard let uid = user?.uid, let bmi = bmiInfo  else { return nil }
+                return (uid, bmi.height, bmi.weight)
             })
             .subscribe(onNext: { (result) in
                 guard let res = result else { return }
