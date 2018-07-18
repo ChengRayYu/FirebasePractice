@@ -33,6 +33,7 @@ class BMIRecordService {
         formatter.dateFormat = "MMM-dd-yyyy\tHH:mm"
 
         return reference.child("records/\(uid)")
+            .queryOrderedByKey()
             .rx
             .observeEvent(.value)
             .map({ (snapshot) -> [Record] in
@@ -44,6 +45,7 @@ class BMIRecordService {
                             entry["h"]?.doubleValue ?? 0,
                             entry["w"]?.doubleValue ?? 0)
                 })
+                .reversed()
             })
             .asDriver(onErrorJustReturn: [])
     }
