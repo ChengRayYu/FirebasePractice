@@ -7,11 +7,13 @@
 //
 
 import UIKit
+import RxSwift
 
 class BMIHeader: UICollectionReusableView {
+    @IBOutlet weak var createBtn: UIButton!
+    private(set) var disposeBag = DisposeBag()
 
-    @IBOutlet weak var userNameLbl: UILabel!
-    @IBOutlet weak var emailLbl: UILabel!
-    @IBOutlet weak var addBtn: UIButton!
-
+    override func prepareForReuse() {
+        disposeBag = DisposeBag()
+    }
 }

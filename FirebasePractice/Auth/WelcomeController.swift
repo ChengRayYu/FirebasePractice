@@ -7,10 +7,10 @@
 //
 
 import UIKit
-import FirebaseAuth
-import GoogleSignIn
 import RxSwift
 import RxCocoa
+import FirebaseAuth
+import GoogleSignIn
 
 class WelcomeController: UIViewController {
 
@@ -18,10 +18,9 @@ class WelcomeController: UIViewController {
     @IBOutlet weak var emailSignInBtn: UIButton!
     @IBOutlet weak var emailSignUpBtn: UIButton!
 
-    var emailAuthController: EmailAuthController?
-
-    var viewModel: WelcomeViewModel?
-    var disposeBag = DisposeBag()
+    fileprivate let viewModel: WelcomeViewModel = WelcomeViewModel(gidAuth: GIDAuthService.instance)
+    fileprivate var emailAuthController: EmailAuthController?
+    fileprivate let disposeBag = DisposeBag()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,9 +49,8 @@ class WelcomeController: UIViewController {
 extension WelcomeController {
 
     func bindViewModel() {
-        guard let vm = viewModel else { return }
 
-        vm.googleSignedIn
+        viewModel.googleSignedIn
             .drive(onNext: { (user) in
                 print("USER: \(user?.displayName ?? "NULL")")
             })
@@ -60,10 +58,9 @@ extension WelcomeController {
     }
 
     func bindViewAction() {
-        guard let vm = viewModel else { return }
 
         googleSignInBtn.rx.tap
-            .bind(to: vm.googleSignInTap)
+            .bind(to: viewModel.googleSignInTap)
             .disposed(by: disposeBag)
 
         emailSignInBtn.rx.tap
