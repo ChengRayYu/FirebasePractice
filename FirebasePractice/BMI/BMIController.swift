@@ -18,6 +18,33 @@ class BMIController: UIViewController {
 
     fileprivate var bmiViewModel: BMIViewModel?
     fileprivate let disposeBag = DisposeBag()
+    fileprivate let bmiCollectionDataSrc = RxCollectionViewSectionedReloadDataSource<SectionModel<String, BMIRecord>>(
+        configureCell: { (dataSrc, cv, indexPath, item) -> UICollectionViewCell in
+
+            switch dataSrc[indexPath] {
+            case .empty:
+                return cv.dequeueReusableCell(withReuseIdentifier: "BMIEmptyCell", for: indexPath)
+
+            case let .record(timestamp, height, weight):
+                let cell = cv.dequeueReusableCell(withReuseIdentifier: "BMICell", for: indexPath) as! BMICell
+                cell.resultLbl.text = String(format: "%2.2f", weight / pow(height / 100, 2.0))
+                cell.heightLbl.text = String(format: "%.2f m", height / 100)
+                cell.weightLbl.text = String(format: "%.0f kg", weight)
+                cell.dateLbl.text = timestamp
+                return cell
+            }
+        },
+        configureSupplementaryView: { (dataSrc, cv, kind, indexPath) -> UICollectionReusableView in
+            let collectionViewLayout = cv.collectionViewLayout as? UICollectionViewFlowLayout
+            collectionViewLayout?.sectionHeadersPinToVisibleBounds = true
+
+            switch kind {
+            case UICollectionElementKindSectionHeader:
+                return cv.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "BMIHeader", for: indexPath) as! BMIHeader
+            default:
+                assert(false, "Unexpected element kind")
+            }
+        })
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,30 +86,9 @@ extension BMIController {
             })
             .disposed(by: disposeBag)
 
-        let bmiCollectionDataSrc = RxCollectionViewSectionedReloadDataSource<SectionModel<String, BMIRecordService.Record>>(
-            configureCell: { (data, cv, indexPath, item) -> UICollectionViewCell in
-                let cell = cv.dequeueReusableCell(withReuseIdentifier: "BMICell", for: indexPath) as! BMICell
-                cell.resultLbl.text = String(format: "%2.2f", item.weight / pow(item.height / 100, 2.0))
-                cell.heightLbl.text = String(format: "%.2f m", item.height / 100)
-                cell.weightLbl.text = String(format: "%.0f kg", item.weight)
-                cell.dateLbl.text = item.timestamp
-                return cell
-            },
-            configureSupplementaryView: { (dataSrc, cv, kind, indexPath) -> UICollectionReusableView in
-                let collectionViewLayout = cv.collectionViewLayout as? UICollectionViewFlowLayout
-                collectionViewLayout?.sectionHeadersPinToVisibleBounds = true
-
-                switch kind {
-                case UICollectionElementKindSectionHeader:
-                    return cv.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "BMIHeader", for: indexPath) as! BMIHeader
-                default:
-                    assert(false, "Unexpected element kind")
-                }
-            })
-
         viewModel.recordsDrv
             .asObservable()
-            .map({ (records) -> [SectionModel<String, BMIRecordService.Record>] in
+            .map({ (records) -> [SectionModel<String, BMIRecord>] in
                 return [SectionModel(model: "", items: records)]
             })
             .bind(to: bmiCollections.rx.items(dataSource: bmiCollectionDataSrc))
@@ -107,6 +113,11 @@ extension BMIController {
 extension BMIController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.size.width - 24.0, height: 88.0)
+        switch bmiCollectionDataSrc[indexPath] {
+        case .empty:
+            return CGSize(width: collectionView.frame.size.width, height: 400.0)
+        default:
+            return CGSize(width: collectionView.frame.size.width - 24.0, height: 88.0)
+        }
     }
 }

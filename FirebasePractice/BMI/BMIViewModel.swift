@@ -15,7 +15,7 @@ import FirebaseDatabase
 class BMIViewModel {
 
     var loggedInDrv: Driver<Bool> = Driver.never()
-    var recordsDrv: Driver<[BMIRecordService.Record]> = Driver.never()
+    var recordsDrv: Driver<[BMIRecord]> = Driver.never()
     fileprivate var currentUserObs: Observable<User?> = Observable.never()
 
     init() {
@@ -35,9 +35,19 @@ class BMIViewModel {
 
         recordsDrv = currentUserObs
             .asDriver(onErrorJustReturn: nil)
-            .flatMapLatest({ (user) -> Driver<[BMIRecordService.Record]> in
+            .flatMap({ (user) -> Driver<[BMIRecordService.Record]> in
                 guard let uid = user?.uid else { return Driver.from([])}
                 return BMIRecordService.fetchBMIRecords(ofUser: uid)
+            })
+            .map({ (records) -> [BMIRecord] in
+                if records.isEmpty {
+                    return [BMIRecord.empty]
+                }
+                return records.map({ (serviceRecord) -> BMIRecord in
+                    return BMIRecord.record(timestamp: serviceRecord.timestamp,
+                                            height: serviceRecord.height,
+                                            weight: serviceRecord.weight)
+                })
             })
     }
 }
@@ -59,4 +69,10 @@ extension BMIViewModel {
             })
     }
 }
+
+enum BMIRecord {
+    case record(timestamp: String, height: Double, weight: Double)
+    case empty
+}
+
 

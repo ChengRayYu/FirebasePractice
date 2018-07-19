@@ -35,7 +35,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Rzg-Ih-1UK">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Rzg-Ih-1UK">
                                 <rect key="frame" x="0.0" y="88" width="375" height="690"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="12" minimumInteritemSpacing="0.0" id="qgh-TE-845">
@@ -156,6 +156,51 @@
                                             <outlet property="resultLbl" destination="NHZ-iJ-zES" id="1AH-Ef-GVm"/>
                                             <outlet property="weightLbl" destination="PGH-kF-aBS" id="cOW-9Y-4S5"/>
                                         </connections>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="BMIEmptyCell" id="y6A-3e-rGj">
+                                        <rect key="frame" x="0.0" y="168" width="375" height="400"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="400"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Htp-ee-ZCH">
+                                                    <rect key="frame" x="48" y="164.33333333333334" width="279" height="71.333333333333343"/>
+                                                    <attributedString key="attributedText">
+                                                        <fragment content="No records found. ">
+                                                            <attributes>
+                                                                <color key="NSColor" name="Grey800"/>
+                                                                <font key="NSFont" size="16" name="AvenirNext-DemiBold"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                        <fragment content=" ">
+                                                            <attributes>
+                                                                <color key="NSColor" name="alternateSelectedControlColor" catalog="System" colorSpace="catalog"/>
+                                                                <font key="NSFont" size="8" name="AvenirNext-DemiBold"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                        <fragment>
+                                                            <string key="content">Add records by "Create New Entry"
+</string>
+                                                            <attributes>
+                                                                <color key="NSColor" name="alternateSelectedControlColor" catalog="System" colorSpace="catalog"/>
+                                                                <font key="NSFont" size="14" name="AvenirNext-DemiBold"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                    </attributedString>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="Htp-ee-ZCH" secondAttribute="trailing" constant="48" id="3ti-io-xTq"/>
+                                            <constraint firstItem="Htp-ee-ZCH" firstAttribute="leading" secondItem="y6A-3e-rGj" secondAttribute="leading" constant="48" id="QPv-qy-tp6"/>
+                                            <constraint firstItem="Htp-ee-ZCH" firstAttribute="centerY" secondItem="y6A-3e-rGj" secondAttribute="centerY" id="rOP-Nm-sXm"/>
+                                        </constraints>
+                                        <size key="customSize" width="375" height="400"/>
                                     </collectionViewCell>
                                 </cells>
                                 <collectionReusableView key="sectionHeaderView" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="BMIHeader" id="IPD-9h-oPj" customClass="BMIHeader" customModule="FirebasePractice" customModuleProvider="target">
@@ -503,7 +548,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic_user" width="20" height="20"/>
+        <image name="ic_user" width="24" height="24"/>
         <namedColor name="Grey200">
             <color red="0.93300002810000005" green="0.93300002810000005" blue="0.93300002810000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -517,25 +562,10 @@
             <color red="0.62000000476837158" green="0.62000000476837158" blue="0.62000000476837158" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Grey600">
-            <color red="0.45899999141693115" green="0.45899999141693115" blue="0.45899999141693115" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Grey600">
             <color red="0.45899999139999997" green="0.45899999139999997" blue="0.45899999139999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Grey600">
-            <color red="0.45899999141693115" green="0.45899999141693115" blue="0.45899999141693115" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Grey800">
-            <color red="0.2590000033" green="0.2590000033" blue="0.2590000033" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Grey800">
             <color red="0.25900000333786011" green="0.25900000333786011" blue="0.25900000333786011" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Grey800">
-            <color red="0.2590000033" green="0.2590000033" blue="0.2590000033" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Grey800">
-            <color red="0.2590000033" green="0.2590000033" blue="0.2590000033" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>
