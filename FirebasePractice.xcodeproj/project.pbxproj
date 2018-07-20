@@ -18,12 +18,13 @@
 		717786091FBF526900E2485B /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 717786081FBF526800E2485B /* ActivityIndicator.swift */; };
 		7177860B1FBF7E5C00E2485B /* WelcomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7177860A1FBF7E5C00E2485B /* WelcomeViewModel.swift */; };
 		7177860D1FBF8CB400E2485B /* GoogleSignInDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7177860C1FBF8CB400E2485B /* GoogleSignInDelegateProxy.swift */; };
+		7183950E210188B700627AB3 /* UserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7183950D210188B700627AB3 /* UserController.swift */; };
+		7183951021023AA700627AB3 /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7183950F21023AA600627AB3 /* UserInfoCell.swift */; };
 		7185E4B91FB61E5600A83692 /* EmailAuthController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7185E4B81FB61E5600A83692 /* EmailAuthController.swift */; };
 		7185E4BB1FB6217E00A83692 /* EmailAuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7185E4BA1FB6217E00A83692 /* EmailAuthViewModel.swift */; };
 		719F09B920F51AB300861108 /* FirebaseDatabase+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 719F09B820F51AB300861108 /* FirebaseDatabase+Rx.swift */; };
 		719F09BF20F569BF00861108 /* Auth.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 719F09BD20F569BF00861108 /* Auth.storyboard */; };
 		719F09C220F599F600861108 /* User.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 719F09C020F599F600861108 /* User.storyboard */; };
-		719F09C520F59AAF00861108 /* UserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 719F09C420F59AAF00861108 /* UserController.swift */; };
 		71C3A2401FCF1FC400A8D276 /* BMIHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C3A23F1FCF1FC400A8D276 /* BMIHeader.swift */; };
 		71D1675120FCF55500B4277E /* CreateBMIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D1675020FCF55500B4277E /* CreateBMIController.swift */; };
 		71D1675320FCF59B00B4277E /* CreateBMIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D1675220FCF59B00B4277E /* CreateBMIViewModel.swift */; };
@@ -48,12 +49,13 @@
 		717786081FBF526800E2485B /* ActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		7177860A1FBF7E5C00E2485B /* WelcomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewModel.swift; sourceTree = "<group>"; };
 		7177860C1FBF8CB400E2485B /* GoogleSignInDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleSignInDelegateProxy.swift; sourceTree = "<group>"; };
+		7183950D210188B700627AB3 /* UserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserController.swift; path = "/Users/ray/Google Drive/Development/iOS:MacOS/Swift/FirebasePractice/FirebasePractice/User/UserController.swift"; sourceTree = "<absolute>"; };
+		7183950F21023AA600627AB3 /* UserInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoCell.swift; sourceTree = "<group>"; };
 		7185E4B81FB61E5600A83692 /* EmailAuthController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailAuthController.swift; sourceTree = "<group>"; };
 		7185E4BA1FB6217E00A83692 /* EmailAuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthViewModel.swift; sourceTree = "<group>"; };
 		719F09B820F51AB300861108 /* FirebaseDatabase+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "FirebaseDatabase+Rx.swift"; path = "/Users/ray/Google Drive/Development/iOS:MacOS/Swift/FirebasePractice/FirebasePractice/Utils/RxFirebase/FirebaseDatabase+Rx.swift"; sourceTree = "<absolute>"; };
 		719F09BE20F569BF00861108 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Auth.storyboard; sourceTree = "<group>"; };
 		719F09C120F599F600861108 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/User.storyboard; sourceTree = "<group>"; };
-		719F09C420F59AAF00861108 /* UserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserController.swift; sourceTree = "<group>"; };
 		71C3A23F1FCF1FC400A8D276 /* BMIHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BMIHeader.swift; sourceTree = "<group>"; };
 		71D1675020FCF55500B4277E /* CreateBMIController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBMIController.swift; sourceTree = "<group>"; };
 		71D1675220FCF59B00B4277E /* CreateBMIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBMIViewModel.swift; sourceTree = "<group>"; };
@@ -131,7 +133,8 @@
 		719F09C320F59A8300861108 /* User */ = {
 			isa = PBXGroup;
 			children = (
-				719F09C420F59AAF00861108 /* UserController.swift */,
+				7183950D210188B700627AB3 /* UserController.swift */,
+				7183950F21023AA600627AB3 /* UserInfoCell.swift */,
 			);
 			path = User;
 			sourceTree = "<group>";
@@ -361,10 +364,10 @@
 				7130B8B6207065F20054125F /* UIView+Extension.swift in Sources */,
 				71D1675120FCF55500B4277E /* CreateBMIController.swift in Sources */,
 				715847131FCC5E8D009162C3 /* BMIViewModel.swift in Sources */,
-				719F09C520F59AAF00861108 /* UserController.swift in Sources */,
 				71D8FABE1FC8B3C70027C24C /* GIDAuthService.swift in Sources */,
 				71D1675320FCF59B00B4277E /* CreateBMIViewModel.swift in Sources */,
 				7152A1D81FCDBCBA006A6C61 /* BMICell.swift in Sources */,
+				7183951021023AA700627AB3 /* UserInfoCell.swift in Sources */,
 				71ED692E20F7D6DA0085C321 /* BMIRecordService.swift in Sources */,
 				71C3A2401FCF1FC400A8D276 /* BMIHeader.swift in Sources */,
 				714AEEDC1FB75B760071FBF9 /* FirebaseAuth+Rx.swift in Sources */,
@@ -374,6 +377,7 @@
 				7177860B1FBF7E5C00E2485B /* WelcomeViewModel.swift in Sources */,
 				7185E4B91FB61E5600A83692 /* EmailAuthController.swift in Sources */,
 				7185E4BB1FB6217E00A83692 /* EmailAuthViewModel.swift in Sources */,
+				7183950E210188B700627AB3 /* UserController.swift in Sources */,
 				7130B8B8207069060054125F /* ValidationService.swift in Sources */,
 				719F09B920F51AB300861108 /* FirebaseDatabase+Rx.swift in Sources */,
 			);
