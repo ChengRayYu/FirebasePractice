@@ -274,7 +274,7 @@
                                         <barButtonItem key="rightBarButtonItem" image="ic_user" id="T1r-kf-CHF">
                                             <color key="tintColor" name="Grey800"/>
                                             <connections>
-                                                <segue destination="9nt-zj-kyr" kind="show" identifier="segue_BMI_checkAccount" id="SI4-2D-ixx"/>
+                                                <segue destination="9nt-zj-kyr" kind="show" identifier="segue_BMI_checkUser" id="SI4-2D-ixx"/>
                                             </connections>
                                         </barButtonItem>
                                     </navigationItem>
@@ -548,7 +548,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic_user" width="24" height="24"/>
+        <image name="ic_user" width="18" height="20"/>
         <namedColor name="Grey200">
             <color red="0.93300002810000005" green="0.93300002810000005" blue="0.93300002810000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -563,6 +563,9 @@
         </namedColor>
         <namedColor name="Grey600">
             <color red="0.45899999139999997" green="0.45899999139999997" blue="0.45899999139999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Grey800">
+            <color red="0.25900000333786011" green="0.25900000333786011" blue="0.25900000333786011" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Grey800">
             <color red="0.25900000333786011" green="0.25900000333786011" blue="0.25900000333786011" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

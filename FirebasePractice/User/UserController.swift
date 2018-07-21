@@ -1,5 +1,5 @@
 //
-//  UserController.swift
+//  UserInfoController.swift
 //  FirebasePractice
 //
 //  Created by Ray on 2018/7/10.
@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 import FirebaseAuth
 
-class UserController: UITableViewController {
+class UserInfoController: UITableViewController {
 
     @IBOutlet weak var closeBarBtn: UIBarButtonItem!
     @IBOutlet weak var emailLbl: UILabel!
@@ -68,7 +68,7 @@ class UserController: UITableViewController {
 
 }
 
-extension UserController {
+extension UserInfoController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

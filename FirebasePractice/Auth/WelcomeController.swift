@@ -9,7 +9,6 @@
 import UIKit
 import RxSwift
 import RxCocoa
-import FirebaseAuth
 import GoogleSignIn
 
 class WelcomeController: UIViewController {

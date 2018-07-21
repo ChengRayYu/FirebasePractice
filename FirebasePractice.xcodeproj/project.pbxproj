@@ -18,14 +18,18 @@
 		717786091FBF526900E2485B /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 717786081FBF526800E2485B /* ActivityIndicator.swift */; };
 		7177860B1FBF7E5C00E2485B /* WelcomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7177860A1FBF7E5C00E2485B /* WelcomeViewModel.swift */; };
 		7177860D1FBF8CB400E2485B /* GoogleSignInDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7177860C1FBF8CB400E2485B /* GoogleSignInDelegateProxy.swift */; };
-		7183950E210188B700627AB3 /* UserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7183950D210188B700627AB3 /* UserController.swift */; };
+		7183950E210188B700627AB3 /* UserInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7183950D210188B700627AB3 /* UserInfoController.swift */; };
 		7183951021023AA700627AB3 /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7183950F21023AA600627AB3 /* UserInfoCell.swift */; };
+		718395122102434800627AB3 /* UserInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718395112102434800627AB3 /* UserInfoViewModel.swift */; };
+		718395142102438800627AB3 /* UserInfoEditController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718395132102438800627AB3 /* UserInfoEditController.swift */; };
+		71839516210243BD00627AB3 /* UserInfoEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71839515210243BD00627AB3 /* UserInfoEditViewModel.swift */; };
 		7185E4B91FB61E5600A83692 /* EmailAuthController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7185E4B81FB61E5600A83692 /* EmailAuthController.swift */; };
 		7185E4BB1FB6217E00A83692 /* EmailAuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7185E4BA1FB6217E00A83692 /* EmailAuthViewModel.swift */; };
 		719F09B920F51AB300861108 /* FirebaseDatabase+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 719F09B820F51AB300861108 /* FirebaseDatabase+Rx.swift */; };
 		719F09BF20F569BF00861108 /* Auth.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 719F09BD20F569BF00861108 /* Auth.storyboard */; };
 		719F09C220F599F600861108 /* User.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 719F09C020F599F600861108 /* User.storyboard */; };
 		71C3A2401FCF1FC400A8D276 /* BMIHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C3A23F1FCF1FC400A8D276 /* BMIHeader.swift */; };
+		71C61C2F2103760B00CA27B6 /* UserInfoEditType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C61C2E2103760B00CA27B6 /* UserInfoEditType.swift */; };
 		71D1675120FCF55500B4277E /* CreateBMIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D1675020FCF55500B4277E /* CreateBMIController.swift */; };
 		71D1675320FCF59B00B4277E /* CreateBMIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D1675220FCF59B00B4277E /* CreateBMIViewModel.swift */; };
 		71D8FABE1FC8B3C70027C24C /* GIDAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D8FABD1FC8B3C70027C24C /* GIDAuthService.swift */; };
@@ -35,7 +39,7 @@
 		71E6F77B1FB2245E0030AA0C /* Image.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 71E6F77A1FB2245E0030AA0C /* Image.xcassets */; };
 		71E6F77E1FB2245E0030AA0C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71E6F77C1FB2245E0030AA0C /* LaunchScreen.storyboard */; };
 		71E6F7861FB2A2930030AA0C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 71E6F7851FB2A2930030AA0C /* GoogleService-Info.plist */; };
-		71ED692E20F7D6DA0085C321 /* BMIRecordService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71ED692D20F7D6DA0085C321 /* BMIRecordService.swift */; };
+		71ED692E20F7D6DA0085C321 /* BMIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71ED692D20F7D6DA0085C321 /* BMIService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,14 +53,18 @@
 		717786081FBF526800E2485B /* ActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		7177860A1FBF7E5C00E2485B /* WelcomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewModel.swift; sourceTree = "<group>"; };
 		7177860C1FBF8CB400E2485B /* GoogleSignInDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleSignInDelegateProxy.swift; sourceTree = "<group>"; };
-		7183950D210188B700627AB3 /* UserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserController.swift; path = "/Users/ray/Google Drive/Development/iOS:MacOS/Swift/FirebasePractice/FirebasePractice/User/UserController.swift"; sourceTree = "<absolute>"; };
+		7183950D210188B700627AB3 /* UserInfoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserInfoController.swift; path = "/Users/ray/Google Drive/Development/iOS:MacOS/Swift/FirebasePractice/FirebasePractice/User/UserInfoController.swift"; sourceTree = "<absolute>"; };
 		7183950F21023AA600627AB3 /* UserInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoCell.swift; sourceTree = "<group>"; };
+		718395112102434800627AB3 /* UserInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoViewModel.swift; sourceTree = "<group>"; };
+		718395132102438800627AB3 /* UserInfoEditController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoEditController.swift; sourceTree = "<group>"; };
+		71839515210243BD00627AB3 /* UserInfoEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoEditViewModel.swift; sourceTree = "<group>"; };
 		7185E4B81FB61E5600A83692 /* EmailAuthController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailAuthController.swift; sourceTree = "<group>"; };
 		7185E4BA1FB6217E00A83692 /* EmailAuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailAuthViewModel.swift; sourceTree = "<group>"; };
 		719F09B820F51AB300861108 /* FirebaseDatabase+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "FirebaseDatabase+Rx.swift"; path = "/Users/ray/Google Drive/Development/iOS:MacOS/Swift/FirebasePractice/FirebasePractice/Utils/RxFirebase/FirebaseDatabase+Rx.swift"; sourceTree = "<absolute>"; };
 		719F09BE20F569BF00861108 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Auth.storyboard; sourceTree = "<group>"; };
 		719F09C120F599F600861108 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/User.storyboard; sourceTree = "<group>"; };
 		71C3A23F1FCF1FC400A8D276 /* BMIHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BMIHeader.swift; sourceTree = "<group>"; };
+		71C61C2E2103760B00CA27B6 /* UserInfoEditType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoEditType.swift; sourceTree = "<group>"; };
 		71D1675020FCF55500B4277E /* CreateBMIController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBMIController.swift; sourceTree = "<group>"; };
 		71D1675220FCF59B00B4277E /* CreateBMIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBMIViewModel.swift; sourceTree = "<group>"; };
 		71D8FABD1FC8B3C70027C24C /* GIDAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIDAuthService.swift; sourceTree = "<group>"; };
@@ -68,7 +76,7 @@
 		71E6F77D1FB2245E0030AA0C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		71E6F77F1FB2245E0030AA0C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		71E6F7851FB2A2930030AA0C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		71ED692D20F7D6DA0085C321 /* BMIRecordService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BMIRecordService.swift; sourceTree = "<group>"; };
+		71ED692D20F7D6DA0085C321 /* BMIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BMIService.swift; sourceTree = "<group>"; };
 		A2540488519F99E4D8FA0BE3 /* Pods-FirebasePractice.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FirebasePractice.release.xcconfig"; path = "Pods/Target Support Files/Pods-FirebasePractice/Pods-FirebasePractice.release.xcconfig"; sourceTree = "<group>"; };
 		A53616A81AC9C42C763CCD91 /* Pods_FirebasePractice.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FirebasePractice.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3076F69F5B8196F4F9B882D /* Pods-FirebasePractice.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FirebasePractice.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FirebasePractice/Pods-FirebasePractice.debug.xcconfig"; sourceTree = "<group>"; };
@@ -133,8 +141,12 @@
 		719F09C320F59A8300861108 /* User */ = {
 			isa = PBXGroup;
 			children = (
-				7183950D210188B700627AB3 /* UserController.swift */,
+				7183950D210188B700627AB3 /* UserInfoController.swift */,
+				718395112102434800627AB3 /* UserInfoViewModel.swift */,
 				7183950F21023AA600627AB3 /* UserInfoCell.swift */,
+				71C61C2E2103760B00CA27B6 /* UserInfoEditType.swift */,
+				718395132102438800627AB3 /* UserInfoEditController.swift */,
+				71839515210243BD00627AB3 /* UserInfoEditViewModel.swift */,
 			);
 			path = User;
 			sourceTree = "<group>";
@@ -144,7 +156,7 @@
 			children = (
 				71D8FABD1FC8B3C70027C24C /* GIDAuthService.swift */,
 				7130B8B7207069060054125F /* ValidationService.swift */,
-				71ED692D20F7D6DA0085C321 /* BMIRecordService.swift */,
+				71ED692D20F7D6DA0085C321 /* BMIService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -359,16 +371,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				718395142102438800627AB3 /* UserInfoEditController.swift in Sources */,
 				71E6F7761FB2245E0030AA0C /* WelcomeController.swift in Sources */,
+				718395122102434800627AB3 /* UserInfoViewModel.swift in Sources */,
 				716217161FB501A300CF9C3F /* BMIController.swift in Sources */,
 				7130B8B6207065F20054125F /* UIView+Extension.swift in Sources */,
 				71D1675120FCF55500B4277E /* CreateBMIController.swift in Sources */,
 				715847131FCC5E8D009162C3 /* BMIViewModel.swift in Sources */,
+				71C61C2F2103760B00CA27B6 /* UserInfoEditType.swift in Sources */,
 				71D8FABE1FC8B3C70027C24C /* GIDAuthService.swift in Sources */,
 				71D1675320FCF59B00B4277E /* CreateBMIViewModel.swift in Sources */,
 				7152A1D81FCDBCBA006A6C61 /* BMICell.swift in Sources */,
 				7183951021023AA700627AB3 /* UserInfoCell.swift in Sources */,
-				71ED692E20F7D6DA0085C321 /* BMIRecordService.swift in Sources */,
+				71ED692E20F7D6DA0085C321 /* BMIService.swift in Sources */,
 				71C3A2401FCF1FC400A8D276 /* BMIHeader.swift in Sources */,
 				714AEEDC1FB75B760071FBF9 /* FirebaseAuth+Rx.swift in Sources */,
 				71E6F7741FB2245E0030AA0C /* AppDelegate.swift in Sources */,
@@ -376,8 +391,9 @@
 				717786091FBF526900E2485B /* ActivityIndicator.swift in Sources */,
 				7177860B1FBF7E5C00E2485B /* WelcomeViewModel.swift in Sources */,
 				7185E4B91FB61E5600A83692 /* EmailAuthController.swift in Sources */,
+				71839516210243BD00627AB3 /* UserInfoEditViewModel.swift in Sources */,
 				7185E4BB1FB6217E00A83692 /* EmailAuthViewModel.swift in Sources */,
-				7183950E210188B700627AB3 /* UserController.swift in Sources */,
+				7183950E210188B700627AB3 /* UserInfoController.swift in Sources */,
 				7130B8B8207069060054125F /* ValidationService.swift in Sources */,
 				719F09B920F51AB300861108 /* FirebaseDatabase+Rx.swift in Sources */,
 			);
