@@ -36,9 +36,9 @@ class UserInfoController: UITableViewController {
             .subscribe(onNext: { (userInfo) in
                 guard let user = userInfo else { return }
                 self.emailLbl.text = user.email
-                self.usernameLbl.text = (user.name.isEmpty) ? "-" : user.name
+                self.usernameLbl.text = (user.name.isEmpty) ? "n/a" : user.name
                 self.genderLbl.text = user.gender.description
-                self.ageLbl.text = (user.age.intValue == -1) ? "–" : user.age.stringValue
+                self.ageLbl.text = user.age.description
             })
             .disposed(by: disposeBag)
 

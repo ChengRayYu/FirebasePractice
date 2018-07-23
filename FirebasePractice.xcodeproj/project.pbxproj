@@ -29,7 +29,6 @@
 		719F09BF20F569BF00861108 /* Auth.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 719F09BD20F569BF00861108 /* Auth.storyboard */; };
 		719F09C220F599F600861108 /* User.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 719F09C020F599F600861108 /* User.storyboard */; };
 		71C3A2401FCF1FC400A8D276 /* BMIHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C3A23F1FCF1FC400A8D276 /* BMIHeader.swift */; };
-		71C61C2F2103760B00CA27B6 /* UserInfoEditType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C61C2E2103760B00CA27B6 /* UserInfoEditType.swift */; };
 		71D1675120FCF55500B4277E /* CreateBMIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D1675020FCF55500B4277E /* CreateBMIController.swift */; };
 		71D1675320FCF59B00B4277E /* CreateBMIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D1675220FCF59B00B4277E /* CreateBMIViewModel.swift */; };
 		71D8FABE1FC8B3C70027C24C /* GIDAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D8FABD1FC8B3C70027C24C /* GIDAuthService.swift */; };
@@ -64,7 +63,6 @@
 		719F09BE20F569BF00861108 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Auth.storyboard; sourceTree = "<group>"; };
 		719F09C120F599F600861108 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/User.storyboard; sourceTree = "<group>"; };
 		71C3A23F1FCF1FC400A8D276 /* BMIHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BMIHeader.swift; sourceTree = "<group>"; };
-		71C61C2E2103760B00CA27B6 /* UserInfoEditType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoEditType.swift; sourceTree = "<group>"; };
 		71D1675020FCF55500B4277E /* CreateBMIController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBMIController.swift; sourceTree = "<group>"; };
 		71D1675220FCF59B00B4277E /* CreateBMIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBMIViewModel.swift; sourceTree = "<group>"; };
 		71D8FABD1FC8B3C70027C24C /* GIDAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIDAuthService.swift; sourceTree = "<group>"; };
@@ -144,7 +142,6 @@
 				7183950D210188B700627AB3 /* UserInfoController.swift */,
 				718395112102434800627AB3 /* UserInfoViewModel.swift */,
 				7183950F21023AA600627AB3 /* UserInfoCell.swift */,
-				71C61C2E2103760B00CA27B6 /* UserInfoEditType.swift */,
 				718395132102438800627AB3 /* UserInfoEditController.swift */,
 				71839515210243BD00627AB3 /* UserInfoEditViewModel.swift */,
 			);
@@ -378,7 +375,6 @@
 				7130B8B6207065F20054125F /* UIView+Extension.swift in Sources */,
 				71D1675120FCF55500B4277E /* CreateBMIController.swift in Sources */,
 				715847131FCC5E8D009162C3 /* BMIViewModel.swift in Sources */,
-				71C61C2F2103760B00CA27B6 /* UserInfoEditType.swift in Sources */,
 				71D8FABE1FC8B3C70027C24C /* GIDAuthService.swift in Sources */,
 				71D1675320FCF59B00B4277E /* CreateBMIViewModel.swift in Sources */,
 				7152A1D81FCDBCBA006A6C61 /* BMICell.swift in Sources */,

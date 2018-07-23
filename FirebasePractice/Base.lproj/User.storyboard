@@ -370,15 +370,14 @@
                                         <color key="textColor" name="Grey600"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="sUK-fW-BB0">
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sUK-fW-BB0">
                                         <rect key="frame" x="0.0" y="16" width="326.5" height="32"/>
-                                        <color key="tintColor" name="Grey500"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="32" id="i0O-V2-8z0"/>
                                         </constraints>
                                         <color key="textColor" name="Grey800"/>
                                         <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" keyboardType="numberPad" keyboardAppearance="alert"/>
+                                        <textInputTraits key="textInputTraits" keyboardAppearance="alert"/>
                                     </textField>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qKg-Kg-ows">
                                         <rect key="frame" x="0.0" y="47.5" width="326.5" height="0.5"/>
@@ -464,9 +463,6 @@
         </namedColor>
         <namedColor name="Grey50">
             <color red="0.98000001907348633" green="0.98000001907348633" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Grey500">
-            <color red="0.62000000479999995" green="0.62000000479999995" blue="0.62000000479999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Grey600">
             <color red="0.45899999139999997" green="0.45899999139999997" blue="0.45899999139999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

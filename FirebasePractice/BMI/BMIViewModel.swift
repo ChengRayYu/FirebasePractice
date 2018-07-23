@@ -34,6 +34,7 @@ class BMIViewModel {
                 return false
             })
             .asDriver(onErrorJustReturn: false)
+            .distinctUntilChanged()
 
         recordsDrv = currentUserObs
             .asDriver(onErrorJustReturn: nil)

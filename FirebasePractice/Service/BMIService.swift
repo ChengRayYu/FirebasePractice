@@ -15,7 +15,11 @@ import FirebaseDatabase
 class BMIService {
 
     enum Gender: Int {
-        case notAvailable = 0, male, female, neither
+
+        case notAvailable = -1
+        case male = 1
+        case female = 2
+        case neither = 3
 
         var description: String {
             switch self {
@@ -27,8 +31,73 @@ class BMIService {
         }
     }
 
-    typealias UserInfo = (email: String, name: String, gender: Gender, age: NSNumber)
+    enum AgeRange: Int {
+
+        case notAvailable = -1
+        case underTen = 1
+        case tenToTwenty = 2
+        case twentyOneToThirty = 3
+        case thirtyOneToForty = 4
+        case fortyOneToFifty = 5
+        case overFifty = 6
+
+        var description: String {
+            switch self {
+            case .notAvailable:         return "–"
+            case .underTen:             return "Under 10"
+            case .tenToTwenty:          return "10 - 20"
+            case .twentyOneToThirty:    return "21 - 30"
+            case .thirtyOneToForty:     return "31 - 40"
+            case .fortyOneToFifty:      return "41 - 50"
+            case .overFifty:            return "Over 50"
+            }
+        }
+    }
+
+    enum UserInfoEditType: String {
+
+        case email = "email"
+        case username = "displayName"
+        case gender = "gender"
+        case age = "age"
+
+        var description : String {
+            switch self {
+            case .email:    return "Email"
+            case .username: return "Username"
+            case .gender:   return "Gender"
+            case .age:      return "Age"
+            }
+        }
+
+        var options: [String] {
+            switch self {
+            case .gender:
+                return ["Please select your gender",
+                        Gender.male.description,
+                        Gender.female.description,
+                        Gender.neither.description]
+            case .age:
+                return ["Please select your age",
+                        AgeRange.underTen.description,
+                        AgeRange.tenToTwenty.description,
+                        AgeRange.twentyOneToThirty.description,
+                        AgeRange.thirtyOneToForty.description,
+                        AgeRange.fortyOneToFifty.description,
+                        AgeRange.overFifty.description]
+            default:
+                return []
+            }
+        }
+    }
+
+    typealias UserInfo = (email: String, name: String, gender: Gender, age: AgeRange)
     typealias Record = (timestamp: String, height: Double, weight: Double)
+}
+
+// MARK: - BMI UserInfo Operations
+
+extension BMIService {
 
     static func initializeProfile() {
         guard let user = Auth.auth().currentUser else { return }
@@ -36,10 +105,10 @@ class BMIService {
 
         usersRef.observeSingleEvent(of: .value, with: { (snapshot) in
             if !snapshot.hasChild(user.uid) {
-                usersRef.child(user.uid).setValue(["email": user.email ?? "",
-                                                   "displayName": user.displayName ?? "",
-                                                   "age": "-1",
-                                                   "gender": "-1"])
+                usersRef.child(user.uid).setValue([UserInfoEditType.email.rawValue: user.email ?? "",
+                                                   UserInfoEditType.username.rawValue: user.displayName ?? "",
+                                                   UserInfoEditType.gender.rawValue: -1,
+                                                   UserInfoEditType.age.rawValue: -1])
             }
         })
     }
@@ -53,13 +122,38 @@ class BMIService {
             .observeEvent(.value)
             .map({ (snapshot) -> UserInfo? in
                 let entries = snapshot.value as? [String: AnyObject]
-                return (entries?["email"] as? String ?? "",
-                        entries?["displayName"] as? String ?? "",
-                        Gender(rawValue: ((entries?["gender"] as? NSNumber)?.intValue ?? 0)) ?? Gender.notAvailable,
-                        entries?["age"] as? NSNumber ?? NSNumber(value: -1))
+                return (entries?[UserInfoEditType.email.rawValue] as? String ?? "",
+                        entries?[UserInfoEditType.username.rawValue] as? String ?? "",
+                        Gender(rawValue: ((entries?[UserInfoEditType.gender.rawValue] as? NSNumber)?.intValue ?? -1)) ?? Gender.notAvailable,
+                        AgeRange(rawValue: ((entries?[UserInfoEditType.age.rawValue] as? NSNumber)?.intValue ?? -1)) ?? AgeRange.notAvailable)
             })
             .asDriver(onErrorJustReturn: nil)
     }
+
+    static func fetchUserInfo(ofType type: UserInfoEditType) -> Driver<Any?> {
+
+        guard let user = Auth.auth().currentUser else { return Driver.of(nil) }
+        let userInfoRef = Database.database().reference().child("users/\(user.uid)/\(type.rawValue)")
+
+        return userInfoRef.rx
+            .observeSingleEvent(.value)
+            .map { (snapshot) -> Any? in
+                return snapshot.value
+            }
+            .asDriver(onErrorJustReturn: nil)
+    }
+
+    static func saveUserInfo(_ content: Any, ofType type: UserInfoEditType) {
+        guard let user = Auth.auth().currentUser else { return }
+        let contentRef = Database.database().reference().child("users/\(user.uid)/\(type.rawValue)")
+        contentRef.setValue(content)
+    }
+}
+
+
+// MARK: - BMI Record Operations
+
+extension BMIService {
 
     static func fetchBMIRecords() -> Driver<[Record]> {
 

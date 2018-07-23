@@ -14,7 +14,7 @@ import FirebaseAuth
 class UserInfoViewModel {
 
     var userInfoDrv: Driver<BMIService.UserInfo?> = Driver.empty()
-    var editingTypeDrv: Driver<UserInfoEditType?> = Driver.empty()
+    var editingTypeDrv: Driver<BMIService.UserInfoEditType?> = Driver.empty()
 
     init(withItemSelected itemOnSelect: Driver<IndexPath>) {
 
@@ -24,7 +24,7 @@ class UserInfoViewModel {
             .filter({ (index) -> Bool in
                 return [2, 3, 4].contains(index.row)
             })
-            .map({ (index) -> UserInfoEditType? in
+            .map({ (index) -> BMIService.UserInfoEditType? in
                 switch index.row {
                 case 2:     return .username
                 case 3:     return .gender
