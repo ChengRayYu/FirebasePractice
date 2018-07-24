@@ -15,7 +15,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
         // Firebase Settings
@@ -26,16 +25,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     @available(iOS 9.0, *)
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-        return GIDSignIn.sharedInstance().handle(url,
-                                                 sourceApplication:options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
-                                                 annotation: [:])
+        return GIDSignIn.sharedInstance().handle(
+                url,
+                sourceApplication:options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
+                annotation: [:])
     }
 
-
     func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
-        return GIDSignIn.sharedInstance().handle(url,
-                                                 sourceApplication: sourceApplication,
-                                                 annotation: annotation)
+        return GIDSignIn.sharedInstance().handle(
+            url,
+            sourceApplication: sourceApplication,
+            annotation: annotation)
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

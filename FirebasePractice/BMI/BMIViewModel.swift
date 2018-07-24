@@ -19,25 +19,27 @@ class BMIViewModel {
     fileprivate var currentUserObs: Observable<User?> = Observable.never()
 
     init() {
-        currentUserObs = Auth.auth().rx
+        let currentUserObs = Auth.auth().rx
             .authStateChangeDidChange()
             .map({ (result) -> User? in
                 return result.1
             })
 
         loggedInDrv = currentUserObs
-            .map({ (currentUser) -> Bool in
-                guard let user = currentUser else { return false }
-                BMIRecordService.setupProfile(ofUser: user.uid, email: user.email ?? "")
-                return true
+            .map({ (user) -> Bool in
+                if user != nil {
+                    BMIService.initializeProfile()
+                    return true
+                }
+                return false
             })
             .asDriver(onErrorJustReturn: false)
+            .distinctUntilChanged()
 
         recordsDrv = currentUserObs
             .asDriver(onErrorJustReturn: nil)
-            .flatMap({ (user) -> Driver<[BMIRecordService.Record]> in
-                guard let uid = user?.uid else { return Driver.from([])}
-                return BMIRecordService.fetchBMIRecords(ofUser: uid)
+            .flatMap({ _ -> Driver<[BMIService.Record]> in
+                return BMIService.fetchBMIRecords()
             })
             .map({ (records) -> [BMIRecord] in
                 if records.isEmpty {
@@ -57,16 +59,10 @@ class BMIViewModel {
 extension BMIViewModel {
 
     func submitRecordOnTap(_ event: Observable<(height: Double, weight: Double)?>) -> Disposable {
-
-        return event
-            .withLatestFrom(currentUserObs, resultSelector: { (bmiInfo, user) -> (user: String, h: Double, w: Double)? in
-                guard let uid = user?.uid, let bmi = bmiInfo  else { return nil }
-                return (uid, bmi.height, bmi.weight)
-            })
-            .subscribe(onNext: { (result) in
-                guard let res = result else { return }
-                BMIRecordService.createBMIRecord(forUser: res.user, height: res.h, weight: res.w)
-            })
+        return event.subscribe(onNext: { (bmiInfo) in
+            guard let bmi = bmiInfo else { return }
+            BMIService.createBMIRecord(height: bmi.height, weight: bmi.weight)
+        })
     }
 }
 

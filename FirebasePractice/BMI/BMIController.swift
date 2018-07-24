@@ -10,7 +10,6 @@ import UIKit
 import RxSwift
 import RxCocoa
 import RxDataSources
-import FirebaseDatabase
 
 class BMIController: UIViewController {
 
@@ -51,6 +50,10 @@ class BMIController: UIViewController {
         setupBMIViewModel(BMIViewModel())
     }
 
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
         guard let identifier = segue.identifier else { return }
@@ -63,10 +66,6 @@ class BMIController: UIViewController {
         default:
             return
         }
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
     }
 }
 
