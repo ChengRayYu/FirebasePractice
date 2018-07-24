@@ -73,12 +73,12 @@ class BMIService {
         var options: [String] {
             switch self {
             case .gender:
-                return ["Please select your gender",
+                return ["–",
                         Gender.male.description,
                         Gender.female.description,
                         Gender.neither.description]
             case .age:
-                return ["Please select your age",
+                return ["–",
                         AgeRange.underTen.description,
                         AgeRange.tenToTwenty.description,
                         AgeRange.twentyOneToThirty.description,

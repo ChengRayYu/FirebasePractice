@@ -36,13 +36,14 @@ class UserInfoEditController: UIViewController {
 
 // MARK: - Public Methods
 
-extension UserInfoEditController {
+extension UserInfoEditController: UIPickerViewDelegate {
 
     func setupViewModel(ofEditingType editType: BMIService.UserInfoEditType) {
 
         let viewModel = UserInfoEditViewModel(
             forType: editType,
             input: (infoContent: infoContentTxtField.rx.text.orEmpty.asDriver(),
+                    selectedPickerIndex: optionPicker.rx.itemSelected.asDriver().map { $0.row }.startWith(0),
                     saveOnTap: saveBtn.rx.tap.asDriver()))
 
         viewModel.editTypeDrv
@@ -69,10 +70,13 @@ extension UserInfoEditController {
 
         viewModel.infoContentDrv
             .drive(onNext: { (result) in
-                self.infoContentTxtField.text = result.content
+                if let content = result.content {
+                    self.infoContentTxtField.text = content
+                }
                 if let idx = result.optionIndex {
                     self.infoContentTxtField.inputView = self.optionPicker
-                    self.optionPicker.selectRow(idx, inComponent: 0, animated: false)
+                    self.optionPicker.selectRow(idx, inComponent: 0, animated: true)
+                    self.optionPicker.delegate?.pickerView!(self.optionPicker, didSelectRow: idx, inComponent: 0)
                 }
             })
             .disposed(by: disposeBag)
@@ -83,5 +87,17 @@ extension UserInfoEditController {
             .bind(to: self.infoContentTxtField.rx.text)
             .disposed(by: disposeBag)
 
+        viewModel.infoUpdatedDrv
+            .drive(onNext: { (flag) in
+                if flag {
+                    self.navigationController?.popViewController(animated: true)
+                }
+            })
+            .disposed(by: disposeBag)
+
+        viewModel.contentErrorSubject
+            .asDriver(onErrorJustReturn: nil)
+            .drive(infoContentErrLbl.rx.text)
+            .disposed(by: disposeBag)
     }
 }
