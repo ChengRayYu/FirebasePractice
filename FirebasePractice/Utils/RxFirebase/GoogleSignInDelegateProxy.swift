@@ -15,19 +15,6 @@ typealias GIDSignInResult = (user: GIDGoogleUser, error: Error?)
 
 extension Reactive where Base: GIDSignIn {
 
-    /*
-    var signIn: ControlEvent<Void> {
-        let source: Observable<Void> = Observable.create { observer in
-            self.base.signIn()
-            observer.on(.next(()))
-            return Disposables.create()
-            }
-            .takeUntil(deallocated)
-
-        return ControlEvent(events: source)
-    }
-    */
-    
     var didSignIn: Observable<GIDSignInResult?> {
         let proxy  = RxGoogleSignInDelegateProxy.proxy(for: base)
         return proxy.didSignInSubject
@@ -47,7 +34,6 @@ class RxGoogleSignInDelegateProxy
     private(set) weak var googleSignIn: GIDSignIn?
 
     private init(googleSignIn: GIDSignIn) {
-        print(#function)
         self.googleSignIn = googleSignIn
         super.init(parentObject: googleSignIn, delegateProxy: RxGoogleSignInDelegateProxy.self)
     }
@@ -86,8 +72,6 @@ class RxGoogleSignInDelegateProxy
     }
 
     func sign(_ signIn: GIDSignIn, didSignInFor user: GIDGoogleUser, withError error: Error?) {
-        print(#function)
-        
         if let subject = _didSignInSubject {
             subject.on(.next((user: user, error: error)))
         }
@@ -102,7 +86,6 @@ class RxGoogleSignInDelegateProxy
     }
 
     deinit {
-        print(#function)
         _didSignInSubject?.on(.completed)
         _didDisconnectSubject?.on(.completed)
     }

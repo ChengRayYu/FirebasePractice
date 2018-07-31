@@ -12,28 +12,38 @@ import RxCocoa
 import FirebaseAuth
 import FirebaseDatabase
 
+enum BMIRecord {
+    case record(timestamp: String, height: Double, weight: Double)
+    case emptyMsg
+}
+
 class BMIViewModel {
 
     var loggedInDrv: Driver<Bool> = Driver.never()
     var recordsDrv: Driver<[BMIRecord]> = Driver.never()
+    //var errorSubject: PublishSubject<String> = .init()
     fileprivate var currentUserObs: Observable<User?> = Observable.never()
 
     init() {
-        let currentUserObs = Auth.auth().rx
-            .authStateChangeDidChange()
-            .map({ (result) -> User? in
-                return result.1
+
+        let currentUserObs = BMIService.authStateChanged()
+            .map({ (response) -> User? in
+                switch response {
+                case .success(let resp):
+                    return resp
+                case .fail(let err):
+                    //self.errorSubject.onNext(err.description)
+                    return nil
+                }
             })
 
         loggedInDrv = currentUserObs
             .map({ (user) -> Bool in
-                if user != nil {
-                    BMIService.initializeProfile()
-                    return true
-                }
-                return false
+                guard user != nil else { return false }
+                //BMIService.initializeProfile()
+                return true
             })
-            .asDriver(onErrorJustReturn: false)
+            .asDriver(onErrorDriveWith: Driver.never())
             .distinctUntilChanged()
 
         recordsDrv = currentUserObs
@@ -43,7 +53,7 @@ class BMIViewModel {
             })
             .map({ (records) -> [BMIRecord] in
                 if records.isEmpty {
-                    return [BMIRecord.empty]
+                    return [BMIRecord.emptyMsg]
                 }
                 return records.map({ (serviceRecord) -> BMIRecord in
                     return BMIRecord.record(timestamp: serviceRecord.timestamp,
@@ -65,10 +75,3 @@ extension BMIViewModel {
         })
     }
 }
-
-enum BMIRecord {
-    case record(timestamp: String, height: Double, weight: Double)
-    case empty
-}
-
-

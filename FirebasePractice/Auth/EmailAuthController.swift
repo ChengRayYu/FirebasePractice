@@ -29,9 +29,9 @@ class EmailAuthController: UIViewController {
             guard let value = newValue else { return }
             viewModel = EmailAuthViewModel.create(purpose: value,
                                                   input: (
-                                                    email: emailTxtField.rx.text.orEmpty.asObservable(),
-                                                    password: passwordTxtField .rx.text.orEmpty.asObservable(),
-                                                    actionTap: actionBtn.rx.tap.asObservable()))
+                                                    email: emailTxtField.rx.text.orEmpty.asDriver(),
+                                                    password: passwordTxtField .rx.text.orEmpty.asDriver(),
+                                                    actionTap: actionBtn.rx.tap.asDriver()))
         }
     }
 
@@ -64,24 +64,22 @@ class EmailAuthController: UIViewController {
             })
             .disposed(by: disposeBag)
         
-        viewModel?.emailValidation
-            .map { $0.description }
-            .bind(to: emailErrLabel.rx.text)
+        viewModel?.emailValidationDrv
+            .drive(emailErrLabel.rx.text)
             .disposed(by: disposeBag)
 
-        viewModel?.passwordValidation
-            .map { $0.description }
-            .bind(to: passwordErrLabel.rx.text)
+        viewModel?.passwordValidationDrv
+            .drive(passwordErrLabel.rx.text)
             .disposed(by: disposeBag)
 
-        viewModel?.errorPublisher
-            .subscribe(onNext: { (errStr) in
+        viewModel?.errorPublishDrv
+            .drive(onNext: { (errStr) in
                 self.showAlert(message: errStr)
             })
             .disposed(by: disposeBag)
 
-        viewModel?.actionProcessing
-            .bind(onNext: { (flag) in
+        viewModel?.processingDrv
+            .drive(onNext: { (flag) in
                 if flag {
                     self.emailErrLabel.text = ""
                     self.passwordErrLabel.text = ""
@@ -94,12 +92,12 @@ class EmailAuthController: UIViewController {
             })
             .disposed(by: disposeBag)
 
-        viewModel?.actionCompleted
-            .subscribe(onNext: { (user) in
+        viewModel?.completionDrv
+            .drive(onNext: { (user) in
                 print("""
-                    Firebase Auth Succeed
-                    user: \(user?.displayName ?? "TBD")
-                    email: \(user?.email ?? "email")
+                    Firebase Auth Complete
+                    user: \(user?.displayName ?? "n/a")
+                    email: \(user?.email ?? "n/a")
                     """)
             })
             .disposed(by: disposeBag)

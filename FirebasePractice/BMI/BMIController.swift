@@ -21,7 +21,7 @@ class BMIController: UIViewController {
         configureCell: { (dataSrc, cv, indexPath, item) -> UICollectionViewCell in
 
             switch dataSrc[indexPath] {
-            case .empty:
+            case .emptyMsg:
                 return cv.dequeueReusableCell(withReuseIdentifier: "BMIEmptyCell", for: indexPath)
 
             case let .record(timestamp, height, weight):
@@ -76,8 +76,7 @@ extension BMIController {
         bmiViewModel = viewModel
 
         viewModel.loggedInDrv
-            .asObservable()
-            .subscribe(onNext: { (flag) in
+            .drive(onNext: { (flag) in
                 self.dismiss(animated: true, completion: nil)
                 if flag != true {
                     self.performSegue(withIdentifier: "segue_BMI_requestAuth", sender: nil)
@@ -113,7 +112,7 @@ extension BMIController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         switch bmiCollectionDataSrc[indexPath] {
-        case .empty:
+        case .emptyMsg:
             return CGSize(width: collectionView.frame.size.width, height: 400.0)
         default:
             return CGSize(width: collectionView.frame.size.width - 24.0, height: 88.0)

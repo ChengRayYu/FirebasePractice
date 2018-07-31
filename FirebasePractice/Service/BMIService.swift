@@ -12,90 +12,55 @@ import RxCocoa
 import FirebaseAuth
 import FirebaseDatabase
 
-class BMIService {
+class BMIService { }
 
-    enum Gender: Int {
+// MARK: - Authentication
 
-        case notAvailable = -1
-        case male = 1
-        case female = 2
-        case neither = 3
+extension BMIService {
 
-        var description: String {
-            switch self {
-            case .notAvailable:     return "–"
-            case .male:             return "Male"
-            case .female:           return "Female"
-            case .neither:          return "Neither"
-            }
-        }
+    static func signIn(withEmail email: String, password: String) -> Observable<Response<User?>> {
+
+        return Auth.auth().rx
+            .signIn(email: email, password: password)
+            .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
+            .map({ (user) -> Response<User?> in
+                guard let user = user else { return .fail(err: .unauthenticated) }
+                return .success(resp: user)
+            })
+            .catchError({ (error) -> Observable<Response<User?>> in
+                return Observable.just(.fail(err: handleError(error)))
+            })
     }
 
-    enum AgeRange: Int {
+    static func createUser(withEmail email: String, password: String) -> Observable<Response<User?>> {
 
-        case notAvailable = -1
-        case underTen = 1
-        case tenToTwenty = 2
-        case twentyOneToThirty = 3
-        case thirtyOneToForty = 4
-        case fortyOneToFifty = 5
-        case overFifty = 6
-
-        var description: String {
-            switch self {
-            case .notAvailable:         return "–"
-            case .underTen:             return "Under 10"
-            case .tenToTwenty:          return "10 - 20"
-            case .twentyOneToThirty:    return "21 - 30"
-            case .thirtyOneToForty:     return "31 - 40"
-            case .fortyOneToFifty:      return "41 - 50"
-            case .overFifty:            return "Over 50"
-            }
-        }
+        return Auth.auth().rx
+            .createUser(email: email, password: password)
+            .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
+            .map({ (user) -> Response<User?> in
+                guard let user = user else { return .fail(err: .unauthenticated) }
+                return .success(resp: user)
+            })
+            .catchError({ (error) -> Observable<Response<User?>> in
+                return Observable.just(.fail(err: handleError(error)))
+            })
     }
 
-    enum UserInfoEditType: String {
+    static func authStateChanged() -> Observable<Response<User?>> {
 
-        case email = "email"
-        case username = "displayName"
-        case gender = "gender"
-        case age = "age"
-
-        var description : String {
-            switch self {
-            case .email:    return "Email"
-            case .username: return "Username"
-            case .gender:   return "Gender"
-            case .age:      return "Age"
-            }
-        }
-
-        var options: [String] {
-            switch self {
-            case .gender:
-                return ["–",
-                        Gender.male.description,
-                        Gender.female.description,
-                        Gender.neither.description]
-            case .age:
-                return ["–",
-                        AgeRange.underTen.description,
-                        AgeRange.tenToTwenty.description,
-                        AgeRange.twentyOneToThirty.description,
-                        AgeRange.thirtyOneToForty.description,
-                        AgeRange.fortyOneToFifty.description,
-                        AgeRange.overFifty.description]
-            default:
-                return []
-            }
-        }
+        return Auth.auth().rx
+            .authStateDidChange()
+            .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
+            .map({ (authResult) -> Response<User?> in
+                return .success(resp: authResult.1)
+            })
+            .catchError({ (error) -> Observable<Response<User?>> in
+                return Observable.just(.fail(err: handleError(error)))
+            })
     }
-
-    typealias UserInfo = (email: String, name: String, gender: Gender, age: AgeRange)
-    typealias Record = (timestamp: String, height: Double, weight: Double)
 }
 
-// MARK: - BMI UserInfo Operations
+// MARK: - UserInfo Operations
 
 extension BMIService {
 
@@ -112,6 +77,30 @@ extension BMIService {
             }
         })
     }
+
+    /*
+    static func initializeProfile() -> Observable<Response<Void>> {
+
+        guard let user = Auth.auth().currentUser else { return Observable.just(.fail(err: .unauthenticated)) }
+
+        let usersRef = Database.database().reference().child("users")
+        return usersRef.rx.observeSingleEvent(.value)
+            .observeOn(ConcurrentDispatchQueueScheduler(qos: .background))
+            .map({ (snapshot) -> BMIService.Response<Void> in
+                if !snapshot.hasChild(user.uid) {
+                    usersRef.child(user.uid).setValue([UserInfoEditType.email.rawValue: user.email ?? "",
+                                                       UserInfoEditType.username.rawValue: user.displayName ?? "",
+                                                       UserInfoEditType.gender.rawValue: -1,
+                                                       UserInfoEditType.age.rawValue: -1])
+                }
+                return .success(response: ())
+            })
+            .catchError({ (error) -> Observable<BMIService.Result<Void>> in
+                return Observable.just(.fail(err: .other(message: error.localizedDescription)))
+            })
+    }
+    */
+
 
     static func fetchUserInfo() -> Driver<UserInfo?> {
 
@@ -186,3 +175,17 @@ extension BMIService {
         userRecordRef.child(timestamp).setValue(["h": NSNumber(value: height), "w": NSNumber(value: weight)])
     }
 }
+
+// MARK: - Private Method
+
+fileprivate extension BMIService {
+
+    fileprivate static func handleError(_ error: Error) -> Err {
+
+        if let code = AuthErrorCode(rawValue: error._code) {
+            return .auth(code: code, msg: error.localizedDescription)
+        }
+        return .other(msg: error.localizedDescription)
+    }
+}
+
