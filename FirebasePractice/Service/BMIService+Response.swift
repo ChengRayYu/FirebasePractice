@@ -8,6 +8,7 @@
 
 import Foundation
 import FirebaseAuth
+import GoogleSignIn
 
 extension BMIService {
 
@@ -20,6 +21,7 @@ extension BMIService {
         case empty
         case unauthenticated
         case auth(code: AuthErrorCode, msg: String)
+        case gAuth(code: GIDSignInErrorCode, msg: String)
         case other(msg: String)
 
         var description: String {
@@ -27,9 +29,9 @@ extension BMIService {
             case .empty:                return "Please enter something"
             case .unauthenticated:      return "Invalid user"
             case let .auth(_, msg):     return msg
-            case let .other(msg):    return msg
+            case let .gAuth(_, msg):    return msg
+            case let .other(msg):       return msg
             }
         }
-
     }
 }

@@ -10,6 +10,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 import FirebaseAuth
+import GoogleSignIn
 import FirebaseDatabase
 
 class BMIService { }
@@ -18,14 +19,13 @@ class BMIService { }
 
 extension BMIService {
 
-    static func signIn(withEmail email: String, password: String) -> Observable<Response<User?>> {
+    static func authStateChanged() -> Observable<Response<User?>> {
 
         return Auth.auth().rx
-            .signIn(email: email, password: password)
+            .authStateDidChange()
             .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
-            .map({ (user) -> Response<User?> in
-                guard let user = user else { return .fail(err: .unauthenticated) }
-                return .success(resp: user)
+            .map({ (authResult) -> Response<User?> in
+                return .success(resp: authResult.1)
             })
             .catchError({ (error) -> Observable<Response<User?>> in
                 return Observable.just(.fail(err: handleError(error)))
@@ -46,13 +46,55 @@ extension BMIService {
             })
     }
 
-    static func authStateChanged() -> Observable<Response<User?>> {
+    static func signIn(withEmail email: String, password: String) -> Observable<Response<User?>> {
 
         return Auth.auth().rx
-            .authStateDidChange()
+            .signIn(email: email, password: password)
             .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
-            .map({ (authResult) -> Response<User?> in
-                return .success(resp: authResult.1)
+            .map({ (user) -> Response<User?> in
+                guard let user = user else { return .fail(err: .unauthenticated) }
+                return .success(resp: user)
+            })
+            .catchError({ (error) -> Observable<Response<User?>> in
+                return Observable.just(.fail(err: handleError(error)))
+            })
+    }
+
+    static func googleSignIn() -> Observable<Response<User?>> {
+
+        return GIDSignIn.sharedInstance().rx.didSignIn
+            .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
+            .map({ (result) -> (credential: AuthCredential?, error: Error?) in
+                if let err = result.error {
+                    return (nil, err)
+                }
+                guard let authentication = result.user.authentication,
+                    let idToken = authentication.idToken,
+                    let accessToken = authentication.accessToken else {
+                        return (nil, nil)
+                }
+                let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
+                return (credential, nil)
+            })
+            .flatMap({ (pair) -> Observable<Response<User?>> in
+                if let err = pair.error {
+                    return Observable.just(.fail(err: handleError(err)))
+                }
+                guard let credential = pair.credential else {
+                    return Observable.just(.fail(err: .unauthenticated))
+                }
+                return signIn(withCredential: credential)
+            })
+    }
+
+    static func signIn(withCredential cred: AuthCredential) -> Observable<Response<User?>> {
+
+        return Auth.auth().rx
+            .signIn(credential: cred)
+            .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
+            .map({ (user) -> Response<User?> in
+                guard let user = user else { return .fail(err: .unauthenticated) }
+                return .success(resp: user)
             })
             .catchError({ (error) -> Observable<Response<User?>> in
                 return Observable.just(.fail(err: handleError(error)))
@@ -139,7 +181,6 @@ extension BMIService {
     }
 }
 
-
 // MARK: - BMI Record Operations
 
 extension BMIService {
@@ -182,8 +223,11 @@ fileprivate extension BMIService {
 
     fileprivate static func handleError(_ error: Error) -> Err {
 
-        if let code = AuthErrorCode(rawValue: error._code) {
+        if error._domain == "FIRAuthErrorDomain", let code = AuthErrorCode(rawValue: error._code) {
             return .auth(code: code, msg: error.localizedDescription)
+        }
+        if error._domain == "com.google.GIDSignIn", let code = GIDSignInErrorCode(rawValue: error._code) {
+            return .gAuth(code: code, msg: error.localizedDescription)
         }
         return .other(msg: error.localizedDescription)
     }

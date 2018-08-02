@@ -15,13 +15,15 @@ typealias GIDSignInResult = (user: GIDGoogleUser, error: Error?)
 
 extension Reactive where Base: GIDSignIn {
 
-    var didSignIn: Observable<GIDSignInResult?> {
+    var didSignIn: Observable<GIDSignInResult> {
         let proxy  = RxGoogleSignInDelegateProxy.proxy(for: base)
+        proxy.didSignInSubject = PublishSubject<GIDSignInResult>()
         return proxy.didSignInSubject
     }
 
-    var didDisconnect: Observable<GIDSignInResult?> {
+    var didDisconnect: Observable<GIDSignInResult> {
         let proxy = RxGoogleSignInDelegateProxy.proxy(for: base)
+        proxy.didDisconnectSubject = PublishSubject<GIDSignInResult>()
         return proxy.didDisconnectSubject
     }
 }
@@ -32,6 +34,8 @@ class RxGoogleSignInDelegateProxy
     , GIDSignInDelegate {
 
     private(set) weak var googleSignIn: GIDSignIn?
+    fileprivate lazy var didSignInSubject = PublishSubject<GIDSignInResult>()
+    fileprivate lazy var didDisconnectSubject = PublishSubject<GIDSignInResult>()
 
     private init(googleSignIn: GIDSignIn) {
         self.googleSignIn = googleSignIn
@@ -50,43 +54,18 @@ class RxGoogleSignInDelegateProxy
         object.delegate = delegate
     }
 
-    private var _didSignInSubject: PublishSubject<GIDSignInResult?>?
-    private var _didDisconnectSubject: PublishSubject<GIDSignInResult?>?
-
-    var didSignInSubject: PublishSubject<GIDSignInResult?> {
-        if let subject = _didSignInSubject {
-            return subject
-        }
-        let subject = PublishSubject<GIDSignInResult?>()
-        _didSignInSubject = subject
-        return subject
-    }
-
-    var didDisconnectSubject: PublishSubject<GIDSignInResult?> {
-        if let subject = _didDisconnectSubject {
-            return subject
-        }
-        let subject = PublishSubject<GIDSignInResult?>()
-        _didDisconnectSubject = subject
-        return subject
-    }
-
     func sign(_ signIn: GIDSignIn, didSignInFor user: GIDGoogleUser, withError error: Error?) {
-        if let subject = _didSignInSubject {
-            subject.on(.next((user: user, error: error)))
-        }
+        didSignInSubject.on(.next((user: user, error: error)))
         _forwardToDelegate?.sign(signIn, didSignInFor: user, withError: error)
     }
 
     func sign(_ signIn: GIDSignIn, didDisconnectWith user: GIDGoogleUser, withError error: Error) {
-        if let subject = _didDisconnectSubject {
-            subject.on(.next((user: user, error: error)))
-        }
+        didDisconnectSubject.on(.next((user: user, error: error)))
         _forwardToDelegate?.sign(signIn, didDisconnectWith: user, withError: error)
     }
 
     deinit {
-        _didSignInSubject?.on(.completed)
-        _didDisconnectSubject?.on(.completed)
+        didSignInSubject.on(.completed)
+        didDisconnectSubject.on(.completed)
     }
 }

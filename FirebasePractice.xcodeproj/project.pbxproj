@@ -32,7 +32,6 @@
 		71C3A2401FCF1FC400A8D276 /* BMIHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C3A23F1FCF1FC400A8D276 /* BMIHeader.swift */; };
 		71D1675120FCF55500B4277E /* CreateBMIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D1675020FCF55500B4277E /* CreateBMIController.swift */; };
 		71D1675320FCF59B00B4277E /* CreateBMIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D1675220FCF59B00B4277E /* CreateBMIViewModel.swift */; };
-		71D8FABE1FC8B3C70027C24C /* GIDAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D8FABD1FC8B3C70027C24C /* GIDAuthService.swift */; };
 		71E6F7741FB2245E0030AA0C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E6F7731FB2245E0030AA0C /* AppDelegate.swift */; };
 		71E6F7761FB2245E0030AA0C /* WelcomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E6F7751FB2245E0030AA0C /* WelcomeController.swift */; };
 		71E6F7791FB2245E0030AA0C /* BMI.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71E6F7771FB2245E0030AA0C /* BMI.storyboard */; };
@@ -67,7 +66,6 @@
 		71C3A23F1FCF1FC400A8D276 /* BMIHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BMIHeader.swift; sourceTree = "<group>"; };
 		71D1675020FCF55500B4277E /* CreateBMIController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBMIController.swift; sourceTree = "<group>"; };
 		71D1675220FCF59B00B4277E /* CreateBMIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateBMIViewModel.swift; sourceTree = "<group>"; };
-		71D8FABD1FC8B3C70027C24C /* GIDAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIDAuthService.swift; sourceTree = "<group>"; };
 		71E6F7701FB2245E0030AA0C /* FirebasePractice.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FirebasePractice.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		71E6F7731FB2245E0030AA0C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		71E6F7751FB2245E0030AA0C /* WelcomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeController.swift; sourceTree = "<group>"; };
@@ -156,7 +154,6 @@
 				71ED692D20F7D6DA0085C321 /* BMIService.swift */,
 				7157E1A5210D16C500F78C4D /* BMIService+Response.swift */,
 				7157E1A7210D27A600F78C4D /* BMIService+Enum.swift */,
-				71D8FABD1FC8B3C70027C24C /* GIDAuthService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -378,7 +375,6 @@
 				7130B8B6207065F20054125F /* UIView+Extension.swift in Sources */,
 				71D1675120FCF55500B4277E /* CreateBMIController.swift in Sources */,
 				715847131FCC5E8D009162C3 /* BMIViewModel.swift in Sources */,
-				71D8FABE1FC8B3C70027C24C /* GIDAuthService.swift in Sources */,
 				71D1675320FCF59B00B4277E /* CreateBMIViewModel.swift in Sources */,
 				7152A1D81FCDBCBA006A6C61 /* BMICell.swift in Sources */,
 				7183951021023AA700627AB3 /* UserInfoCell.swift in Sources */,

@@ -17,16 +17,13 @@ class WelcomeController: UIViewController {
     @IBOutlet weak var emailSignInBtn: UIButton!
     @IBOutlet weak var emailSignUpBtn: UIButton!
 
-    fileprivate let viewModel: WelcomeViewModel = WelcomeViewModel(gidAuth: GIDAuthService.instance)
     fileprivate var emailAuthController: EmailAuthController?
     fileprivate let disposeBag = DisposeBag()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         GIDSignIn.sharedInstance().uiDelegate = self
-
-        bindViewModel()
-        bindViewAction()
+        rx()
     }
 
     override func didReceiveMemoryWarning() {
@@ -47,27 +44,32 @@ class WelcomeController: UIViewController {
 // MARK: - Private Methods
 extension WelcomeController {
 
-    func bindViewModel() {
+    func rx() {
 
-        viewModel.googleSignedIn
-            .drive(onNext: { (user) in
-                print("USER: \(user?.displayName ?? "NULL")")
+        let vm = WelcomeViewModel(withGoogleSignInOnTap: googleSignInBtn.rx.tap.asDriver())
+
+        vm.googleSignedInDrv
+            .drive()
+            .disposed(by: disposeBag)
+
+        vm.processingDrv
+            .drive(onNext: { (flag) in
+                print("WELCOME ACTIVITY IS - \((flag) ? "ON" : "OFF")")
             })
             .disposed(by: disposeBag)
-    }
 
-    func bindViewAction() {
-
-        googleSignInBtn.rx.tap
-            .bind(to: viewModel.googleSignInTap)
+        vm.errResponseDrv
+            .drive(onNext: { (errMsg) in
+                print(errMsg)
+            })
             .disposed(by: disposeBag)
 
         emailSignInBtn.rx.tap
             .asObservable()
             .subscribe(onNext: { _ in
-                 self.performSegue(withIdentifier: "segue_welcome_emailAuth", sender: nil)
-                 guard let authCtrl = self.emailAuthController else { return }
-                 authCtrl.purpose = .signIn
+                self.performSegue(withIdentifier: "segue_welcome_emailAuth", sender: nil)
+                guard let authCtrl = self.emailAuthController else { return }
+                authCtrl.purpose = .signIn
             })
             .disposed(by: disposeBag)
 
@@ -79,6 +81,7 @@ extension WelcomeController {
                 authCtrl.purpose = .signUp
             })
             .disposed(by: disposeBag)
+
     }
 }
 
