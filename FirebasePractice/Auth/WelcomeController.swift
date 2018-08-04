@@ -49,18 +49,27 @@ extension WelcomeController {
         let vm = WelcomeViewModel(withGoogleSignInOnTap: googleSignInBtn.rx.tap.asDriver())
 
         vm.googleSignedInDrv
-            .drive()
+            .drive(onNext: { (user) in
+                print("""
+                    Firebase Auth Complete
+                    user: \(user?.displayName ?? "failed")
+                    email: \(user?.email ?? "failed")
+                    """)
+            })
             .disposed(by: disposeBag)
 
         vm.processingDrv
             .drive(onNext: { (flag) in
-                print("WELCOME ACTIVITY IS - \((flag) ? "ON" : "OFF")")
+                flag ? self.showLoadingHud() : self.hideLoadingHud()
+                self.googleSignInBtn.isEnabled = !flag
+                self.emailSignInBtn.isEnabled = !flag
+                self.emailSignUpBtn.isEnabled = !flag
             })
             .disposed(by: disposeBag)
 
         vm.errResponseDrv
             .drive(onNext: { (errMsg) in
-                print(errMsg)
+                self.showAlert(message: errMsg)
             })
             .disposed(by: disposeBag)
 
@@ -81,7 +90,6 @@ extension WelcomeController {
                 authCtrl.purpose = .signUp
             })
             .disposed(by: disposeBag)
-
     }
 }
 

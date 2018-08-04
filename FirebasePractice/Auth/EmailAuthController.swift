@@ -80,6 +80,7 @@ class EmailAuthController: UIViewController {
 
         viewModel?.processingDrv
             .drive(onNext: { (flag) in
+                flag ? self.showLoadingHud() : self.hideLoadingHud()
                 if flag {
                     self.emailErrLabel.text = ""
                     self.passwordErrLabel.text = ""
@@ -88,7 +89,6 @@ class EmailAuthController: UIViewController {
                 self.passwordTxtField.isEnabled = !flag
                 self.cancelBtn.isEnabled = !flag
                 self.actionBtn.isEnabled = !flag
-                print("ACTIVITY INDICATION IS - \((flag) ? "ON" : "OFF")")
             })
             .disposed(by: disposeBag)
 
@@ -96,16 +96,10 @@ class EmailAuthController: UIViewController {
             .drive(onNext: { (user) in
                 print("""
                     Firebase Auth Complete
-                    user: \(user?.displayName ?? "n/a")
-                    email: \(user?.email ?? "n/a")
+                    user: \(user?.displayName ?? "failed")
+                    email: \(user?.email ?? "failed")
                     """)
             })
             .disposed(by: disposeBag)
-    }
-
-    func showAlert(message: String) {
-        let alertView = UIAlertController(title: "FirebasePractice", message: message, preferredStyle: .alert)
-        alertView.addAction(UIAlertAction(title: "OK", style: .cancel))
-        self.present(alertView, animated: true, completion: nil)
     }
 }

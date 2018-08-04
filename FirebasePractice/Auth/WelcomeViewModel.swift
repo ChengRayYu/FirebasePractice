@@ -27,26 +27,43 @@ class WelcomeViewModel {
         errResponseDrv = errRespSubject.asDriver(onErrorDriveWith: Driver.never())
 
         googleSignedInDrv = googleSignInOnTap
+            .asObservable()
             .map {
                 GIDSignIn.sharedInstance().signIn()
             }
-            .flatMap({ () -> Driver<User?> in
-                return BMIService.googleSignIn()
-                    .map({ (response) -> User? in
+            .flatMap({ _ -> Observable<AuthCredential?> in
+                return BMIService.signInViaGoogle()
+                    .map({ (response) -> AuthCredential? in
                         switch response {
                         case .success(let resp):
                             return resp
                         case .fail(let err):
-                            print(err)
                             let codes: [GIDSignInErrorCode] = [.canceled, .noSignInHandlersInstalled]
-                            if case .gAuth(let code, _) = err, codes.contains(code) {
+                            if case .gAuth(let code, _) = err, !codes.contains(code) {
                                 errRespSubject.onNext(err.description)
                             }
                             return nil
                         }
                     })
                     .trackActivity(activityIndicator)
-                    .asDriver(onErrorJustReturn: nil)
             })
+            .skipWhile { $0 == nil }
+            .flatMap({ (credential) -> Observable<User?> in
+                guard let cred = credential else {
+                    return Observable.just(nil)
+                }
+                return BMIService.signIn(withCredential: cred)
+                    .map({ (response) -> User? in
+                        switch response {
+                        case .success(let resp):
+                            return resp
+                        case .fail(let err):
+                            errRespSubject.onNext(err.description)
+                            return nil
+                        }
+                    })
+                    .trackActivity(activityIndicator)
+            })
+            .asDriver(onErrorJustReturn: nil)
     }
 }

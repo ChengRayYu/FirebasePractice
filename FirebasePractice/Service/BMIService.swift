@@ -60,30 +60,22 @@ extension BMIService {
             })
     }
 
-    static func googleSignIn() -> Observable<Response<User?>> {
+
+    static func signInViaGoogle() -> Observable<Response<AuthCredential?>> {
 
         return GIDSignIn.sharedInstance().rx.didSignIn
             .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
-            .map({ (result) -> (credential: AuthCredential?, error: Error?) in
+            .map({ (result) -> Response<AuthCredential?> in
                 if let err = result.error {
-                    return (nil, err)
+                    return .fail(err: handleError(err))
                 }
                 guard let authentication = result.user.authentication,
                     let idToken = authentication.idToken,
                     let accessToken = authentication.accessToken else {
-                        return (nil, nil)
+                        return .fail(err: .unauthenticated)
                 }
                 let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
-                return (credential, nil)
-            })
-            .flatMap({ (pair) -> Observable<Response<User?>> in
-                if let err = pair.error {
-                    return Observable.just(.fail(err: handleError(err)))
-                }
-                guard let credential = pair.credential else {
-                    return Observable.just(.fail(err: .unauthenticated))
-                }
-                return signIn(withCredential: credential)
+                return .success(resp: credential)
             })
     }
 

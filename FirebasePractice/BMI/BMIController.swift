@@ -58,7 +58,7 @@ class BMIController: UIViewController {
 
         guard let identifier = segue.identifier else { return }
         switch identifier {
-        case "segue_BMI_CreateRecord":
+        case "segue_BMI_createRecord":
             let vc = segue.destination as? CreateBMIController
             vc?.loadView()
             setupCreateBMIViewModel(vc?.generateViewModel())

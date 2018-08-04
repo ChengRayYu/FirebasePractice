@@ -13,5 +13,6 @@ target 'FirebasePractice' do
     pod 'GoogleSignIn'
     pod 'Firebase/Database'
     pod 'Firebase/Messaging'
+    pod 'MBProgressHUD', '~> 1.1.0'
   
 end

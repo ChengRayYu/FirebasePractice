@@ -51,7 +51,7 @@ class EmailAuthViewModel: EmailAuthRes {
 
         errorPublishDrv = errorResponseSubject.asObservable()
             .skipWhile { ValidationService.filterResponsedError($0) }
-            .map { $0.localizedDescription }
+            .map { $0.description }
             .asDriver(onErrorDriveWith: Driver.never())
 
         let emailAndErr = Driver.combineLatest(input.email, errorResponseSubject.asDriver(onErrorDriveWith: Driver.never()))
@@ -175,5 +175,3 @@ class SignInViewModel: EmailAuthViewModel {
             }
     }
 }
-
-

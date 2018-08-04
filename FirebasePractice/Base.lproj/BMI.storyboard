@@ -223,7 +223,7 @@
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
                                                     <connections>
-                                                        <segue destination="sNq-r6-p2y" kind="presentation" identifier="segue_BMI_CreateRecord" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="U9v-P5-tBd"/>
+                                                        <segue destination="sNq-r6-p2y" kind="presentation" identifier="segue_BMI_createRecord" modalPresentationStyle="overCurrentContext" modalTransitionStyle="crossDissolve" id="U9v-P5-tBd"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -548,7 +548,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic_user" width="18" height="20"/>
+        <image name="ic_user" width="14" height="16"/>
         <namedColor name="Grey200">
             <color red="0.93300002810000005" green="0.93300002810000005" blue="0.93300002810000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		663D8C03C21EF7B7C9E0A7DF /* Pods_FirebasePractice.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A53616A81AC9C42C763CCD91 /* Pods_FirebasePractice.framework */; };
+		712C7AEA211507C000F03C44 /* UIViewController+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712C7AE9211507C000F03C44 /* UIViewController+Common.swift */; };
 		712EEB981FB3A9BA00CF71B5 /* Color.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 712EEB971FB3A9BA00CF71B5 /* Color.xcassets */; };
 		7130B8B6207065F20054125F /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7130B8B5207065F20054125F /* UIView+Extension.swift */; };
 		714AEEDC1FB75B760071FBF9 /* FirebaseAuth+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714AEEDB1FB75B760071FBF9 /* FirebaseAuth+Rx.swift */; };
@@ -42,6 +43,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		712C7AE9211507C000F03C44 /* UIViewController+Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Common.swift"; sourceTree = "<group>"; };
 		712EEB971FB3A9BA00CF71B5 /* Color.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Color.xcassets; sourceTree = "<group>"; };
 		7130B8B5207065F20054125F /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		714AEEDB1FB75B760071FBF9 /* FirebaseAuth+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FirebaseAuth+Rx.swift"; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 			isa = PBXGroup;
 			children = (
 				719F09B720F51A5800861108 /* RxFirebase */,
+				712C7AE9211507C000F03C44 /* UIViewController+Common.swift */,
 				7130B8B5207065F20054125F /* UIView+Extension.swift */,
 				717786081FBF526800E2485B /* ActivityIndicator.swift */,
 			);
@@ -300,6 +303,7 @@
 				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxDataSources/RxDataSources.framework",
@@ -313,6 +317,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxDataSources.framework",
@@ -389,6 +394,7 @@
 				7177860B1FBF7E5C00E2485B /* WelcomeViewModel.swift in Sources */,
 				7185E4B91FB61E5600A83692 /* EmailAuthController.swift in Sources */,
 				71839516210243BD00627AB3 /* UserInfoEditViewModel.swift in Sources */,
+				712C7AEA211507C000F03C44 /* UIViewController+Common.swift in Sources */,
 				7185E4BB1FB6217E00A83692 /* EmailAuthViewModel.swift in Sources */,
 				7183950E210188B700627AB3 /* UserInfoController.swift in Sources */,
 				719F09B920F51AB300861108 /* FirebaseDatabase+Rx.swift in Sources */,
