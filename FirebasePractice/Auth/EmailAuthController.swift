@@ -51,6 +51,9 @@ class EmailAuthController: UIViewController {
     }
 
     func rx() {
+
+        guard let vm = viewModel else { return }
+
         cancelBtn.rx.tap
             .subscribe(onNext: { [weak self] _ in
                 self?.dismiss(animated: true, completion: {
@@ -64,21 +67,21 @@ class EmailAuthController: UIViewController {
             })
             .disposed(by: disposeBag)
         
-        viewModel?.emailValidationDrv
+        vm.emailValidationDrv
             .drive(emailErrLabel.rx.text)
             .disposed(by: disposeBag)
 
-        viewModel?.passwordValidationDrv
+        vm.passwordValidationDrv
             .drive(passwordErrLabel.rx.text)
             .disposed(by: disposeBag)
 
-        viewModel?.errorPublishDrv
+        vm.errorPublishDrv
             .drive(onNext: { (errStr) in
                 self.showAlert(message: errStr)
             })
             .disposed(by: disposeBag)
 
-        viewModel?.processingDrv
+        vm.processingDrv
             .drive(onNext: { (flag) in
                 flag ? self.showLoadingHud() : self.hideLoadingHud()
                 if flag {
@@ -92,7 +95,7 @@ class EmailAuthController: UIViewController {
             })
             .disposed(by: disposeBag)
 
-        viewModel?.completionDrv
+        vm.completionDrv
             .drive(onNext: { (user) in
                 print("""
                     Firebase Auth Complete

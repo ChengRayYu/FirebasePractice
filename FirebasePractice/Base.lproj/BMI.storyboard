@@ -45,7 +45,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="4" maxX="0.0" maxY="12"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="BMICell" id="fky-me-QU3" customClass="BMICell" customModule="FirebasePractice" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="BMIRecordCell" id="fky-me-QU3" customClass="BMIRecordCell" customModule="FirebasePractice" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="64" width="375" height="92"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -157,15 +157,114 @@
                                             <outlet property="weightLbl" destination="PGH-kF-aBS" id="cOW-9Y-4S5"/>
                                         </connections>
                                     </collectionViewCell>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="BMIEmptyCell" id="y6A-3e-rGj">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="BMIErrorCell" id="y6A-3e-rGj" customClass="BMIErrorCell" customModule="FirebasePractice" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="168" width="375" height="400"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="400"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Htp-ee-ZCH">
-                                                    <rect key="frame" x="48" y="164.33333333333334" width="279" height="71.333333333333343"/>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Wl-gS-QO3">
+                                                    <rect key="frame" x="36" y="150.66666666666666" width="303" height="60"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Htp-ee-ZCH">
+                                                            <rect key="frame" x="0.0" y="0.0" width="303" height="44"/>
+                                                            <attributedString key="attributedText">
+                                                                <fragment content="Oops!">
+                                                                    <attributes>
+                                                                        <color key="NSColor" name="Grey800"/>
+                                                                        <font key="NSFont" size="16" name="AvenirNext-Bold"/>
+                                                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                                    </attributes>
+                                                                </fragment>
+                                                                <fragment content=" Something went wrong.">
+                                                                    <attributes>
+                                                                        <color key="NSColor" name="Grey800"/>
+                                                                        <font key="NSFont" size="16" name="AvenirNext-DemiBold"/>
+                                                                        <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                                    </attributes>
+                                                                </fragment>
+                                                            </attributedString>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qum-V2-ID7">
+                                                            <rect key="frame" x="0.0" y="60" width="303" height="0.0"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" priority="250" constant="24" id="RfP-EU-wbB"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="14"/>
+                                                            <color key="textColor" name="Grey600"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="303" id="0Vc-pg-KXl"/>
+                                                        <constraint firstItem="Htp-ee-ZCH" firstAttribute="leading" secondItem="6Wl-gS-QO3" secondAttribute="leading" id="7AM-v7-Cv9"/>
+                                                        <constraint firstItem="Htp-ee-ZCH" firstAttribute="top" secondItem="6Wl-gS-QO3" secondAttribute="top" id="HSH-P7-yJc"/>
+                                                        <constraint firstItem="qum-V2-ID7" firstAttribute="top" secondItem="Htp-ee-ZCH" secondAttribute="bottom" constant="16" id="OLw-3E-nqT"/>
+                                                        <constraint firstAttribute="trailing" secondItem="qum-V2-ID7" secondAttribute="trailing" id="Oor-3D-hwd"/>
+                                                        <constraint firstAttribute="bottom" secondItem="qum-V2-ID7" secondAttribute="bottom" id="nfS-dk-QiT"/>
+                                                        <constraint firstAttribute="trailing" secondItem="Htp-ee-ZCH" secondAttribute="trailing" id="noE-M2-3fk"/>
+                                                        <constraint firstItem="qum-V2-ID7" firstAttribute="leading" secondItem="6Wl-gS-QO3" secondAttribute="leading" id="xaW-M4-s6b"/>
+                                                    </constraints>
+                                                </view>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S0l-Uh-ZI8">
+                                                    <rect key="frame" x="155.66666666666666" y="258.66666666666669" width="64" height="29"/>
+                                                    <color key="backgroundColor" name="Grey300"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="64" id="op6-aS-rES"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="12"/>
+                                                    <state key="normal" title="Reload">
+                                                        <color key="titleColor" name="Grey600"/>
+                                                    </state>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                            <real key="value" value="2"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
+                                                            <real key="value" value="1"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="shadowColor">
+                                                            <color key="value" name="Grey300"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
+                                                            <real key="value" value="0.5"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </button>
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="fNf-Nq-KsY">
+                                                    <rect key="frame" x="177" y="264" width="20" height="20"/>
+                                                    <color key="color" name="Grey600"/>
+                                                </activityIndicatorView>
+                                            </subviews>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="6Wl-gS-QO3" secondAttribute="trailing" constant="36" id="1g9-iz-DWt"/>
+                                            <constraint firstItem="6Wl-gS-QO3" firstAttribute="leading" secondItem="y6A-3e-rGj" secondAttribute="leading" constant="36" id="Oz0-t0-RkS"/>
+                                            <constraint firstItem="fNf-Nq-KsY" firstAttribute="centerY" secondItem="S0l-Uh-ZI8" secondAttribute="centerY" id="fM1-eY-ZdZ"/>
+                                            <constraint firstItem="S0l-Uh-ZI8" firstAttribute="top" secondItem="6Wl-gS-QO3" secondAttribute="bottom" constant="48" id="huv-m4-Bac"/>
+                                            <constraint firstItem="fNf-Nq-KsY" firstAttribute="centerX" secondItem="S0l-Uh-ZI8" secondAttribute="centerX" id="i9k-Gc-n74"/>
+                                            <constraint firstItem="6Wl-gS-QO3" firstAttribute="centerY" secondItem="y6A-3e-rGj" secondAttribute="centerY" constant="-20" id="js6-v8-N6O"/>
+                                            <constraint firstItem="S0l-Uh-ZI8" firstAttribute="centerX" secondItem="y6A-3e-rGj" secondAttribute="centerX" id="kif-TS-ADy"/>
+                                        </constraints>
+                                        <size key="customSize" width="375" height="400"/>
+                                        <connections>
+                                            <outlet property="errorLbl" destination="qum-V2-ID7" id="xT2-F0-nZu"/>
+                                            <outlet property="loadingIndicator" destination="fNf-Nq-KsY" id="VNS-x2-iop"/>
+                                            <outlet property="reloadBtn" destination="S0l-Uh-ZI8" id="eFt-NU-L8O"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="BMIEmptyMsgCell" id="xLR-bE-ygs">
+                                        <rect key="frame" x="0.0" y="580" width="375" height="400"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="400"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KbL-Al-CH0">
+                                                    <rect key="frame" x="48" y="164.66666666666666" width="279" height="71.333333333333343"/>
                                                     <attributedString key="attributedText">
                                                         <fragment content="No records found. ">
                                                             <attributes>
@@ -196,9 +295,9 @@
                                             </subviews>
                                         </view>
                                         <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="Htp-ee-ZCH" secondAttribute="trailing" constant="48" id="3ti-io-xTq"/>
-                                            <constraint firstItem="Htp-ee-ZCH" firstAttribute="leading" secondItem="y6A-3e-rGj" secondAttribute="leading" constant="48" id="QPv-qy-tp6"/>
-                                            <constraint firstItem="Htp-ee-ZCH" firstAttribute="centerY" secondItem="y6A-3e-rGj" secondAttribute="centerY" id="rOP-Nm-sXm"/>
+                                            <constraint firstItem="KbL-Al-CH0" firstAttribute="leading" secondItem="xLR-bE-ygs" secondAttribute="leading" constant="48" id="DVm-vl-nhV"/>
+                                            <constraint firstItem="KbL-Al-CH0" firstAttribute="centerY" secondItem="xLR-bE-ygs" secondAttribute="centerY" id="g3F-r5-cD4"/>
+                                            <constraint firstAttribute="trailing" secondItem="KbL-Al-CH0" secondAttribute="trailing" constant="48" id="nvM-bd-rai"/>
                                         </constraints>
                                         <size key="customSize" width="375" height="400"/>
                                     </collectionViewCell>
@@ -216,6 +315,9 @@
                                                     <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="14"/>
                                                     <state key="normal" title="Create New Entry">
                                                         <color key="titleColor" name="Grey600"/>
+                                                    </state>
+                                                    <state key="disabled">
+                                                        <color key="titleColor" name="Grey100"/>
                                                     </state>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -237,7 +339,7 @@
                                             </constraints>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                    <real key="value" value="3"/>
+                                                    <real key="value" value="2"/>
                                                 </userDefinedRuntimeAttribute>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
                                                     <real key="value" value="1.5"/>
@@ -549,8 +651,17 @@
     </scenes>
     <resources>
         <image name="ic_user" width="14" height="16"/>
+        <namedColor name="Grey100">
+            <color red="0.96100002527236938" green="0.96100002527236938" blue="0.96100002527236938" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="Grey200">
             <color red="0.93300002810000005" green="0.93300002810000005" blue="0.93300002810000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Grey300">
+            <color red="0.87800002099999996" green="0.87800002099999996" blue="0.87800002099999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Grey300">
+            <color red="0.87800002098083496" green="0.87800002098083496" blue="0.87800002098083496" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Grey300">
             <color red="0.87800002099999996" green="0.87800002099999996" blue="0.87800002099999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -562,7 +673,10 @@
             <color red="0.62000000476837158" green="0.62000000476837158" blue="0.62000000476837158" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Grey600">
-            <color red="0.45899999139999997" green="0.45899999139999997" blue="0.45899999139999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.45899999141693115" green="0.45899999141693115" blue="0.45899999141693115" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Grey600">
+            <color red="0.45899999141693115" green="0.45899999141693115" blue="0.45899999141693115" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Grey800">
             <color red="0.25900000333786011" green="0.25900000333786011" blue="0.25900000333786011" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

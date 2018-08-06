@@ -14,52 +14,100 @@ import FirebaseDatabase
 
 enum BMIRecord {
     case record(timestamp: String, height: Double, weight: Double)
-    case emptyMsg
+    case error(err: String)
+    case empty
 }
 
 class BMIViewModel {
 
-    var loggedInDrv: Driver<Bool> = Driver.never()
-    var recordsDrv: Driver<[BMIRecord]> = Driver.never()
-    //var errorSubject: PublishSubject<String> = .init()
-    fileprivate var currentUserObs: Observable<User?> = Observable.never()
+    let loggedInDrv: Driver<Bool>
+    let profileInitStateDrv: Driver<Bool>
+    let recordsDrv: Driver<[BMIRecord]>
+    let newEntryEnabledDrv: Driver<Bool>
+    let errResponseDrv: Driver<String>
+    let reloadSubject: PublishSubject<Void> = .init()
+    let reloadProgressDrv: Driver<Bool>
 
     init() {
+        let errRespSubject = PublishSubject<String>()
+        errResponseDrv = errRespSubject.asDriver(onErrorDriveWith: Driver.never())
 
-        let currentUserObs = BMIService.authStateChanged()
+        loggedInDrv = BMIService.authStateChanged()
             .map({ (response) -> User? in
                 switch response {
                 case .success(let resp):
                     return resp
                 case .fail(let err):
-                    //self.errorSubject.onNext(err.description)
+                    errRespSubject.onNext(err.description)
                     return nil
                 }
             })
+            .map { $0 != nil }
+            .asDriver(onErrorJustReturn: false)
 
-        loggedInDrv = currentUserObs
-            .map({ (user) -> Bool in
-                guard user != nil else { return false }
-                //BMIService.initializeProfile()
-                return true
+        profileInitStateDrv = loggedInDrv
+            .asObservable()
+            .takeWhile { $0 }
+            .flatMap({ _ -> Observable<Bool> in
+                return BMIService.initializeProfile()
+                    .map({ (response) -> Bool in
+                        switch response {
+                        case .success:
+                            return true
+                        case .fail(let err):
+                            errRespSubject.onNext(err.description)
+                            return false
+                        }
+                    })
             })
-            .asDriver(onErrorDriveWith: Driver.never())
-            .distinctUntilChanged()
+            .asDriver(onErrorJustReturn: false)
 
-        recordsDrv = currentUserObs
-            .asDriver(onErrorJustReturn: nil)
-            .flatMap({ _ -> Driver<[BMIService.Record]> in
-                return BMIService.fetchBMIRecords()
+        let loggedInAndReload = Driver.combineLatest(
+            loggedInDrv,
+            reloadSubject.startWith(())
+                .asDriver(onErrorJustReturn: ())) {
+                    (logged: $0, reload: $1 )
+            }
+
+        let activityIndicator = ActivityIndicator()
+        reloadProgressDrv = activityIndicator.asDriver()
+        
+        recordsDrv = loggedInAndReload
+            .asObservable()
+            .takeWhile { $0.logged }
+            .flatMap({ _ -> Observable<[BMIRecord]> in
+                BMIService.fetchRecords()
+                    .map({ (response) -> (records: [BMIService.Record]?, err: BMIService.Err?) in
+                        switch response {
+                        case .success(let resp):
+                            return (resp, nil)
+                        case .fail(let err):
+                            return (nil, err)
+                        }
+                    })
+                    .map({ (result) -> [BMIRecord] in
+                        guard let records = result.records else {
+                            return [BMIRecord.error(err: result.err?.description ?? "")]
+                        }
+                        if records.isEmpty {
+                            return [BMIRecord.empty]
+                        }
+                        return records.map({ (serviceRecord) -> BMIRecord in
+                            return BMIRecord.record(timestamp: serviceRecord.timestamp,
+                                                    height: serviceRecord.height,
+                                                    weight: serviceRecord.weight)
+                        })
+                    })
+                    .trackActivity(activityIndicator)
             })
-            .map({ (records) -> [BMIRecord] in
-                if records.isEmpty {
-                    return [BMIRecord.emptyMsg]
+            .asDriver(onErrorJustReturn: [])
+
+        newEntryEnabledDrv = recordsDrv
+            .map({ (records) -> Bool in
+                guard records.count == 1, case .error = records[0] else {
+                    return true
                 }
-                return records.map({ (serviceRecord) -> BMIRecord in
-                    return BMIRecord.record(timestamp: serviceRecord.timestamp,
-                                            height: serviceRecord.height,
-                                            weight: serviceRecord.weight)
-                })
+                return false
             })
     }
 }

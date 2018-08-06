@@ -64,6 +64,7 @@ extension BMIService {
     static func signInViaGoogle() -> Observable<Response<AuthCredential?>> {
 
         return GIDSignIn.sharedInstance().rx.didSignIn
+            .asObservable()
             .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
             .map({ (result) -> Response<AuthCredential?> in
                 if let err = result.error {
@@ -77,6 +78,7 @@ extension BMIService {
                 let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
                 return .success(resp: credential)
             })
+            .take(1)
     }
 
     static func signIn(withCredential cred: AuthCredential) -> Observable<Response<User?>> {
@@ -98,46 +100,28 @@ extension BMIService {
 
 extension BMIService {
 
-    static func initializeProfile() {
-        guard let user = Auth.auth().currentUser else { return }
-        let usersRef = Database.database().reference().child("users")
-
-        usersRef.observeSingleEvent(of: .value, with: { (snapshot) in
-            if !snapshot.hasChild(user.uid) {
-                usersRef.child(user.uid).setValue([UserInfoEditType.email.rawValue: user.email ?? "",
-                                                   UserInfoEditType.username.rawValue: user.displayName ?? "",
-                                                   UserInfoEditType.gender.rawValue: -1,
-                                                   UserInfoEditType.age.rawValue: -1])
-            }
-        })
-    }
-
-    /*
     static func initializeProfile() -> Observable<Response<Void>> {
-
-        guard let user = Auth.auth().currentUser else { return Observable.just(.fail(err: .unauthenticated)) }
-
+        guard let user = Auth.auth().currentUser else {
+            return Observable.just(.fail(err: .unauthenticated))
+        }
         let usersRef = Database.database().reference().child("users")
         return usersRef.rx.observeSingleEvent(.value)
-            .observeOn(ConcurrentDispatchQueueScheduler(qos: .background))
-            .map({ (snapshot) -> BMIService.Response<Void> in
+            .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
+            .map({ (snapshot) -> Response<Void> in
                 if !snapshot.hasChild(user.uid) {
                     usersRef.child(user.uid).setValue([UserInfoEditType.email.rawValue: user.email ?? "",
                                                        UserInfoEditType.username.rawValue: user.displayName ?? "",
                                                        UserInfoEditType.gender.rawValue: -1,
                                                        UserInfoEditType.age.rawValue: -1])
                 }
-                return .success(response: ())
+                return .success(resp: ())
             })
-            .catchError({ (error) -> Observable<BMIService.Result<Void>> in
-                return Observable.just(.fail(err: .other(message: error.localizedDescription)))
+            .catchError({ (error) -> Observable<Response<Void>> in
+                return Observable.just(.fail(err: handleError(error)))
             })
     }
-    */
-
 
     static func fetchUserInfo() -> Driver<UserInfo?> {
-
         guard let user = Auth.auth().currentUser else { return Driver.of(nil) }
         let userRef = Database.database().reference().child("users/\(user.uid)")
 
@@ -177,10 +161,10 @@ extension BMIService {
 
 extension BMIService {
 
-    static func fetchBMIRecords() -> Driver<[Record]> {
-
-        guard let user = Auth.auth().currentUser else { return Driver.from([]) }
-
+    static func fetchRecords() -> Observable<Response<[Record]>> {
+        guard let user = Auth.auth().currentUser else {
+            return Observable.just(.fail(err: .unauthenticated))
+        }
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM-dd-yyyy\tHH:mm"
 
@@ -188,17 +172,22 @@ extension BMIService {
             .queryOrderedByKey()
             .rx
             .observeEvent(.value)
-            .map({ (snapshot) -> [Record] in
-                return snapshot.children.map({ (child) -> Record in
-                    let childSnapshot = child as! DataSnapshot
-                    let entries = childSnapshot.value as! [String: AnyObject]
-                    return (formatter.string(from: Date(timeIntervalSince1970: (Double(childSnapshot.key) ?? 0) / 1000)),
-                            entries["h"]?.doubleValue ?? 0,
-                            entries["w"]?.doubleValue ?? 0)
-                })
-                .reversed()
+            .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
+            .map({ (snapshot) -> Response<[Record]> in
+                let records =  snapshot.children
+                    .reversed()
+                    .map({ (child) -> Record in
+                        let childSnapshot = child as! DataSnapshot
+                        let entries = childSnapshot.value as! [String: AnyObject]
+                        return (formatter.string(from: Date(timeIntervalSince1970: (Double(childSnapshot.key) ?? 0) / 1000)),
+                                entries["h"]?.doubleValue ?? 0,
+                                entries["w"]?.doubleValue ?? 0)
+                    })
+                return .success(resp: records)
             })
-            .asDriver(onErrorJustReturn: [])
+            .catchError({ (error) -> Observable<Response<[Record]>> in
+                return Observable.just(.fail(err: handleError(error)))
+            })
     }
 
     static func createBMIRecord(height: Double, weight: Double) {
