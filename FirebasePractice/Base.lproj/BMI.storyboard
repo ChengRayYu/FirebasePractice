@@ -566,7 +566,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C0E-zc-FNM">
-                                            <rect key="frame" x="23.333333333333329" y="248" width="123.99999999999999" height="40"/>
+                                            <rect key="frame" x="24" y="248" width="124" height="40"/>
                                             <color key="backgroundColor" name="Grey800"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="40" id="3UW-aq-92s"/>
@@ -582,7 +582,7 @@
                                             </userDefinedRuntimeAttributes>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GZS-zi-4WY">
-                                            <rect key="frame" x="171.33333333333334" y="248" width="124.00000000000003" height="40"/>
+                                            <rect key="frame" x="172" y="248" width="124" height="40"/>
                                             <color key="backgroundColor" name="Grey800"/>
                                             <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="14"/>
                                             <state key="normal" title="Save">
@@ -595,10 +595,10 @@
                                             </userDefinedRuntimeAttributes>
                                         </button>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zh3-2A-OxM">
-                                            <rect key="frame" x="171.33333333333334" y="248" width="124.00000000000003" height="40"/>
+                                            <rect key="frame" x="172" y="248" width="124" height="40"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="9Ov-QQ-GUl">
-                                                    <rect key="frame" x="21.666666666666657" y="10" width="81" height="20"/>
+                                                    <rect key="frame" x="21.666666666666686" y="10" width="81" height="20"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fcp-uo-9eP">
                                                             <rect key="frame" x="0.0" y="0.0" width="53" height="20"/>
@@ -607,7 +607,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="rWx-8n-Jx5">
-                                                            <rect key="frame" x="61.000000000000028" y="0.0" width="20" height="20"/>
+                                                            <rect key="frame" x="60.999999999999972" y="0.0" width="20" height="20"/>
                                                             <color key="color" name="Grey200"/>
                                                         </activityIndicatorView>
                                                     </subviews>
@@ -628,30 +628,30 @@
                                     <color key="backgroundColor" name="Grey50"/>
                                     <constraints>
                                         <constraint firstAttribute="bottom" secondItem="C0E-zc-FNM" secondAttribute="bottom" constant="24" id="2f1-Ot-WsD"/>
+                                        <constraint firstAttribute="trailing" secondItem="GZS-zi-4WY" secondAttribute="trailing" constant="24" id="4gr-x7-Cby"/>
                                         <constraint firstItem="gjK-Do-Mbg" firstAttribute="trailing" secondItem="fPL-a5-p17" secondAttribute="trailing" id="6jd-7i-7uv"/>
                                         <constraint firstItem="GZS-zi-4WY" firstAttribute="width" secondItem="C0E-zc-FNM" secondAttribute="width" id="8Z6-oA-mEx"/>
+                                        <constraint firstItem="C0E-zc-FNM" firstAttribute="leading" secondItem="IOB-kL-VhS" secondAttribute="leading" priority="750" constant="24" id="8rC-X6-ruN"/>
                                         <constraint firstItem="gjK-Do-Mbg" firstAttribute="leading" secondItem="fPL-a5-p17" secondAttribute="leading" id="A70-Kj-ycF"/>
                                         <constraint firstItem="qvT-hS-qJn" firstAttribute="leading" secondItem="fPL-a5-p17" secondAttribute="leading" id="CFQ-QZ-hAO"/>
-                                        <constraint firstItem="Zh3-2A-OxM" firstAttribute="centerY" secondItem="GZS-zi-4WY" secondAttribute="centerY" id="Dzd-lJ-DEb"/>
                                         <constraint firstItem="GZS-zi-4WY" firstAttribute="height" secondItem="C0E-zc-FNM" secondAttribute="height" id="Fzo-Oa-rmt"/>
                                         <constraint firstItem="dlL-sF-SjU" firstAttribute="leading" secondItem="fPL-a5-p17" secondAttribute="leading" id="Gkw-Kq-DRX"/>
-                                        <constraint firstItem="Zh3-2A-OxM" firstAttribute="centerX" secondItem="GZS-zi-4WY" secondAttribute="centerX" id="RID-Db-CHn"/>
                                         <constraint firstItem="gjK-Do-Mbg" firstAttribute="top" secondItem="dlL-sF-SjU" secondAttribute="bottom" constant="8" id="U2x-4R-ksV"/>
                                         <constraint firstItem="qvT-hS-qJn" firstAttribute="trailing" secondItem="fPL-a5-p17" secondAttribute="trailing" id="UNl-36-2gO"/>
                                         <constraint firstItem="qvT-hS-qJn" firstAttribute="top" secondItem="fPL-a5-p17" secondAttribute="bottom" constant="24" id="W2H-9I-6bR"/>
-                                        <constraint firstItem="C0E-zc-FNM" firstAttribute="leading" secondItem="fPL-a5-p17" secondAttribute="leading" id="WbI-j2-Qa0"/>
                                         <constraint firstItem="fPL-a5-p17" firstAttribute="top" secondItem="IOB-kL-VhS" secondAttribute="top" constant="24" id="XV0-Ec-Avl"/>
-                                        <constraint firstItem="Zh3-2A-OxM" firstAttribute="width" secondItem="GZS-zi-4WY" secondAttribute="width" id="XcK-mC-NAz"/>
+                                        <constraint firstItem="Zh3-2A-OxM" firstAttribute="trailing" secondItem="fPL-a5-p17" secondAttribute="trailing" id="Xi7-Oh-PTo"/>
                                         <constraint firstItem="GZS-zi-4WY" firstAttribute="leading" secondItem="C0E-zc-FNM" secondAttribute="trailing" constant="24" id="ZJM-ly-Dk9"/>
-                                        <constraint firstItem="Zh3-2A-OxM" firstAttribute="height" secondItem="GZS-zi-4WY" secondAttribute="height" id="aB0-e8-l7R"/>
+                                        <constraint firstItem="Zh3-2A-OxM" firstAttribute="centerY" secondItem="C0E-zc-FNM" secondAttribute="centerY" id="afv-Ku-SnK"/>
                                         <constraint firstItem="dlL-sF-SjU" firstAttribute="top" secondItem="qvT-hS-qJn" secondAttribute="bottom" constant="16" id="cfu-WQ-CqJ"/>
                                         <constraint firstItem="fPL-a5-p17" firstAttribute="leading" secondItem="IOB-kL-VhS" secondAttribute="leading" constant="24" id="dBp-sx-wWX"/>
                                         <constraint firstItem="dlL-sF-SjU" firstAttribute="trailing" secondItem="fPL-a5-p17" secondAttribute="trailing" id="eZs-mh-lDe"/>
                                         <constraint firstItem="C0E-zc-FNM" firstAttribute="centerY" secondItem="GZS-zi-4WY" secondAttribute="centerY" id="fpU-c7-heX"/>
                                         <constraint firstAttribute="width" relation="lessThanOrEqual" constant="320" id="n95-xN-DJm"/>
+                                        <constraint firstItem="Zh3-2A-OxM" firstAttribute="width" secondItem="C0E-zc-FNM" secondAttribute="width" id="sDf-vo-XtX"/>
+                                        <constraint firstItem="Zh3-2A-OxM" firstAttribute="height" secondItem="C0E-zc-FNM" secondAttribute="height" id="tFy-gm-2dV"/>
                                         <constraint firstAttribute="trailing" secondItem="fPL-a5-p17" secondAttribute="trailing" constant="24" id="udD-cx-5UI"/>
                                         <constraint firstItem="C0E-zc-FNM" firstAttribute="top" secondItem="gjK-Do-Mbg" secondAttribute="bottom" constant="24" id="yTw-I8-8fj"/>
-                                        <constraint firstItem="GZS-zi-4WY" firstAttribute="trailing" secondItem="fPL-a5-p17" secondAttribute="trailing" id="zcy-cK-fgy"/>
                                     </constraints>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -704,15 +704,6 @@
         <namedColor name="Grey200">
             <color red="0.93300002810000005" green="0.93300002810000005" blue="0.93300002810000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <namedColor name="Grey200">
-            <color red="0.93300002813339233" green="0.93300002813339233" blue="0.93300002813339233" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Grey300">
-            <color red="0.87800002099999996" green="0.87800002099999996" blue="0.87800002099999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Grey300">
-            <color red="0.87800002098083496" green="0.87800002098083496" blue="0.87800002098083496" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <namedColor name="Grey300">
             <color red="0.87800002099999996" green="0.87800002099999996" blue="0.87800002099999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -725,17 +716,11 @@
         <namedColor name="Grey600">
             <color red="0.45899999141693115" green="0.45899999141693115" blue="0.45899999141693115" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <namedColor name="Grey600">
-            <color red="0.45899999141693115" green="0.45899999141693115" blue="0.45899999141693115" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Grey800">
-            <color red="0.25900000333786011" green="0.25900000333786011" blue="0.25900000333786011" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <namedColor name="Grey800">
             <color red="0.25900000333786011" green="0.25900000333786011" blue="0.25900000333786011" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Warning">
-            <color red="1" green="0.20000000298023224" blue="0.20000000298023224" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="1" green="0.20000000000000001" blue="0.20000000000000001" alpha="0.80000001192092896" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>
