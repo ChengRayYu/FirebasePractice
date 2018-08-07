@@ -190,11 +190,23 @@ extension BMIService {
             })
     }
 
-    static func createBMIRecord(height: Double, weight: Double) {
-        guard let user = Auth.auth().currentUser else { return }
+    static func createRecord(height: Double, weight: Double) -> Observable<Response<Void>> {
+        guard let user = Auth.auth().currentUser else {
+            return Observable.just(.fail(err: .unauthenticated))
+        }
         let userRecordRef = Database.database().reference().child("records/\(user.uid)")
         let timestamp = String(format: "%.0f", Date().timeIntervalSince1970 * 1000)
-        userRecordRef.child(timestamp).setValue(["h": NSNumber(value: height), "w": NSNumber(value: weight)])
+        return userRecordRef
+            .child(timestamp)
+            .rx
+            .setValue(["h": NSNumber(value: height), "w": NSNumber(value: weight)])
+            .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
+            .map({ (ref) -> Response<Void> in
+                return .success(resp: ())
+            })
+            .catchError({ (error) -> Observable<BMIService.Response<Void>> in
+                return Observable.just(.fail(err: handleError(error)))
+            })
     }
 }
 

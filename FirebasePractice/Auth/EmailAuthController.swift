@@ -12,11 +12,11 @@ import RxCocoa
 
 class EmailAuthController: UIViewController {
 
-    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var emailTxtField: UITextField!
-    @IBOutlet weak var emailErrLabel: UILabel!
+    @IBOutlet weak var emailErrLbl: UILabel!
     @IBOutlet weak var passwordTxtField: UITextField!
-    @IBOutlet weak var passwordErrLabel: UILabel!
+    @IBOutlet weak var passwordErrLbl: UILabel!
     @IBOutlet weak var actionBtn: UIButton!
     @IBOutlet weak var cancelBtn: UIButton!
     @IBOutlet weak var backgroundTapGesture: UITapGestureRecognizer!
@@ -41,7 +41,7 @@ class EmailAuthController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        titleLabel.text = viewModel?.pageTitle
+        titleLbl.text = viewModel?.pageTitle
         actionBtn.setTitle(viewModel?.functionTitle, for: .normal)
         rx()
     }
@@ -68,11 +68,11 @@ class EmailAuthController: UIViewController {
             .disposed(by: disposeBag)
         
         vm.emailValidationDrv
-            .drive(emailErrLabel.rx.text)
+            .drive(emailErrLbl.rx.text)
             .disposed(by: disposeBag)
 
         vm.passwordValidationDrv
-            .drive(passwordErrLabel.rx.text)
+            .drive(passwordErrLbl.rx.text)
             .disposed(by: disposeBag)
 
         vm.errorPublishDrv
@@ -85,8 +85,8 @@ class EmailAuthController: UIViewController {
             .drive(onNext: { (flag) in
                 flag ? self.showLoadingHud() : self.hideLoadingHud()
                 if flag {
-                    self.emailErrLabel.text = ""
-                    self.passwordErrLabel.text = ""
+                    self.emailErrLbl.text = ""
+                    self.passwordErrLbl.text = ""
                 }
                 self.emailTxtField.isEnabled = !flag
                 self.passwordTxtField.isEnabled = !flag

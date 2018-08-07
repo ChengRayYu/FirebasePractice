@@ -111,15 +111,3 @@ class BMIViewModel {
             })
     }
 }
-
-// MARK: - Public Methods
-
-extension BMIViewModel {
-
-    func submitRecordOnTap(_ event: Observable<(height: Double, weight: Double)?>) -> Disposable {
-        return event.subscribe(onNext: { (bmiInfo) in
-            guard let bmi = bmiInfo else { return }
-            BMIService.createBMIRecord(height: bmi.height, weight: bmi.weight)
-        })
-    }
-}

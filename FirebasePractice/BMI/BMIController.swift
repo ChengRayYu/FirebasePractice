@@ -33,7 +33,7 @@ class BMIController: UIViewController {
         case "segue_BMI_createRecord":
             let vc = segue.destination as? CreateBMIController
             vc?.loadView()
-            //setupCreateBMIViewModel(vc?.generateViewModel())
+            vc?.setupViewModel()
 
         default:
             return
@@ -77,9 +77,7 @@ extension BMIController {
                 }
             },
             configureSupplementaryView: { (dataSrc, cv, kind, indexPath) -> UICollectionReusableView in
-                let collectionViewLayout = cv.collectionViewLayout as? UICollectionViewFlowLayout
-                collectionViewLayout?.sectionHeadersPinToVisibleBounds = true
-
+                (cv.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionHeadersPinToVisibleBounds = true
                 switch kind {
                 case UICollectionElementKindSectionHeader:
                     let header = cv.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "BMIHeader", for: indexPath) as! BMIHeader
@@ -118,22 +116,6 @@ extension BMIController {
             .drive(bmiCollections.rx.items(dataSource: bmiCollectionDataSrc!))
             .disposed(by: disposeBag)
     }
-
-    /*
-    fileprivate func setupCreateBMIViewModel(_ creationVM: CreateBMIViewModel?) {
-
-        guard let vm = bmiViewModel, let cvm = creationVM else { return }
-        vm.submitRecordOnTap(
-            cvm.submittedDrv.asObservable()
-                .skipWhile({ (data) -> Bool in
-                    if data != nil {
-                        self.dismiss(animated: true, completion: nil)
-                    }
-                    return data == nil
-                })
-            ).disposed(by: disposeBag)
-    }
-    */
 }
 
 extension BMIController: UICollectionViewDelegateFlowLayout {
