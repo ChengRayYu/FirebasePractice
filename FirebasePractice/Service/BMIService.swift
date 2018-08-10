@@ -94,6 +94,18 @@ extension BMIService {
                 return Observable.just(.fail(err: handleError(error)))
             })
     }
+
+    static func signOut() -> Observable<Response<Void>> {
+        return Auth.auth().rx
+            .signOut()
+            .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
+            .map({ _ -> Response<Void> in
+                return .success(resp: ())
+            })
+            .catchError({ (error) -> Observable<Response<Void>> in
+                return Observable.just(.fail(err: handleError(error)))
+            })
+    }
 }
 
 // MARK: - UserInfo Operations
@@ -121,20 +133,28 @@ extension BMIService {
             })
     }
 
-    static func fetchUserInfo() -> Driver<UserInfo?> {
-        guard let user = Auth.auth().currentUser else { return Driver.of(nil) }
+    static func fetchUserInfo() -> Observable<Response<UserInfo?>> {
+        guard let user = Auth.auth().currentUser else {
+            return Observable.just(.fail(err: .unauthenticated))
+        }
         let userRef = Database.database().reference().child("users/\(user.uid)")
-
         return userRef.rx
-            .observeEvent(.value)
-            .map({ (snapshot) -> UserInfo? in
-                let entries = snapshot.value as? [String: AnyObject]
-                return (entries?[UserInfoEditType.email.rawValue] as? String ?? "",
-                        entries?[UserInfoEditType.username.rawValue] as? String ?? "",
-                        Gender(rawValue: ((entries?[UserInfoEditType.gender.rawValue] as? NSNumber)?.intValue ?? -1)) ?? Gender.notAvailable,
-                        AgeRange(rawValue: ((entries?[UserInfoEditType.age.rawValue] as? NSNumber)?.intValue ?? -1)) ?? AgeRange.notAvailable)
+            .observeSingleEvent(.value)
+            .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
+            .map({ (snapshot) -> Response<UserInfo?> in
+                guard let entries = snapshot.value as? [String: AnyObject],
+                    let email = entries[UserInfoEditType.email.rawValue] as? String,
+                    let username = entries[UserInfoEditType.username.rawValue] as? String,
+                    let gender = Gender(rawValue: ((entries[UserInfoEditType.gender.rawValue] as? NSNumber))?.intValue ?? Int.min),
+                    let ageRange = AgeRange(rawValue: ((entries[UserInfoEditType.age.rawValue] as? NSNumber))?.intValue ?? Int.min) else {
+                        return .fail(err: .other(msg: "Fetch user failed"))
+                }
+                let userInfo = (email, username, gender, ageRange)
+                return .success(resp: userInfo)
             })
-            .asDriver(onErrorJustReturn: nil)
+            .catchError({ (error) -> Observable<Response<UserInfo?>> in
+                return Observable.just(.fail(err: handleError(error)))
+            })
     }
 
     static func fetchUserInfo(ofType type: UserInfoEditType) -> Driver<Any?> {

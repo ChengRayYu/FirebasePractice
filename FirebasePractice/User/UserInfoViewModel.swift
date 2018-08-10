@@ -13,14 +13,33 @@ import FirebaseAuth
 
 class UserInfoViewModel {
 
-    var userInfoDrv: Driver<BMIService.UserInfo?> = Driver.empty()
-    var editingTypeDrv: Driver<BMIService.UserInfoEditType?> = Driver.empty()
+    let userInfoDrv: Driver<BMIService.UserInfo?>
+    let editingTypeDrv: Driver<BMIService.UserInfoEditType?>
+    let userInfoErrDrv: Driver<String>
+    let progressingDrv: Driver<Bool>
+    let userSignedOut: Driver<Void>
 
-    init(withItemSelected itemOnSelect: Driver<IndexPath>) {
+    init(input: (itemOnSelect: Driver<IndexPath>, signOutOnTap: Driver<Void>)) {
+
+        let activityIndicator = ActivityIndicator()
+        progressingDrv = activityIndicator.asDriver()
+        let errSubject = PublishSubject<String>()
+        userInfoErrDrv = errSubject.asDriver(onErrorDriveWith: Driver.never())
 
         userInfoDrv = BMIService.fetchUserInfo()
+            .map({ (response) -> BMIService.UserInfo? in
+                switch response {
+                case .success(let resp):
+                    return resp
+                case.fail(let err):
+                    errSubject.onNext(err.description)
+                    return nil
+                }
+            })
+            .trackActivity(activityIndicator)
+            .asDriver(onErrorJustReturn: nil)
 
-        editingTypeDrv = itemOnSelect
+        editingTypeDrv = input.itemOnSelect
             .filter({ (index) -> Bool in
                 return [2, 3, 4].contains(index.row)
             })
@@ -32,16 +51,18 @@ class UserInfoViewModel {
                 default:    return nil
                 }
             })
+
+        userSignedOut = input.signOutOnTap
+            .flatMap({ _ -> Driver<Void> in
+                return BMIService.signOut()
+                    .map({ (response) in
+                        if case let .fail(err) = response {
+                            errSubject.onNext(err.description)
+                        }
+                        return
+                    })
+                    .trackActivity(activityIndicator)
+                    .asDriver(onErrorJustReturn: ())
+            })
     }
 }
-
-extension UserInfoViewModel {
-
-    func signOutOnTap(_ tap: Driver<Void>) -> Disposable {
-        return tap.map({ _ in
-            try! Auth.auth().signOut()
-        })
-        .drive()
-    }
-}
-

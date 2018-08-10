@@ -11,9 +11,14 @@ import MBProgressHUD
 
 extension UIViewController {
 
-    func showAlert(title: String? = "Oops!", message: String) {
+    func showAlert(title: String? = "Oops!", message: String, withCancelAction cancelBlock: (() -> Void)? = nil) {
         let alertView = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertView.addAction(UIAlertAction(title: "OK", style: .cancel))
+        let cancelAct = UIAlertAction(title: "OK", style: .cancel) { (act) in
+            if let act = cancelBlock {
+                act()
+            }
+        }
+        alertView.addAction(cancelAct)
         self.present(alertView, animated: true, completion: nil)
     }
 
