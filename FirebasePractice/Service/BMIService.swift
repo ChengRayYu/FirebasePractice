@@ -138,7 +138,8 @@ extension BMIService {
         }
         let userRef = Database.database().reference().child("users/\(user.uid)")
         return userRef.rx
-            .observeSingleEvent(.value)
+            //.observeSingleEvent(.value)
+            .observeEvent(.value)
             .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
             .map({ (snapshot) -> Response<UserInfo> in
                 guard let entries = snapshot.value as? [String: AnyObject],

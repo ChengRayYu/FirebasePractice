@@ -20,22 +20,12 @@ class UserInfoController: UITableViewController {
     @IBOutlet weak var signOutBtn: UIButton!
 
     fileprivate var editController: UserInfoEditController?
-    fileprivate var disposeBag: DisposeBag!
+    fileprivate let disposeBag = DisposeBag()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavbar()
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        disposeBag = DisposeBag()
         rx()
-    }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        disposeBag = nil
     }
 
     override func didReceiveMemoryWarning() {
@@ -70,6 +60,7 @@ extension UserInfoController {
 
         vm.userInfoDrv
             .drive(onNext: { (userInfo) in
+                self.hideLoadingHud()
                 guard let user = userInfo else { return }
                 self.emailLbl.text = user.email
                 self.usernameLbl.text = (user.name.isEmpty) ? "n/a" : user.name
@@ -80,7 +71,9 @@ extension UserInfoController {
 
         vm.progressingDrv
             .drive(onNext: { (flag) in
-                flag ? self.showLoadingHud() : self.hideLoadingHud()
+                if flag {
+                    self.showLoadingHud()
+                }
             })
             .disposed(by: disposeBag)
 

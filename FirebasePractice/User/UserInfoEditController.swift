@@ -16,6 +16,9 @@ class UserInfoEditController: UIViewController {
     @IBOutlet weak var infoContentTxtField: UITextField!
     @IBOutlet weak var infoContentErrLbl: UILabel!
     @IBOutlet weak var saveBtn: UIButton!
+    @IBOutlet weak var loadingBanner: UIView!
+    @IBOutlet weak var loadingBannerLbl: UILabel!
+    @IBOutlet weak var loadingBannerSpinner: UIActivityIndicatorView!
 
     fileprivate let optionPicker: UIPickerView = .init()
     fileprivate let disposeBag = DisposeBag()
@@ -88,6 +91,11 @@ extension UserInfoEditController: UIPickerViewDelegate {
             .disposed(by: disposeBag)
 
         vm.infoUpdatedDrv
+            .map({ (flag) -> Bool in
+                self.loadingBannerLbl.text = "Saved!"
+                return flag
+            })
+            .delay(0.6)
             .drive(onNext: { (flag) in
                 if flag {
                     self.navigationController?.popViewController(animated: true)
@@ -107,8 +115,15 @@ extension UserInfoEditController: UIPickerViewDelegate {
 
         vm.progressingDrv
             .drive(onNext: { (flag) in
-                flag ? self.showLoadingHud() : self.hideLoadingHud()
+                if flag {
+                    self.loadingBanner.isHidden = false
+                }
             })
             .disposed(by: disposeBag)
+
+        vm.progressingDrv
+            .drive(loadingBannerSpinner.rx.isAnimating)
+            .disposed(by: disposeBag)
+
     }
 }
