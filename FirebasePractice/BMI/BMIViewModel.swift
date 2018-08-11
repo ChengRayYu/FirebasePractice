@@ -74,9 +74,9 @@ class BMIViewModel {
         
         recordsDrv = loggedInAndReload
             .asObservable()
-            .takeWhile { $0.logged }
             .flatMap({ _ -> Observable<[BMIRecord]> in
-                BMIService.fetchRecords()
+
+                return BMIService.fetchRecords()
                     .map({ (response) -> (records: [BMIService.Record]?, err: BMIService.Err?) in
                         switch response {
                         case .success(let resp):

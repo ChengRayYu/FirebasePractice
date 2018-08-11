@@ -49,13 +49,7 @@ extension WelcomeController {
         let vm = WelcomeViewModel(withGoogleSignInOnTap: googleSignInBtn.rx.tap.asDriver())
 
         vm.googleSignedInDrv
-            .drive(onNext: { (user) in
-                print("""
-                    Firebase Auth Complete
-                    user: \(user?.displayName ?? "failed")
-                    email: \(user?.email ?? "failed")
-                    """)
-            })
+            .drive()
             .disposed(by: disposeBag)
 
         vm.processingDrv

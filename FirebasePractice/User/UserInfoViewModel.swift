@@ -61,7 +61,6 @@ class UserInfoViewModel {
                         }
                         return
                     })
-                    .trackActivity(activityIndicator)
                     .asDriver(onErrorJustReturn: ())
             })
     }

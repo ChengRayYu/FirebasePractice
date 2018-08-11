@@ -96,13 +96,7 @@ class EmailAuthController: UIViewController {
             .disposed(by: disposeBag)
 
         vm.completionDrv
-            .drive(onNext: { (user) in
-                print("""
-                    Firebase Auth Complete
-                    user: \(user?.displayName ?? "failed")
-                    email: \(user?.email ?? "failed")
-                    """)
-            })
+            .drive()
             .disposed(by: disposeBag)
     }
 }

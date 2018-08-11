@@ -23,11 +23,11 @@ extension UIViewController {
     }
 
     func showLoadingHud() {
-        MBProgressHUD.showAdded(to: self.view, animated: true)
+        MBProgressHUD.showAdded(to: self.navigationController?.view ?? self.view, animated: true)
     }
 
     func hideLoadingHud() {
-        MBProgressHUD.hide(for: self.view, animated: true)
+        MBProgressHUD.hide(for: self.navigationController?.view ?? self.view, animated: true)
     }
 
 }

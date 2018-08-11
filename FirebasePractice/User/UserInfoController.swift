@@ -20,12 +20,22 @@ class UserInfoController: UITableViewController {
     @IBOutlet weak var signOutBtn: UIButton!
 
     fileprivate var editController: UserInfoEditController?
-    fileprivate let disposeBag = DisposeBag()
-    
+    fileprivate var disposeBag: DisposeBag!
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavbar()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        disposeBag = DisposeBag()
         rx()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        disposeBag = nil
     }
 
     override func didReceiveMemoryWarning() {
@@ -57,6 +67,7 @@ extension UserInfoController {
     func rx() {
         let vm = UserInfoViewModel(input: (itemOnSelect: tableView.rx.itemSelected.asDriver(),
                                            signOutOnTap: signOutBtn.rx.tap.asDriver()))
+
         vm.userInfoDrv
             .drive(onNext: { (userInfo) in
                 guard let user = userInfo else { return }
@@ -87,7 +98,7 @@ extension UserInfoController {
                 guard let type = editType else { return }
                 self.performSegue(withIdentifier: "segue_userInfo_startEdit", sender: nil)
                 self.editController?.loadView()
-                self.editController?.setupViewModel(ofEditingType: type)
+                self.editController?.startEditing(ofType: type)
             })
             .disposed(by: disposeBag)
 

@@ -60,7 +60,6 @@ extension BMIService {
             })
     }
 
-
     static func signInViaGoogle() -> Observable<Response<AuthCredential?>> {
 
         return GIDSignIn.sharedInstance().rx.didSignIn
@@ -133,7 +132,7 @@ extension BMIService {
             })
     }
 
-    static func fetchUserInfo() -> Observable<Response<UserInfo?>> {
+    static func fetchUserInfo() -> Observable<Response<UserInfo>> {
         guard let user = Auth.auth().currentUser else {
             return Observable.just(.fail(err: .unauthenticated))
         }
@@ -141,7 +140,7 @@ extension BMIService {
         return userRef.rx
             .observeSingleEvent(.value)
             .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
-            .map({ (snapshot) -> Response<UserInfo?> in
+            .map({ (snapshot) -> Response<UserInfo> in
                 guard let entries = snapshot.value as? [String: AnyObject],
                     let email = entries[UserInfoEditType.email.rawValue] as? String,
                     let username = entries[UserInfoEditType.username.rawValue] as? String,
@@ -152,28 +151,43 @@ extension BMIService {
                 let userInfo = (email, username, gender, ageRange)
                 return .success(resp: userInfo)
             })
-            .catchError({ (error) -> Observable<Response<UserInfo?>> in
+            .catchError({ (error) -> Observable<Response<UserInfo>> in
                 return Observable.just(.fail(err: handleError(error)))
             })
     }
 
-    static func fetchUserInfo(ofType type: UserInfoEditType) -> Driver<Any?> {
-
-        guard let user = Auth.auth().currentUser else { return Driver.of(nil) }
+    static func fetchUserInfo(ofType type: UserInfoEditType) -> Observable<Response<Any>> {
+        guard let user = Auth.auth().currentUser else {
+            return Observable.just(.fail(err: .unauthenticated))
+        }
         let userInfoRef = Database.database().reference().child("users/\(user.uid)/\(type.rawValue)")
 
         return userInfoRef.rx
             .observeSingleEvent(.value)
-            .map { (snapshot) -> Any? in
-                return snapshot.value
+            .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
+            .map { (snapshot) -> Response<Any> in
+                return .success(resp: snapshot.value!)
             }
-            .asDriver(onErrorJustReturn: nil)
+            .catchError({ (error) -> Observable<Response<Any>> in
+                return Observable.just(.fail(err: handleError(error)))
+            })
     }
 
-    static func saveUserInfo(_ content: Any, ofType type: UserInfoEditType) {
-        guard let user = Auth.auth().currentUser else { return }
+    static func saveUserInfo(_ content: Any, ofType type: UserInfoEditType) -> Observable<Response<Void>> {
+        guard let user = Auth.auth().currentUser else {
+            return Observable.just(.fail(err: .unauthenticated))
+        }
         let contentRef = Database.database().reference().child("users/\(user.uid)/\(type.rawValue)")
-        contentRef.setValue(content)
+        return contentRef
+            .rx
+            .setValue(content)
+            .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
+            .map({ (ref) -> Response<Void> in
+                return .success(resp: ())
+            })
+            .catchError({ (error) -> Observable<BMIService.Response<Void>> in
+                return Observable.just(.fail(err: handleError(error)))
+            })
     }
 }
 

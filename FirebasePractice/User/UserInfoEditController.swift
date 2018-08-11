@@ -38,20 +38,20 @@ class UserInfoEditController: UIViewController {
 
 extension UserInfoEditController: UIPickerViewDelegate {
 
-    func setupViewModel(ofEditingType editType: BMIService.UserInfoEditType) {
+    func startEditing(ofType editType: BMIService.UserInfoEditType) {
 
-        let viewModel = UserInfoEditViewModel(
+        let vm = UserInfoEditViewModel(
             forType: editType,
             input: (infoContent: infoContentTxtField.rx.text.orEmpty.asDriver(),
                     selectedPickerIndex: optionPicker.rx.itemSelected.asDriver().map { $0.row }.startWith(0),
                     saveOnTap: saveBtn.rx.tap.asDriver()))
 
-        viewModel.editTypeDrv
+        vm.editTypeDrv
             .map { $0.description }
             .drive(self.infoTypeLbl.rx.text)
             .disposed(by: disposeBag)
 
-        viewModel.editTypeDrv
+        vm.editTypeDrv
             .map { $0 == .username }
             .map({ (flag) -> (UITextFieldViewMode, UIColor) in
                 return (flag ? .whileEditing : .never, flag ? UIColor(named: "Grey500")! : UIColor.clear)
@@ -62,13 +62,13 @@ extension UserInfoEditController: UIPickerViewDelegate {
             })
             .disposed(by: disposeBag)
 
-        viewModel.optionDrv
+        vm.optionDrv
             .drive(optionPicker.rx.itemTitles) { (index, item) -> String in
                 return "\(item)"
             }
             .disposed(by: disposeBag)
 
-        viewModel.infoContentDrv
+        vm.infoContentDrv
             .drive(onNext: { (result) in
                 if let content = result.content {
                     self.infoContentTxtField.text = content
@@ -87,7 +87,7 @@ extension UserInfoEditController: UIPickerViewDelegate {
             .bind(to: self.infoContentTxtField.rx.text)
             .disposed(by: disposeBag)
 
-        viewModel.infoUpdatedDrv
+        vm.infoUpdatedDrv
             .drive(onNext: { (flag) in
                 if flag {
                     self.navigationController?.popViewController(animated: true)
@@ -95,9 +95,20 @@ extension UserInfoEditController: UIPickerViewDelegate {
             })
             .disposed(by: disposeBag)
 
-        viewModel.contentErrorSubject
-            .asDriver(onErrorJustReturn: nil)
+        vm.contentErrDrv
             .drive(infoContentErrLbl.rx.text)
+            .disposed(by: disposeBag)
+
+        vm.responseErrDrv
+            .drive(onNext: { (err) in
+                self.showAlert(message: err)
+            })
+            .disposed(by: disposeBag)
+
+        vm.progressingDrv
+            .drive(onNext: { (flag) in
+                flag ? self.showLoadingHud() : self.hideLoadingHud()
+            })
             .disposed(by: disposeBag)
     }
 }
