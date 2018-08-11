@@ -15,25 +15,12 @@ typealias GIDSignInResult = (user: GIDGoogleUser, error: Error?)
 
 extension Reactive where Base: GIDSignIn {
 
-    /*
-    var signIn: ControlEvent<Void> {
-        let source: Observable<Void> = Observable.create { observer in
-            self.base.signIn()
-            observer.on(.next(()))
-            return Disposables.create()
-            }
-            .takeUntil(deallocated)
-
-        return ControlEvent(events: source)
-    }
-    */
-    
-    var didSignIn: Observable<GIDSignInResult?> {
+    var didSignIn: Observable<GIDSignInResult> {
         let proxy  = RxGoogleSignInDelegateProxy.proxy(for: base)
         return proxy.didSignInSubject
     }
 
-    var didDisconnect: Observable<GIDSignInResult?> {
+    var didDisconnect: Observable<GIDSignInResult> {
         let proxy = RxGoogleSignInDelegateProxy.proxy(for: base)
         return proxy.didDisconnectSubject
     }
@@ -45,9 +32,10 @@ class RxGoogleSignInDelegateProxy
     , GIDSignInDelegate {
 
     private(set) weak var googleSignIn: GIDSignIn?
+    private var _didSignInSubject: PublishSubject<GIDSignInResult>?
+    private var _didDisconnectSubject: PublishSubject<GIDSignInResult>?
 
     private init(googleSignIn: GIDSignIn) {
-        print(#function)
         self.googleSignIn = googleSignIn
         super.init(parentObject: googleSignIn, delegateProxy: RxGoogleSignInDelegateProxy.self)
     }
@@ -64,30 +52,26 @@ class RxGoogleSignInDelegateProxy
         object.delegate = delegate
     }
 
-    private var _didSignInSubject: PublishSubject<GIDSignInResult?>?
-    private var _didDisconnectSubject: PublishSubject<GIDSignInResult?>?
-
-    var didSignInSubject: PublishSubject<GIDSignInResult?> {
+    fileprivate var didSignInSubject: PublishSubject<GIDSignInResult> {
         if let subject = _didSignInSubject {
             return subject
         }
-        let subject = PublishSubject<GIDSignInResult?>()
+        let subject = PublishSubject<GIDSignInResult>()
         _didSignInSubject = subject
         return subject
     }
 
-    var didDisconnectSubject: PublishSubject<GIDSignInResult?> {
+    fileprivate var didDisconnectSubject: PublishSubject<GIDSignInResult> {
         if let subject = _didDisconnectSubject {
             return subject
         }
-        let subject = PublishSubject<GIDSignInResult?>()
+        let subject = PublishSubject<GIDSignInResult>()
         _didDisconnectSubject = subject
         return subject
     }
 
+
     func sign(_ signIn: GIDSignIn, didSignInFor user: GIDGoogleUser, withError error: Error?) {
-        print(#function)
-        
         if let subject = _didSignInSubject {
             subject.on(.next((user: user, error: error)))
         }
@@ -102,8 +86,15 @@ class RxGoogleSignInDelegateProxy
     }
 
     deinit {
-        print(#function)
-        _didSignInSubject?.on(.completed)
-        _didDisconnectSubject?.on(.completed)
+
+        if let subject = _didSignInSubject {
+            subject.on(.completed)
+            subject.dispose()
+        }
+
+        if let subject = _didDisconnectSubject {
+            subject.on(.completed)
+            subject.dispose()
+        }
     }
 }

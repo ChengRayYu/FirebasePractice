@@ -12,16 +12,24 @@ import RxCocoa
 
 class UserInfoEditViewModel {
 
-    var editTypeDrv: Driver<BMIService.UserInfoEditType> = Driver.never()
-    var optionDrv : Driver<[String]> = Driver.never()
-    var infoContentDrv : Driver<(content: String?, optionIndex: Int?)> = Driver.never()
-    var infoUpdatedDrv: Driver<Bool> = Driver.never()
-    var contentErrorSubject: PublishSubject<String?> = .init()
-
-
-    let disposeBag = DisposeBag()
+    let editTypeDrv: Driver<BMIService.UserInfoEditType>
+    let optionDrv : Driver<[String]>
+    let infoContentDrv : Driver<(content: String?, optionIndex: Int?)>
+    let infoUpdatedDrv: Driver<Bool>
+    let contentErrDrv: Driver<String>
+    let responseErrDrv: Driver<String>
+    let progressingDrv: Driver<Bool>
 
     init(forType type: BMIService.UserInfoEditType, input: (infoContent: Driver<String>, selectedPickerIndex: Driver<Int>, saveOnTap: Driver<Void>)) {
+
+        let activityIndicator = ActivityIndicator()
+        progressingDrv = activityIndicator.asDriver()
+
+        let contentErrSubject = PublishSubject<String>()
+        contentErrDrv = contentErrSubject.asDriver(onErrorDriveWith: Driver.never())
+
+        let respErrSubject = PublishSubject<String>()
+        responseErrDrv = respErrSubject.asDriver(onErrorDriveWith: Driver.never())
 
         editTypeDrv = Driver.just(type)
 
@@ -32,15 +40,21 @@ class UserInfoEditViewModel {
             })
 
         infoContentDrv = BMIService.fetchUserInfo(ofType: type)
-            .withLatestFrom(editTypeDrv, resultSelector: { (content, type) -> (content: String?, optionIndex: Int?) in
-                switch type {
-                case .gender, .age:
-                    let index = (content as? NSNumber) ?? -1
-                    return (nil, index.intValue)
-                default:
-                    return ((content as? String) ?? "", nil)
+            .withLatestFrom(editTypeDrv.asObservable(), resultSelector: { (response, type) -> (content: String?, optionIndex: Int?) in
+                switch response {
+                case .success(let resp):
+                    switch type {
+                    case .gender, .age:
+                        return (nil, (resp as? NSNumber)?.intValue ?? -1)
+                    default:
+                        return ((resp as? String) ?? "", nil)
+                    }
+                case .fail(let err):
+                    respErrSubject.onNext(err.description)
+                    return (nil, nil)
                 }
             })
+            .asDriver(onErrorJustReturn: (nil, nil))
 
         let typeAndInputs = Driver.combineLatest(editTypeDrv, input.infoContent, input.selectedPickerIndex)
 
@@ -49,10 +63,10 @@ class UserInfoEditViewModel {
                 switch pair.0 {
                 case .username:
                     guard !pair.1.isEmpty else {
-                        self.contentErrorSubject.onNext("Please enter something")
+                        contentErrSubject.onNext("Please enter something")
                         return nil
                     }
-                    self.contentErrorSubject.onNext("")
+                    contentErrSubject.onNext("")
                     return (pair.1, type)
                 case .gender, .age:
                     return ((pair.2 == 0) ? -1 : pair.2, type)
@@ -64,10 +78,21 @@ class UserInfoEditViewModel {
             .skipWhile({ (input) -> Bool in
                 return input == nil
             })
-            .map({ (pair) -> Bool in
-                guard let pair = pair else { return false }
-                BMIService.saveUserInfo(pair.input, ofType: pair.type)
-                return true
+            .flatMap({ (pair) -> Observable<Bool> in
+                guard let p = pair else {
+                    return Observable.never()
+                }
+                return BMIService.saveUserInfo(p.input, ofType: p.type)
+                    .map({ (response) -> Bool in
+                        switch response {
+                        case .success:
+                            return true
+                        case .fail(let err):
+                            respErrSubject.onNext(err.description)
+                            return false
+                        }
+                    })
+                    .trackActivity(activityIndicator)
             })
             .asDriver(onErrorJustReturn: false)
     }

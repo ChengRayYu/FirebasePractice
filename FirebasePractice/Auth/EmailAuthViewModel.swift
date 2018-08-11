@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 import FirebaseAuth
 
 protocol EmailAuthRes {
@@ -22,22 +23,18 @@ class EmailAuthViewModel: EmailAuthRes {
     var pageTitle: String { return "" }
     var functionTitle: String { return "" }
 
-    let actionProcessing: Observable<Bool>
-    var actionCompleted: Observable<User?>
+    let processingDrv: Driver<Bool>
+    var completionDrv: Driver<User?>
 
-    let emailValidation: Observable<ValidationResult>
-    let passwordValidation: Observable<ValidationResult>
-    let errorPublisher: Observable<String>
+    let emailValidationDrv: Driver<String>
+    let passwordValidationDrv: Driver<String>
+    let errorPublishDrv: Driver<String>
 
-    fileprivate let errorResponse = PublishSubject<Error>()
+    fileprivate let errorResponseSubject = PublishSubject<BMIService.Err>()
     fileprivate let activityIndicator = ActivityIndicator()
 
     static func create(purpose: Purpose,
-                       input: (
-                            email: Observable<String>,
-                            password: Observable<String>,
-                            actionTap: Observable<Void>)) -> EmailAuthViewModel {
-
+                       input: (email: Driver<String>,  password: Driver<String>, actionTap: Driver<Void>)) -> EmailAuthViewModel {
         switch purpose {
         case .signIn:   return SignInViewModel(input: input)
         case .signUp:   return SignUpViewModel(input: input)
@@ -45,37 +42,74 @@ class EmailAuthViewModel: EmailAuthRes {
     }
 
     fileprivate init(input: (
-        email: Observable<String>,
-        password: Observable<String>,
-        actionTap: Observable<Void>)) {
+        email: Driver<String>,
+        password: Driver<String>,
+        actionTap: Driver<Void>)) {
 
-        actionCompleted = Observable.never()
-        actionProcessing = activityIndicator.asObservable()
+        completionDrv = Driver.never()
+        processingDrv = activityIndicator.asDriver()
 
-        errorPublisher = errorResponse.asObservable()
-            .takeWhile({ (error) -> Bool in
-                guard let errCode = AuthErrorCode(rawValue: error._code) else {
-                    return true
-                }
-                let allowance: [AuthErrorCode] = [.userDisabled, .emailAlreadyInUse, .invalidEmail, .userNotFound, .weakPassword, .wrongPassword]
-                guard allowance.contains(errCode) else {
-                    return true
-                }
+        errorPublishDrv = errorResponseSubject.asObservable()
+            .skipWhile { ValidationService.filterResponsedError($0) }
+            .map { $0.description }
+            .asDriver(onErrorDriveWith: Driver.never())
+
+        let emailAndErr = Driver.combineLatest(input.email, errorResponseSubject.asDriver(onErrorDriveWith: Driver.never()))
+
+        emailValidationDrv = processingDrv
+            .withLatestFrom(emailAndErr)
+            .map({ (pair) -> String in
+                return ValidationService.checkEmail(pair.0, withResponsedError: pair.1)
+            })
+
+        let pwAndErr = Driver.combineLatest(input.password, errorResponseSubject.asDriver(onErrorDriveWith: Driver.never()))
+
+        passwordValidationDrv = processingDrv
+            .withLatestFrom(pwAndErr)
+            .map({ (pair) -> String in
+                return ValidationService.checkPassword(pair.0, withResponsedError: pair.1)
+            })
+    }
+
+    fileprivate class ValidationService {
+
+        static func checkEmail(_ email: String, withResponsedError err: BMIService.Err) -> String {
+            guard !email.isEmpty else {
+                return BMIService.Err.empty.description
+            }
+            guard case .auth(let code, let msg) = err else {
+                return ""
+            }
+            switch code {
+            case .userDisabled, .emailAlreadyInUse, .invalidEmail, .userNotFound:
+                return msg
+            default:
+                return ""
+            }
+        }
+
+        static func checkPassword(_ password: String, withResponsedError err: BMIService.Err) -> String {
+            guard !password.isEmpty else {
+                return BMIService.Err.empty.description
+            }
+            guard case .auth(let code, let msg) = err else {
+                return ""
+            }
+            switch code {
+            case .weakPassword, .wrongPassword:
+                return msg
+            default:
+                return ""
+            }
+        }
+
+        static func filterResponsedError(_ err: BMIService.Err) -> Bool {
+            let codes: [AuthErrorCode] = [.userDisabled, .emailAlreadyInUse, .invalidEmail, .userNotFound, .weakPassword, .wrongPassword]
+            guard case .auth(let code, _) = err, codes.contains(code) else {
                 return false
-            })
-            .map({ (error) -> String in
-                error.localizedDescription
-            })
-
-        let emailAndErr = Observable.combineLatest(input.email, errorResponse.asObservable()) { (email: $0, err: $1) }
-        emailValidation = actionProcessing.withLatestFrom(emailAndErr, resultSelector: { (flag, content) -> ValidationResult in
-            return ValidationService.validateEmail(content.email, authError: content.err)
-        })
-
-        let pwAndErr = Observable.combineLatest(input.password, errorResponse.asObservable()) { (passwd: $0, err: $1) }
-        passwordValidation = actionProcessing.withLatestFrom(pwAndErr, resultSelector: { (flag, content) -> ValidationResult in
-            return ValidationService.validatePassword(content.passwd, authError: content.err)
-        })
+            }
+            return true
+        }
     }
 }
 
@@ -85,25 +119,28 @@ class SignUpViewModel: EmailAuthViewModel {
     override var functionTitle: String { return "Sign Up" }
 
     fileprivate override init(input: (
-        email: Observable<String>,
-        password: Observable<String>,
-        actionTap: Observable<Void>)) {
+        email: Driver<String>,
+        password: Driver<String>,
+        actionTap: Driver<Void>)) {
 
         super.init(input: input)
 
-        let emailAndPw = Observable.combineLatest(input.email, input.password) { (email: $0, password: $1) }
-        actionCompleted = input.actionTap.withLatestFrom(emailAndPw)
+        let emailAndPw = Driver.combineLatest(input.email, input.password) { (email: $0, password: $1) }
+        completionDrv = input.actionTap.withLatestFrom(emailAndPw)
             .flatMap { (pair) in
-                return Auth.auth().rx
-                    .createUser(email: pair.email, password: pair.password)
-                    .catchError({ (err) -> Observable<(User?)> in
-                        self.errorResponse.onNext(err)
-                        return Observable.just(nil)
+                return BMIService.createUser(withEmail: pair.email, password: pair.password)
+                    .map({ (response) -> User? in
+                        switch response {
+                        case .success(let resp):
+                            return resp
+                        case .fail(let err):
+                            self.errorResponseSubject.onNext(err)
+                            return nil
+                        }
                     })
                     .trackActivity(self.activityIndicator)
-                    .skipWhile{ $0 == nil }
+                    .asDriver(onErrorJustReturn: nil)
             }
-            .share(replay: 1, scope: .forever)
     }
 }
 
@@ -113,24 +150,28 @@ class SignInViewModel: EmailAuthViewModel {
     override var functionTitle: String { return "Sign In" }
 
     fileprivate override init(input: (
-        email: Observable<String>,
-        password: Observable<String>,
-        actionTap: Observable<Void>)) {
+        email: Driver<String>,
+        password: Driver<String>,
+        actionTap: Driver<Void>)) {
 
         super.init(input: input)
 
-        let emailAndPw = Observable.combineLatest(input.email, input.password) { (email: $0, password: $1) }
-        actionCompleted = input.actionTap.withLatestFrom(emailAndPw)
+        let emailAndPw = Driver.combineLatest(input.email, input.password) { (email: $0, password: $1) }
+
+        completionDrv = input.actionTap.withLatestFrom(emailAndPw)
             .flatMap { (pair) in
-                return Auth.auth().rx
-                    .signIn(email: pair.email, password: pair.password)
-                    .catchError({ (err) -> Observable<User?> in
-                        self.errorResponse.onNext(err)
-                        return Observable.just(nil)
+                return BMIService.signIn(withEmail: pair.email, password: pair.password)
+                    .map({ (response) -> User? in
+                        switch response {
+                        case .success(let resp):
+                            return resp
+                        case .fail(let err):
+                            self.errorResponseSubject.onNext(err)
+                            return nil
+                        }
                     })
                     .trackActivity(self.activityIndicator)
-                    .skipWhile{ $0 == nil }
+                    .asDriver(onErrorJustReturn: nil)
             }
-            .share(replay: 1, scope: .forever)
     }
 }

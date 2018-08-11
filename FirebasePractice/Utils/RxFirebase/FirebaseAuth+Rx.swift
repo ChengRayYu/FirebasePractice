@@ -12,10 +12,9 @@ import FirebaseAuth
 
 extension Reactive where Base: Auth {
 
-    func authStateChangeDidChange() -> Observable<(Auth, User?)> {
+    func authStateDidChange() -> Observable<(Auth, User?)> {
 
         return Observable.create({ (observer: AnyObserver<(Auth, User?)>) -> Disposable in
-
             let listener = self.base.addStateDidChangeListener({ (auth, user) in
                 observer.onNext((auth, user))
             })
@@ -28,7 +27,6 @@ extension Reactive where Base: Auth {
     func createUser(email: String, password: String) -> Observable<User?> {
 
         return Observable.create({ (observer: AnyObserver<(User?)>) -> Disposable in
-
             self.base.createUser(withEmail: email, password: password, completion: { (authResult, error) in
                 if let err = error {
                     observer.onError(err)

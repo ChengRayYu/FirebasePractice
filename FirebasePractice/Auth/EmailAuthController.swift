@@ -12,11 +12,11 @@ import RxCocoa
 
 class EmailAuthController: UIViewController {
 
-    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var emailTxtField: UITextField!
-    @IBOutlet weak var emailErrLabel: UILabel!
+    @IBOutlet weak var emailErrLbl: UILabel!
     @IBOutlet weak var passwordTxtField: UITextField!
-    @IBOutlet weak var passwordErrLabel: UILabel!
+    @IBOutlet weak var passwordErrLbl: UILabel!
     @IBOutlet weak var actionBtn: UIButton!
     @IBOutlet weak var cancelBtn: UIButton!
     @IBOutlet weak var backgroundTapGesture: UITapGestureRecognizer!
@@ -29,9 +29,9 @@ class EmailAuthController: UIViewController {
             guard let value = newValue else { return }
             viewModel = EmailAuthViewModel.create(purpose: value,
                                                   input: (
-                                                    email: emailTxtField.rx.text.orEmpty.asObservable(),
-                                                    password: passwordTxtField .rx.text.orEmpty.asObservable(),
-                                                    actionTap: actionBtn.rx.tap.asObservable()))
+                                                    email: emailTxtField.rx.text.orEmpty.asDriver(),
+                                                    password: passwordTxtField .rx.text.orEmpty.asDriver(),
+                                                    actionTap: actionBtn.rx.tap.asDriver()))
         }
     }
 
@@ -41,7 +41,7 @@ class EmailAuthController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        titleLabel.text = viewModel?.pageTitle
+        titleLbl.text = viewModel?.pageTitle
         actionBtn.setTitle(viewModel?.functionTitle, for: .normal)
         rx()
     }
@@ -51,6 +51,9 @@ class EmailAuthController: UIViewController {
     }
 
     func rx() {
+
+        guard let vm = viewModel else { return }
+
         cancelBtn.rx.tap
             .subscribe(onNext: { [weak self] _ in
                 self?.dismiss(animated: true, completion: {
@@ -64,50 +67,36 @@ class EmailAuthController: UIViewController {
             })
             .disposed(by: disposeBag)
         
-        viewModel?.emailValidation
-            .map { $0.description }
-            .bind(to: emailErrLabel.rx.text)
+        vm.emailValidationDrv
+            .drive(emailErrLbl.rx.text)
             .disposed(by: disposeBag)
 
-        viewModel?.passwordValidation
-            .map { $0.description }
-            .bind(to: passwordErrLabel.rx.text)
+        vm.passwordValidationDrv
+            .drive(passwordErrLbl.rx.text)
             .disposed(by: disposeBag)
 
-        viewModel?.errorPublisher
-            .subscribe(onNext: { (errStr) in
+        vm.errorPublishDrv
+            .drive(onNext: { (errStr) in
                 self.showAlert(message: errStr)
             })
             .disposed(by: disposeBag)
 
-        viewModel?.actionProcessing
-            .bind(onNext: { (flag) in
+        vm.processingDrv
+            .drive(onNext: { (flag) in
+                flag ? self.showLoadingHud() : self.hideLoadingHud()
                 if flag {
-                    self.emailErrLabel.text = ""
-                    self.passwordErrLabel.text = ""
+                    self.emailErrLbl.text = ""
+                    self.passwordErrLbl.text = ""
                 }
                 self.emailTxtField.isEnabled = !flag
                 self.passwordTxtField.isEnabled = !flag
                 self.cancelBtn.isEnabled = !flag
                 self.actionBtn.isEnabled = !flag
-                print("ACTIVITY INDICATION IS - \((flag) ? "ON" : "OFF")")
             })
             .disposed(by: disposeBag)
 
-        viewModel?.actionCompleted
-            .subscribe(onNext: { (user) in
-                print("""
-                    Firebase Auth Succeed
-                    user: \(user?.displayName ?? "TBD")
-                    email: \(user?.email ?? "email")
-                    """)
-            })
+        vm.completionDrv
+            .drive()
             .disposed(by: disposeBag)
-    }
-
-    func showAlert(message: String) {
-        let alertView = UIAlertController(title: "FirebasePractice", message: message, preferredStyle: .alert)
-        alertView.addAction(UIAlertAction(title: "OK", style: .cancel))
-        self.present(alertView, animated: true, completion: nil)
     }
 }

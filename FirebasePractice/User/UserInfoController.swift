@@ -21,46 +21,11 @@ class UserInfoController: UITableViewController {
 
     fileprivate var editController: UserInfoEditController?
     fileprivate let disposeBag = DisposeBag()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        navigationController?.navigationBar.backIndicatorImage = UIImage()
-        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage()
-        navigationItem.backBarButtonItem = UIBarButtonItem(image: UIImage(named: "ic_arrowLeft"), style: .plain, target: nil, action: nil)
-
-        let viewModel = UserInfoViewModel(withItemSelected: tableView.rx.itemSelected.asDriver())
-
-        viewModel.userInfoDrv
-            .asObservable()
-            .subscribe(onNext: { (userInfo) in
-                guard let user = userInfo else { return }
-                self.emailLbl.text = user.email
-                self.usernameLbl.text = (user.name.isEmpty) ? "n/a" : user.name
-                self.genderLbl.text = user.gender.description
-                self.ageLbl.text = user.age.description
-            })
-            .disposed(by: disposeBag)
-
-        viewModel.editingTypeDrv
-            .asObservable()
-            .subscribe(onNext: { (editType) in
-                guard let type = editType else { return }
-                self.performSegue(withIdentifier: "segue_userInfo_startEdit", sender: nil)
-                self.editController?.loadView()
-                self.editController?.setupViewModel(ofEditingType: type)
-            })
-            .disposed(by: disposeBag)
-
-        viewModel.signOutOnTap(signOutBtn.rx.tap.asDriver())
-            .disposed(by: disposeBag)
-
-        closeBarBtn.rx.tap
-            .asObservable()
-            .subscribe(onNext: { _ in
-                self.dismiss(animated: true, completion: nil)
-            })
-            .disposed(by: disposeBag)
+        setupNavbar()
+        rx()
     }
 
     override func didReceiveMemoryWarning() {
@@ -78,6 +43,72 @@ class UserInfoController: UITableViewController {
         }
     }
 }
+
+// MARK: - Private Methods
+
+extension UserInfoController {
+
+    func setupNavbar() {
+        navigationController?.navigationBar.backIndicatorImage = UIImage()
+        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage()
+        navigationItem.backBarButtonItem = UIBarButtonItem(image: UIImage(named: "ic_arrowLeft"), style: .plain, target: nil, action: nil)
+    }
+
+    func rx() {
+        let vm = UserInfoViewModel(input: (itemOnSelect: tableView.rx.itemSelected.asDriver(),
+                                           signOutOnTap: signOutBtn.rx.tap.asDriver()))
+
+        vm.userInfoDrv
+            .drive(onNext: { (userInfo) in
+                self.hideLoadingHud()
+                guard let user = userInfo else { return }
+                self.emailLbl.text = user.email
+                self.usernameLbl.text = (user.name.isEmpty) ? "n/a" : user.name
+                self.genderLbl.text = user.gender.description
+                self.ageLbl.text = user.age.description
+            })
+            .disposed(by: disposeBag)
+
+        vm.progressingDrv
+            .drive(onNext: { (flag) in
+                if flag {
+                    self.showLoadingHud()
+                }
+            })
+            .disposed(by: disposeBag)
+
+        vm.userInfoErrDrv
+            .drive(onNext: { (err) in
+                self.showAlert(message: err, withCancelAction: {
+                    self.dismiss(animated: true, completion: nil)
+                })
+            })
+            .disposed(by: disposeBag)
+
+        vm.editingTypeDrv
+            .asObservable()
+            .subscribe(onNext: { (editType) in
+                guard let type = editType else { return }
+                self.performSegue(withIdentifier: "segue_userInfo_startEdit", sender: nil)
+                self.editController?.loadView()
+                self.editController?.startEditing(ofType: type)
+            })
+            .disposed(by: disposeBag)
+
+        vm.userSignedOut
+            .drive()
+            .disposed(by: disposeBag)
+
+        closeBarBtn.rx.tap
+            .asObservable()
+            .subscribe(onNext: { _ in
+                self.dismiss(animated: true, completion: nil)
+            })
+            .disposed(by: disposeBag)
+    }
+}
+
+// MARK: - UITableViewDelegate
 
 extension UserInfoController {
 

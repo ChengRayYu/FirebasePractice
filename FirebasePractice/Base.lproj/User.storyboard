@@ -389,7 +389,7 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Td1-3T-iUg">
                                         <rect key="frame" x="0.0" y="52" width="326.5" height="12"/>
                                         <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="10"/>
-                                        <color key="textColor" red="1" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" name="Warning"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
@@ -427,6 +427,33 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </button>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Rt-yJ-iIK">
+                                <rect key="frame" x="36" y="224" width="303" height="40"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V27-Dg-pyF">
+                                        <rect key="frame" x="121" y="9" width="60.5" height="22"/>
+                                        <fontDescription key="fontDescription" name="AvenirNext-DemiBold" family="Avenir Next" pointSize="16"/>
+                                        <color key="textColor" name="Grey200"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="g5V-Gg-Xkz">
+                                        <rect key="frame" x="197.5" y="10" width="20" height="20"/>
+                                        <color key="color" name="Grey300"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" name="Grey800"/>
+                                <constraints>
+                                    <constraint firstItem="g5V-Gg-Xkz" firstAttribute="leading" secondItem="V27-Dg-pyF" secondAttribute="trailing" constant="16" id="3Uw-4G-AfH"/>
+                                    <constraint firstItem="V27-Dg-pyF" firstAttribute="centerY" secondItem="9Rt-yJ-iIK" secondAttribute="centerY" id="VX9-fz-kwF"/>
+                                    <constraint firstItem="g5V-Gg-Xkz" firstAttribute="centerY" secondItem="V27-Dg-pyF" secondAttribute="centerY" id="sfj-dd-nQS"/>
+                                    <constraint firstItem="V27-Dg-pyF" firstAttribute="centerX" secondItem="9Rt-yJ-iIK" secondAttribute="centerX" id="z8e-jj-Vwf"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" name="Grey50"/>
                         <color key="tintColor" name="Grey800"/>
@@ -434,9 +461,13 @@
                             <constraint firstItem="D3X-gi-pvB" firstAttribute="trailing" secondItem="iVY-Yo-OhF" secondAttribute="trailing" constant="24" id="6qu-Td-lte"/>
                             <constraint firstItem="iVY-Yo-OhF" firstAttribute="top" secondItem="D3X-gi-pvB" secondAttribute="top" constant="48" id="JdT-3i-vuH"/>
                             <constraint firstItem="iVY-Yo-OhF" firstAttribute="leading" secondItem="D3X-gi-pvB" secondAttribute="leading" constant="24" id="MkO-AM-CNn"/>
+                            <constraint firstItem="9Rt-yJ-iIK" firstAttribute="top" secondItem="Uqz-4y-V1X" secondAttribute="top" id="O6t-OU-KcQ"/>
                             <constraint firstItem="Uqz-4y-V1X" firstAttribute="leading" secondItem="D3X-gi-pvB" secondAttribute="leading" priority="250" constant="36" id="Pie-QH-8wu"/>
+                            <constraint firstItem="9Rt-yJ-iIK" firstAttribute="bottom" secondItem="Uqz-4y-V1X" secondAttribute="bottom" id="Uva-ci-xZc"/>
+                            <constraint firstItem="9Rt-yJ-iIK" firstAttribute="trailing" secondItem="Uqz-4y-V1X" secondAttribute="trailing" id="Zql-lA-pv0"/>
                             <constraint firstItem="Uqz-4y-V1X" firstAttribute="top" secondItem="iVY-Yo-OhF" secondAttribute="bottom" constant="48" id="pOd-XF-Aq8"/>
                             <constraint firstItem="D3X-gi-pvB" firstAttribute="trailing" secondItem="Uqz-4y-V1X" secondAttribute="trailing" priority="250" constant="36" id="siX-Sj-VMC"/>
+                            <constraint firstItem="9Rt-yJ-iIK" firstAttribute="leading" secondItem="Uqz-4y-V1X" secondAttribute="leading" id="xc6-lB-iIg"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="D3X-gi-pvB"/>
                     </view>
@@ -444,6 +475,9 @@
                         <outlet property="infoContentErrLbl" destination="Td1-3T-iUg" id="geJ-tW-0dW"/>
                         <outlet property="infoContentTxtField" destination="sUK-fW-BB0" id="hOX-14-yfP"/>
                         <outlet property="infoTypeLbl" destination="NSq-hJ-QPS" id="5VT-BQ-gqd"/>
+                        <outlet property="loadingBanner" destination="9Rt-yJ-iIK" id="aeK-N8-679"/>
+                        <outlet property="loadingBannerLbl" destination="V27-Dg-pyF" id="in2-Zl-965"/>
+                        <outlet property="loadingBannerSpinner" destination="g5V-Gg-Xkz" id="ChR-Pw-6M0"/>
                         <outlet property="saveBtn" destination="Uqz-4y-V1X" id="lGA-MB-abp"/>
                     </connections>
                 </viewController>
@@ -458,6 +492,12 @@
         <namedColor name="Grey100">
             <color red="0.96100002529999995" green="0.96100002529999995" blue="0.96100002529999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <namedColor name="Grey200">
+            <color red="0.93300002813339233" green="0.93300002813339233" blue="0.93300002813339233" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Grey300">
+            <color red="0.87800002098083496" green="0.87800002098083496" blue="0.87800002098083496" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="Grey300">
             <color red="0.87800002098083496" green="0.87800002098083496" blue="0.87800002098083496" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -468,10 +508,13 @@
             <color red="0.45899999139999997" green="0.45899999139999997" blue="0.45899999139999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Grey800">
-            <color red="0.2590000033" green="0.2590000033" blue="0.2590000033" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.25900000333786011" green="0.25900000333786011" blue="0.25900000333786011" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Grey800">
-            <color red="0.25900000333786011" green="0.25900000333786011" blue="0.25900000333786011" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.2590000033" green="0.2590000033" blue="0.2590000033" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Warning">
+            <color red="1" green="0.20000000000000001" blue="0.20000000000000001" alpha="0.80000001192092896" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

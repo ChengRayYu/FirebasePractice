@@ -14,45 +14,56 @@ import GoogleSignIn
 
 class WelcomeViewModel {
 
-    let signInProcessing: Driver<Bool>
-    let googleSignedIn: Driver<User?>
-    let googleSignInTap: PublishSubject<Void> = .init()
-    private let activityIndicator: ActivityIndicator = .init()
+    let processingDrv: Driver<Bool>
+    let googleSignedInDrv: Driver<User?>
+    let errResponseDrv: Driver<String>
 
-    init(gidAuth: GIDAuthService) {
+    init(withGoogleSignInOnTap googleSignInOnTap: Driver<Void>) {
 
-        signInProcessing = activityIndicator.asDriver()
+        let errRespSubject = PublishSubject<String>()
+        let activityIndicator = ActivityIndicator()
 
-        googleSignedIn = googleSignInTap
-            .asDriver(onErrorJustReturn: ())
-            .map { _ in
+        processingDrv = activityIndicator.asDriver()
+        errResponseDrv = errRespSubject.asDriver(onErrorDriveWith: Driver.never())
+
+        googleSignedInDrv = googleSignInOnTap
+            .asObservable()
+            .map {
                 GIDSignIn.sharedInstance().signIn()
             }
-            .flatMapLatest { _ in
-                return gidAuth.signed
-            }
-            .map({ (result) -> AuthCredential? in
-                guard let res = result else { return nil }
-                guard res.error == nil else { return nil }
-
-                guard let authentication = res.user.authentication,
-                    let idToken = authentication.idToken,
-                    let accessToken = authentication.accessToken else {
-                        return nil
+            .flatMap({ _ -> Observable<AuthCredential?> in
+                return BMIService.signInViaGoogle()
+                    .map({ (response) -> AuthCredential? in
+                        switch response {
+                        case .success(let resp):
+                            return resp
+                        case .fail(let err):
+                            let codes: [GIDSignInErrorCode] = [.canceled, .noSignInHandlersInstalled]
+                            if case .gAuth(let code, _) = err, !codes.contains(code) {
+                                errRespSubject.onNext(err.description)
+                            }
+                            return nil
+                        }
+                    })
+                    .trackActivity(activityIndicator)
+            })
+            .skipWhile { $0 == nil }
+            .flatMap({ (credential) -> Observable<User?> in
+                guard let cred = credential else {
+                    return Observable.just(nil)
                 }
-                return GoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
+                return BMIService.signIn(withCredential: cred)
+                    .map({ (response) -> User? in
+                        switch response {
+                        case .success(let resp):
+                            return resp
+                        case .fail(let err):
+                            errRespSubject.onNext(err.description)
+                            return nil
+                        }
+                    })
+                    .trackActivity(activityIndicator)
             })
-            .flatMapLatest({ (credential) -> Driver<User?> in
-                guard let cred = credential else { return Driver.empty()}
-                return Auth.auth().rx
-                    .signIn(credential: cred)
-                    .debug("[FIR]", trimOutput: false)
-                    .asDriver(onErrorJustReturn: nil)
-            })
-    }
-
-    func googleIDDisconnected() -> Driver<GIDSignInResult?> {
-        return GIDSignIn.sharedInstance().rx.didDisconnect
             .asDriver(onErrorJustReturn: nil)
     }
 }
