@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9CB1C24ADB533261511ABB208E8A8E60"
-               BuildableName = "RxCocoa.framework"
-               BlueprintName = "RxCocoa"
+               BlueprintIdentifier = "BA01960D983C39B66BEF78638ADF3202"
+               BuildableName = "RxGesture.framework"
+               BlueprintName = "RxGesture"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9CB1C24ADB533261511ABB208E8A8E60"
-            BuildableName = "RxCocoa.framework"
-            BlueprintName = "RxCocoa"
+            BlueprintIdentifier = "BA01960D983C39B66BEF78638ADF3202"
+            BuildableName = "RxGesture.framework"
+            BlueprintName = "RxGesture"
             ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

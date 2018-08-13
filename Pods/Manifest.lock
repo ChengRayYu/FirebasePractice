@@ -72,6 +72,9 @@ PODS:
     - Differentiator (~> 3.0)
     - RxCocoa (~> 4.0)
     - RxSwift (~> 4.0)
+  - RxGesture (1.2.1):
+    - RxCocoa (~> 4.0)
+    - RxSwift (~> 4.0)
   - RxSwift (4.2.0)
 
 DEPENDENCIES:
@@ -83,6 +86,7 @@ DEPENDENCIES:
   - MBProgressHUD (~> 1.1.0)
   - RxCocoa (~> 4.0)
   - RxDataSources
+  - RxGesture
   - RxSwift (~> 4.0)
 
 SPEC REPOS:
@@ -105,6 +109,7 @@ SPEC REPOS:
     - Protobuf
     - RxCocoa
     - RxDataSources
+    - RxGesture
     - RxSwift
 
 SPEC CHECKSUMS:
@@ -126,8 +131,9 @@ SPEC CHECKSUMS:
   Protobuf: 0fc0ad8bec688b2a3017a139953e01374fedbd5f
   RxCocoa: 0b54909c902e1e581212a03e690bbd94032d8baa
   RxDataSources: cb7c31e652a87ebb919da45f716bbb87b3765f6b
+  RxGesture: c278eb05b187abd47e11e65464ae4de53ab71d95
   RxSwift: 99e10317ddfcc7fbe01356aafd118fde4a0be104
 
-PODFILE CHECKSUM: d4350ed173e92e53bb2f6a8c2bcb1420a56e7c88
+PODFILE CHECKSUM: 174f0ade47742fcc6aeaf85fac092b04c9d12258
 
 COCOAPODS: 1.5.3
