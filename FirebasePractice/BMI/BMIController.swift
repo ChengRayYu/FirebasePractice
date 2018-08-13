@@ -53,8 +53,8 @@ extension BMIController {
                 case let .record(timestamp, height, weight):
                     let cell = cv.dequeueReusableCell(withReuseIdentifier: "BMIRecordCell", for: indexPath) as! BMIRecordCell
                     cell.resultLbl.text = String(format: "%2.2f", weight / pow(height / 100, 2.0))
-                    cell.heightLbl.text = String(format: "%.2f m", height / 100)
-                    cell.weightLbl.text = String(format: "%.0f kg", weight)
+                    cell.heightLbl.text = String(format: "%.2f", height / 100)
+                    cell.weightLbl.text = String(format: "%.0f", weight)
                     cell.dateLbl.text = timestamp
                     return cell
 
@@ -125,7 +125,7 @@ extension BMIController: UICollectionViewDelegateFlowLayout {
 
         switch dataSrc[indexPath] {
         case .record:
-            return CGSize(width: collectionView.frame.size.width - 24.0, height: 88.0)
+            return CGSize(width: collectionView.frame.size.width - 24.0, height: 92.0)
         default:
             return CGSize(width: collectionView.frame.size.width, height: 400.0)
         }
