@@ -27,6 +27,8 @@ class BMIViewModel {
     let errResponseDrv: Driver<String>
     let reloadSubject: PublishSubject<Void> = .init()
     let reloadProgressDrv: Driver<Bool>
+    let deleteSubject: PublishSubject<Void> = .init()
+    let deleteProgressDrv: Driver<Bool>
 
     init() {
         let errRespSubject = PublishSubject<String>()
@@ -109,5 +111,13 @@ class BMIViewModel {
                 }
                 return false
             })
+
+        deleteProgressDrv = deleteSubject
+            .map({ _ -> Bool in
+                print("DELETE")
+                return true
+            })
+            .asDriver(onErrorDriveWith: Driver.never())
+
     }
 }

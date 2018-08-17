@@ -10,6 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import RxDataSources
+import RxGesture
 
 class BMIController: UIViewController {
 
@@ -56,13 +57,51 @@ extension BMIController {
                     cell.heightLbl.text = String(format: "%.2f", height / 100)
                     cell.weightLbl.text = String(format: "%.0f", weight)
                     cell.dateLbl.text = timestamp
+                    cell.controlState(fromGestureLocation:
+                        cell.infoContainer.rx
+                            .anyGesture(
+                                .tap(),
+                                .pan(configuration: { gesture, delegate in
+                                    delegate.simultaneousRecognitionPolicy = .custom({ (gesture, otherGesture) -> Bool in
+                                        guard let scrollPan = otherGesture as? UIPanGestureRecognizer else { return true }
+                                        let velocity = scrollPan.velocity(in: cell)
+                                        return fabs(velocity.y) > fabs(velocity.x)
+                                    })
+                                    delegate.beginPolicy = .custom({ gesture -> Bool in
+                                        guard let pan = gesture as? UIPanGestureRecognizer else { return true }
+                                        return fabs(pan.translation(in: pan.view).y) <= 0
+                                    })
+                                })
+                            )
+                            .map({ (gesture) -> (initial: CGFloat?, current: CGFloat?)? in
+                                guard let pan = gesture as? UIPanGestureRecognizer else { return nil }
+                                let location = pan.location(in: cell)
+                                switch pan.state {
+                                case .began:    return (location.x, location.x)
+                                case .changed:  return (nil, location.x)
+                                case .ended:    return (nil, CGFloat.greatestFiniteMagnitude)
+                                default:        return nil
+                                }
+                            })
+                        )
+                        .drive(cell.rx.controlState)
+                        .disposed(by: cell.disposeBag)
+
+                    cell.deleteBtn.rx.tap
+                        .asDriver()
+                        .drive(vm.deleteSubject)
+                        .disposed(by: cell.disposeBag)
+                    vm.deleteProgressDrv
+                        .drive()
+                        .disposed(by: cell.disposeBag)
                     return cell
 
                 case let .error(err):
                     let cell = cv.dequeueReusableCell(withReuseIdentifier: "BMIErrorCell", for: indexPath) as! BMIErrorCell
                     cell.errorLbl.text = err
                     cell.reloadBtn.rx.tap
-                        .asDriver().drive(vm.reloadSubject)
+                        .asDriver()
+                        .drive(vm.reloadSubject)
                         .disposed(by: cell.disposeBag)
                     vm.reloadProgressDrv
                         .drive(cell.loadingIndicator.rx.isAnimating)
