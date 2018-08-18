@@ -62,9 +62,10 @@ extension WelcomeController {
             .disposed(by: disposeBag)
 
         vm.errResponseDrv
-            .drive(onNext: { (errMsg) in
-                self.showAlert(message: errMsg)
+            .flatMap({ (err) in
+                self.showAlert(message: err).asDriver(onErrorDriveWith: Driver.never())
             })
+            .drive()
             .disposed(by: disposeBag)
 
         emailSignInBtn.rx.tap

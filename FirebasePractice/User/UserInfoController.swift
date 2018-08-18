@@ -78,11 +78,13 @@ extension UserInfoController {
             .disposed(by: disposeBag)
 
         vm.userInfoErrDrv
-            .drive(onNext: { (err) in
-                self.showAlert(message: err, withCancelAction: {
-                    self.dismiss(animated: true, completion: nil)
-                })
+            .flatMap({ (error) -> Driver<Int> in
+                return self.showAlert(message: error).asDriver(onErrorDriveWith: Driver.never())
             })
+            .map({ _ in
+                self.dismiss(animated: true, completion: nil)
+            })
+            .drive()
             .disposed(by: disposeBag)
 
         vm.editingTypeDrv

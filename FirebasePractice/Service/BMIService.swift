@@ -200,9 +200,6 @@ extension BMIService {
         guard let user = Auth.auth().currentUser else {
             return Observable.just(.fail(err: .unauthenticated))
         }
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM-dd-yyyy\tHH:mm"
-
         return Database.database().reference().child("records/\(user.uid)")
             .queryOrderedByKey()
             .rx
@@ -214,7 +211,7 @@ extension BMIService {
                     .map({ (child) -> Record in
                         let childSnapshot = child as! DataSnapshot
                         let entries = childSnapshot.value as! [String: AnyObject]
-                        return (formatter.string(from: Date(timeIntervalSince1970: (Double(childSnapshot.key) ?? 0) / 1000)),
+                        return (childSnapshot.key,
                                 entries["h"]?.doubleValue ?? 0,
                                 entries["w"]?.doubleValue ?? 0)
                     })
@@ -235,6 +232,25 @@ extension BMIService {
             .child(timestamp)
             .rx
             .setValue(["h": NSNumber(value: height), "w": NSNumber(value: weight)])
+            .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
+            .map({ (ref) -> Response<Void> in
+                return .success(resp: ())
+            })
+            .catchError({ (error) -> Observable<BMIService.Response<Void>> in
+                return Observable.just(.fail(err: handleError(error)))
+            })
+    }
+
+    static func deleteRecord(_ timestamp: String) -> Observable<Response<Void>> {
+
+        guard let user = Auth.auth().currentUser else {
+            return Observable.just(.fail(err: .unauthenticated))
+        }
+        let userRecordRef = Database.database().reference().child("records/\(user.uid)")
+        return userRecordRef
+            .child(timestamp)
+            .rx
+            .removeValue()
             .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
             .map({ (ref) -> Response<Void> in
                 return .success(resp: ())

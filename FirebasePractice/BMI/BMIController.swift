@@ -51,48 +51,33 @@ extension BMIController {
         bmiCollectionDataSrc = RxCollectionViewSectionedReloadDataSource<SectionModel<String, BMIRecord>>(
             configureCell: { (dataSrc, cv, indexPath, item) -> UICollectionViewCell in
                 switch dataSrc[indexPath] {
-                case let .record(timestamp, height, weight):
+                case .record(let recordVM):
                     let cell = cv.dequeueReusableCell(withReuseIdentifier: "BMIRecordCell", for: indexPath) as! BMIRecordCell
-                    cell.resultLbl.text = String(format: "%2.2f", weight / pow(height / 100, 2.0))
-                    cell.heightLbl.text = String(format: "%.2f", height / 100)
-                    cell.weightLbl.text = String(format: "%.0f", weight)
-                    cell.dateLbl.text = timestamp
-                    cell.controlState(fromGestureLocation:
-                        cell.infoContainer.rx
-                            .anyGesture(
-                                .tap(),
-                                .pan(configuration: { gesture, delegate in
-                                    delegate.simultaneousRecognitionPolicy = .custom({ (gesture, otherGesture) -> Bool in
-                                        guard let scrollPan = otherGesture as? UIPanGestureRecognizer else { return true }
-                                        let velocity = scrollPan.velocity(in: cell)
-                                        return fabs(velocity.y) > fabs(velocity.x)
-                                    })
-                                    delegate.beginPolicy = .custom({ gesture -> Bool in
-                                        guard let pan = gesture as? UIPanGestureRecognizer else { return true }
-                                        return fabs(pan.translation(in: pan.view).y) <= 0
-                                    })
-                                })
-                            )
-                            .map({ (gesture) -> (initial: CGFloat?, current: CGFloat?)? in
-                                guard let pan = gesture as? UIPanGestureRecognizer else { return nil }
-                                let location = pan.location(in: cell)
-                                switch pan.state {
-                                case .began:    return (location.x, location.x)
-                                case .changed:  return (nil, location.x)
-                                case .ended:    return (nil, CGFloat.greatestFiniteMagnitude)
-                                default:        return nil
-                                }
-                            })
-                        )
+                    recordVM.infoDrv
+                        .drive(cell.rx.info)
+                        .disposed(by: cell.disposeBag)
+                    cell.controlState()
                         .drive(cell.rx.controlState)
                         .disposed(by: cell.disposeBag)
-
                     cell.deleteBtn.rx.tap
-                        .asDriver()
-                        .drive(vm.deleteSubject)
+                        .flatMap({ _ -> Observable<Int> in
+                            return self.showAlert(title: "Delete Record?",
+                                                  message: "Confirm to delete this entry? ",
+                                                  actions: [.cancel(title: "Cancel"), .option(title: "Delete")])
+                        })
+                        .skipWhile { $0 == 0 }
+                        .map { _ in return () }
+                        .bind(to: recordVM.deletionSubject)
                         .disposed(by: cell.disposeBag)
-                    vm.deleteProgressDrv
+                    recordVM.deletionDrv
+                        .flatMap({ (error) -> Driver<Int> in
+                            guard let err = error else { return Driver.empty() }
+                            return self.showAlert(message: err).asDriver(onErrorDriveWith: Driver.never())
+                        })
                         .drive()
+                        .disposed(by: cell.disposeBag)
+                    recordVM.deletionProgressDrv
+                        .drive(cell.loadingSpinner.rx.isAnimating)
                         .disposed(by: cell.disposeBag)
                     return cell
 
@@ -143,9 +128,10 @@ extension BMIController {
             .disposed(by: disposeBag)
 
         vm.errResponseDrv
-            .drive(onNext: { (msg) in
-                self.showAlert(message: msg)
+            .flatMap({ (msg) in
+                self.showAlert(message: msg).asDriver(onErrorDriveWith: Driver.never())
             })
+            .drive()
             .disposed(by: disposeBag)
 
         vm.recordsDrv

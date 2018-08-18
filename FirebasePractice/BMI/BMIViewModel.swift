@@ -13,7 +13,7 @@ import FirebaseAuth
 import FirebaseDatabase
 
 enum BMIRecord {
-    case record(timestamp: String, height: Double, weight: Double)
+    case record(viewModel: BMIRecordCellViewModel)
     case error(err: String)
     case empty
 }
@@ -27,8 +27,6 @@ class BMIViewModel {
     let errResponseDrv: Driver<String>
     let reloadSubject: PublishSubject<Void> = .init()
     let reloadProgressDrv: Driver<Bool>
-    let deleteSubject: PublishSubject<Void> = .init()
-    let deleteProgressDrv: Driver<Bool>
 
     init() {
         let errRespSubject = PublishSubject<String>()
@@ -71,8 +69,8 @@ class BMIViewModel {
                     (logged: $0, reload: $1 )
             }
 
-        let activityIndicator = ActivityIndicator()
-        reloadProgressDrv = activityIndicator.asDriver()
+        let reloadActIndicator = ActivityIndicator()
+        reloadProgressDrv = reloadActIndicator.asDriver()
         
         recordsDrv = loggedInAndReload
             .asObservable()
@@ -95,12 +93,12 @@ class BMIViewModel {
                             return [BMIRecord.empty]
                         }
                         return records.map({ (serviceRecord) -> BMIRecord in
-                            return BMIRecord.record(timestamp: serviceRecord.timestamp,
-                                                    height: serviceRecord.height,
-                                                    weight: serviceRecord.weight)
+                            return BMIRecord.record(viewModel:
+                                BMIRecordCellViewModel(stamp: serviceRecord.timestamp, h: serviceRecord.height, w: serviceRecord.weight)
+                            )
                         })
                     })
-                    .trackActivity(activityIndicator)
+                    .trackActivity(reloadActIndicator)
             })
             .asDriver(onErrorJustReturn: [])
 
@@ -111,13 +109,5 @@ class BMIViewModel {
                 }
                 return false
             })
-
-        deleteProgressDrv = deleteSubject
-            .map({ _ -> Bool in
-                print("DELETE")
-                return true
-            })
-            .asDriver(onErrorDriveWith: Driver.never())
-
     }
 }

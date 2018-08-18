@@ -76,9 +76,10 @@ class EmailAuthController: UIViewController {
             .disposed(by: disposeBag)
 
         vm.errorPublishDrv
-            .drive(onNext: { (errStr) in
-                self.showAlert(message: errStr)
+            .flatMap({ (err) in
+                self.showAlert(message: err).asDriver(onErrorDriveWith: Driver.never())
             })
+            .drive()
             .disposed(by: disposeBag)
 
         vm.processingDrv

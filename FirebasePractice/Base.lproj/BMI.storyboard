@@ -52,14 +52,26 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="92"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Len-wM-nbt">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LNR-3Z-StB">
                                                     <rect key="frame" x="295" y="0.0" width="80" height="92"/>
+                                                    <subviews>
+                                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="F1K-aM-dL2">
+                                                            <rect key="frame" x="30" y="36" width="20" height="20"/>
+                                                        </activityIndicatorView>
+                                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Len-wM-nbt">
+                                                            <rect key="frame" x="0.0" y="0.0" width="80" height="92"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <state key="normal" image="ic_trash"/>
+                                                        </button>
+                                                    </subviews>
                                                     <color key="backgroundColor" red="1" green="0.20000000000000001" blue="0.20000000000000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="80" id="VG8-4b-Xzv"/>
+                                                        <constraint firstAttribute="width" constant="80" id="Bkz-9w-Qaq"/>
+                                                        <constraint firstItem="F1K-aM-dL2" firstAttribute="centerX" secondItem="LNR-3Z-StB" secondAttribute="centerX" id="GBy-Y2-PNb"/>
+                                                        <constraint firstItem="F1K-aM-dL2" firstAttribute="centerY" secondItem="LNR-3Z-StB" secondAttribute="centerY" id="V9u-UR-GpC"/>
                                                     </constraints>
-                                                    <state key="normal" image="ic_trash"/>
-                                                </button>
+                                                </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uvx-tl-MWR">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="92"/>
                                                     <subviews>
@@ -181,13 +193,12 @@
                                         <color key="backgroundColor" name="Grey200"/>
                                         <constraints>
                                             <constraint firstAttribute="bottom" secondItem="uvx-tl-MWR" secondAttribute="bottom" id="5Y8-i7-sjt"/>
+                                            <constraint firstItem="LNR-3Z-StB" firstAttribute="centerY" secondItem="fky-me-QU3" secondAttribute="centerY" id="7zh-qF-1mI"/>
                                             <constraint firstAttribute="trailing" secondItem="uvx-tl-MWR" secondAttribute="trailing" id="DJE-zA-BV9"/>
-                                            <constraint firstItem="Len-wM-nbt" firstAttribute="height" secondItem="fky-me-QU3" secondAttribute="height" id="DMB-Ga-nMz"/>
-                                            <constraint firstItem="Len-wM-nbt" firstAttribute="centerY" secondItem="fky-me-QU3" secondAttribute="centerY" id="KfO-Cg-8hw"/>
-                                            <constraint firstAttribute="trailing" secondItem="Len-wM-nbt" secondAttribute="trailing" id="jJo-sB-YGf"/>
+                                            <constraint firstItem="LNR-3Z-StB" firstAttribute="height" secondItem="fky-me-QU3" secondAttribute="height" id="bVl-ad-kbK"/>
+                                            <constraint firstAttribute="trailing" secondItem="LNR-3Z-StB" secondAttribute="trailing" id="brt-qu-Daw"/>
                                             <constraint firstItem="uvx-tl-MWR" firstAttribute="top" secondItem="fky-me-QU3" secondAttribute="top" id="sgL-Kn-0ya"/>
                                             <constraint firstItem="uvx-tl-MWR" firstAttribute="leading" secondItem="fky-me-QU3" secondAttribute="leading" id="tQY-r1-wQg"/>
-                                            <constraint firstItem="Len-wM-nbt" firstAttribute="leading" secondItem="fky-me-QU3" secondAttribute="leading" priority="250" constant="295" id="ty7-Ys-yqs"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -210,6 +221,7 @@
                                             <outlet property="infoContainer" destination="uvx-tl-MWR" id="xOD-UK-gjw"/>
                                             <outlet property="infoContainerLeadingConstraint" destination="tQY-r1-wQg" id="vqs-TO-6yE"/>
                                             <outlet property="infoContainerTrailingConstraint" destination="DJE-zA-BV9" id="hWC-x6-DEZ"/>
+                                            <outlet property="loadingSpinner" destination="F1K-aM-dL2" id="g0L-3A-N1m"/>
                                             <outlet property="resultLbl" destination="ySj-Wi-c2n" id="sIN-6p-yxi"/>
                                             <outlet property="weightLbl" destination="wM9-sX-5S9" id="bLu-uj-B7z"/>
                                         </connections>
@@ -762,9 +774,6 @@
         <namedColor name="Grey200">
             <color red="0.93300002810000005" green="0.93300002810000005" blue="0.93300002810000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <namedColor name="Grey200">
-            <color red="0.93300002813339233" green="0.93300002813339233" blue="0.93300002813339233" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <namedColor name="Grey300">
             <color red="0.87800002099999996" green="0.87800002099999996" blue="0.87800002099999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -774,20 +783,8 @@
         <namedColor name="Grey500">
             <color red="0.62000000476837158" green="0.62000000476837158" blue="0.62000000476837158" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <namedColor name="Grey500">
-            <color red="0.62000000476837158" green="0.62000000476837158" blue="0.62000000476837158" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <namedColor name="Grey600">
             <color red="0.45899999139999997" green="0.45899999139999997" blue="0.45899999139999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Grey600">
-            <color red="0.45899999141693115" green="0.45899999141693115" blue="0.45899999141693115" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Grey800">
-            <color red="0.25900000333786011" green="0.25900000333786011" blue="0.25900000333786011" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Grey800">
-            <color red="0.2590000033" green="0.2590000033" blue="0.2590000033" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Grey800">
             <color red="0.25900000333786011" green="0.25900000333786011" blue="0.25900000333786011" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
