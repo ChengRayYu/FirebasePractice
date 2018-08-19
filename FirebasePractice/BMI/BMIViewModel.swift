@@ -13,7 +13,7 @@ import FirebaseAuth
 import FirebaseDatabase
 
 enum BMIRecord {
-    case record(timestamp: String, height: Double, weight: Double)
+    case record(viewModel: BMIRecordCellViewModel)
     case error(err: String)
     case empty
 }
@@ -69,8 +69,8 @@ class BMIViewModel {
                     (logged: $0, reload: $1 )
             }
 
-        let activityIndicator = ActivityIndicator()
-        reloadProgressDrv = activityIndicator.asDriver()
+        let reloadActIndicator = ActivityIndicator()
+        reloadProgressDrv = reloadActIndicator.asDriver()
         
         recordsDrv = loggedInAndReload
             .asObservable()
@@ -93,12 +93,12 @@ class BMIViewModel {
                             return [BMIRecord.empty]
                         }
                         return records.map({ (serviceRecord) -> BMIRecord in
-                            return BMIRecord.record(timestamp: serviceRecord.timestamp,
-                                                    height: serviceRecord.height,
-                                                    weight: serviceRecord.weight)
+                            return BMIRecord.record(viewModel:
+                                BMIRecordCellViewModel(stamp: serviceRecord.timestamp, h: serviceRecord.height, w: serviceRecord.weight)
+                            )
                         })
                     })
-                    .trackActivity(activityIndicator)
+                    .trackActivity(reloadActIndicator)
             })
             .asDriver(onErrorJustReturn: [])
 

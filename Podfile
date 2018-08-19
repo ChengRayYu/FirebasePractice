@@ -7,6 +7,7 @@ target 'FirebasePractice' do
 
     pod 'RxSwift', '~> 4.0'
     pod 'RxCocoa', '~> 4.0'
+    pod 'RxGesture'
     pod 'RxDataSources'
     pod 'Firebase/Core'
     pod 'Firebase/Auth'

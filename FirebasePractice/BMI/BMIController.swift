@@ -10,6 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import RxDataSources
+import RxGesture
 
 class BMIController: UIViewController {
 
@@ -50,19 +51,42 @@ extension BMIController {
         bmiCollectionDataSrc = RxCollectionViewSectionedReloadDataSource<SectionModel<String, BMIRecord>>(
             configureCell: { (dataSrc, cv, indexPath, item) -> UICollectionViewCell in
                 switch dataSrc[indexPath] {
-                case let .record(timestamp, height, weight):
+                case .record(let recordVM):
                     let cell = cv.dequeueReusableCell(withReuseIdentifier: "BMIRecordCell", for: indexPath) as! BMIRecordCell
-                    cell.resultLbl.text = String(format: "%2.2f", weight / pow(height / 100, 2.0))
-                    cell.heightLbl.text = String(format: "%.2f m", height / 100)
-                    cell.weightLbl.text = String(format: "%.0f kg", weight)
-                    cell.dateLbl.text = timestamp
+                    recordVM.infoDrv
+                        .drive(cell.rx.info)
+                        .disposed(by: cell.disposeBag)
+                    cell.controlState()
+                        .drive(cell.rx.controlState)
+                        .disposed(by: cell.disposeBag)
+                    cell.deleteBtn.rx.tap
+                        .flatMap({ _ -> Observable<Int> in
+                            return self.showAlert(title: "Delete Record?",
+                                                  message: "Confirm to delete this entry? ",
+                                                  actions: [.cancel(title: "Cancel"), .option(title: "Delete")])
+                        })
+                        .skipWhile { $0 == 0 }
+                        .map { _ in return () }
+                        .bind(to: recordVM.deletionSubject)
+                        .disposed(by: cell.disposeBag)
+                    recordVM.deletionDrv
+                        .flatMap({ (error) -> Driver<Int> in
+                            guard let err = error else { return Driver.empty() }
+                            return self.showAlert(message: err).asDriver(onErrorDriveWith: Driver.never())
+                        })
+                        .drive()
+                        .disposed(by: cell.disposeBag)
+                    recordVM.deletionProgressDrv
+                        .drive(cell.loadingSpinner.rx.isAnimating)
+                        .disposed(by: cell.disposeBag)
                     return cell
 
                 case let .error(err):
                     let cell = cv.dequeueReusableCell(withReuseIdentifier: "BMIErrorCell", for: indexPath) as! BMIErrorCell
                     cell.errorLbl.text = err
                     cell.reloadBtn.rx.tap
-                        .asDriver().drive(vm.reloadSubject)
+                        .asDriver()
+                        .drive(vm.reloadSubject)
                         .disposed(by: cell.disposeBag)
                     vm.reloadProgressDrv
                         .drive(cell.loadingIndicator.rx.isAnimating)
@@ -104,9 +128,10 @@ extension BMIController {
             .disposed(by: disposeBag)
 
         vm.errResponseDrv
-            .drive(onNext: { (msg) in
-                self.showAlert(message: msg)
+            .flatMap({ (msg) in
+                self.showAlert(message: msg).asDriver(onErrorDriveWith: Driver.never())
             })
+            .drive()
             .disposed(by: disposeBag)
 
         vm.recordsDrv
@@ -125,7 +150,7 @@ extension BMIController: UICollectionViewDelegateFlowLayout {
 
         switch dataSrc[indexPath] {
         case .record:
-            return CGSize(width: collectionView.frame.size.width - 24.0, height: 88.0)
+            return CGSize(width: collectionView.frame.size.width - 24.0, height: 92.0)
         default:
             return CGSize(width: collectionView.frame.size.width, height: 400.0)
         }

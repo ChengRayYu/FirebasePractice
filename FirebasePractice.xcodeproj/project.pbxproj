@@ -11,6 +11,7 @@
 		712C7AEA211507C000F03C44 /* UIViewController+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712C7AE9211507C000F03C44 /* UIViewController+Common.swift */; };
 		712EEB981FB3A9BA00CF71B5 /* Color.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 712EEB971FB3A9BA00CF71B5 /* Color.xcassets */; };
 		7130B8B6207065F20054125F /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7130B8B5207065F20054125F /* UIView+Extension.swift */; };
+		7140F5CE21272230003A87DF /* UIAlertController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7140F5CD21272230003A87DF /* UIAlertController+Rx.swift */; };
 		714AEEDC1FB75B760071FBF9 /* FirebaseAuth+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 714AEEDB1FB75B760071FBF9 /* FirebaseAuth+Rx.swift */; };
 		7152A1D81FCDBCBA006A6C61 /* BMICells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7152A1D71FCDBCBA006A6C61 /* BMICells.swift */; };
 		7157E1A6210D16C500F78C4D /* BMIService+Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7157E1A5210D16C500F78C4D /* BMIService+Response.swift */; };
@@ -46,6 +47,7 @@
 		712C7AE9211507C000F03C44 /* UIViewController+Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Common.swift"; sourceTree = "<group>"; };
 		712EEB971FB3A9BA00CF71B5 /* Color.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Color.xcassets; sourceTree = "<group>"; };
 		7130B8B5207065F20054125F /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
+		7140F5CD21272230003A87DF /* UIAlertController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Rx.swift"; sourceTree = "<group>"; };
 		714AEEDB1FB75B760071FBF9 /* FirebaseAuth+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FirebaseAuth+Rx.swift"; sourceTree = "<group>"; };
 		7152A1D71FCDBCBA006A6C61 /* BMICells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BMICells.swift; sourceTree = "<group>"; };
 		7157E1A5210D16C500F78C4D /* BMIService+Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BMIService+Response.swift"; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 				712C7AE9211507C000F03C44 /* UIViewController+Common.swift */,
 				7130B8B5207065F20054125F /* UIView+Extension.swift */,
 				717786081FBF526800E2485B /* ActivityIndicator.swift */,
+				7140F5CD21272230003A87DF /* UIAlertController+Rx.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -307,6 +310,7 @@
 				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxDataSources/RxDataSources.framework",
+				"${BUILT_PRODUCTS_DIR}/RxGesture/RxGesture.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
@@ -321,6 +325,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxDataSources.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxGesture.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
@@ -385,6 +390,7 @@
 				7183951021023AA700627AB3 /* UserInfoCell.swift in Sources */,
 				71ED692E20F7D6DA0085C321 /* BMIService.swift in Sources */,
 				71C3A2401FCF1FC400A8D276 /* BMIHeader.swift in Sources */,
+				7140F5CE21272230003A87DF /* UIAlertController+Rx.swift in Sources */,
 				7157E1A6210D16C500F78C4D /* BMIService+Response.swift in Sources */,
 				714AEEDC1FB75B760071FBF9 /* FirebaseAuth+Rx.swift in Sources */,
 				71E6F7741FB2245E0030AA0C /* AppDelegate.swift in Sources */,
