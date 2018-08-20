@@ -13,6 +13,7 @@ import RxCocoa
 class UserInfoController: UITableViewController {
 
     @IBOutlet weak var closeBarBtn: UIBarButtonItem!
+    @IBOutlet weak var portraitBtn: UIButton!
     @IBOutlet weak var emailLbl: UILabel!
     @IBOutlet weak var usernameLbl: UILabel!
     @IBOutlet weak var genderLbl: UILabel!
@@ -25,6 +26,7 @@ class UserInfoController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavbar()
+        maskPortrait()
         rx()
     }
 
@@ -54,6 +56,30 @@ extension UserInfoController {
         navigationItem.backBarButtonItem = UIBarButtonItem(image: UIImage(named: "ic_arrowLeft"), style: .plain, target: nil, action: nil)
     }
 
+    func maskPortrait() {
+
+        //portraitBtn.clipsToBounds = false
+        let bounds = portraitBtn.bounds
+        let maskLayer = CAShapeLayer()
+        let maskPath = UIBezierPath(roundedRect: bounds, cornerRadius: bounds.width)
+
+        maskLayer.path = maskPath.cgPath
+        maskLayer.fillColor = UIColor.black.cgColor
+        portraitBtn.layer.mask = maskLayer
+
+        /*
+        let rimLayer = CAShapeLayer()
+        let rimPath = UIBezierPath(roundedRect: bounds, cornerRadius: bounds.width)
+        let rimPath = UIBezierPath(roundedRect: CGRect(origin: CGPoint(x: bounds.origin.x - 2, y: bounds.origin.x - 2),
+                                                      size: CGSize(width: bounds.width + 4, height: bounds.height + 4)),
+                                   cornerRadius: bounds.width + 4)
+        rimLayer.path = rimPath.cgPath
+        rimLayer.fillColor = UIColor.clear.cgColor
+        rimLayer.strokeColor = UIColor.red.cgColor
+        rimLayer.lineWidth = 1.5
+        */
+    }
+
     func rx() {
         let vm = UserInfoViewModel(input: (itemOnSelect: tableView.rx.itemSelected.asDriver(),
                                            signOutOnTap: signOutBtn.rx.tap.asDriver()))
@@ -66,6 +92,7 @@ extension UserInfoController {
                 self.usernameLbl.text = (user.name.isEmpty) ? "n/a" : user.name
                 self.genderLbl.text = user.gender.description
                 self.ageLbl.text = user.age.description
+                //self.portraitBtn.setImage(user.portrait ?? UIImage(named: "ic_portrait"), for: .normal)
             })
             .disposed(by: disposeBag)
 
@@ -107,6 +134,7 @@ extension UserInfoController {
                 self.dismiss(animated: true, completion: nil)
             })
             .disposed(by: disposeBag)
+        
     }
 }
 

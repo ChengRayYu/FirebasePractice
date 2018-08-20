@@ -41,13 +41,13 @@ class UserInfoViewModel {
 
         editingTypeDrv = input.itemOnSelect
             .filter({ (index) -> Bool in
-                return [2, 3, 4].contains(index.row)
+                return [1, 2, 3].contains(index.row)
             })
             .map({ (index) -> BMIService.UserInfoEditType? in
                 switch index.row {
-                case 2:     return .username
-                case 3:     return .gender
-                case 4:     return .age
+                case 1:     return .username
+                case 2:     return .gender
+                case 3:     return .age
                 default:    return nil
                 }
             })
