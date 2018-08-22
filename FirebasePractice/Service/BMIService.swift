@@ -11,6 +11,7 @@ import RxSwift
 import RxCocoa
 import FirebaseAuth
 import GoogleSignIn
+import FirebaseStorage
 import FirebaseDatabase
 
 class BMIService { }
@@ -138,7 +139,6 @@ extension BMIService {
         }
         let userRef = Database.database().reference().child("users/\(user.uid)")
         return userRef.rx
-            //.observeSingleEvent(.value)
             .observeEvent(.value)
             .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
             .map({ (snapshot) -> Response<UserInfo> in
@@ -147,7 +147,7 @@ extension BMIService {
                     let username = entries[UserInfoEditType.username.rawValue] as? String,
                     let gender = Gender(rawValue: ((entries[UserInfoEditType.gender.rawValue] as? NSNumber))?.intValue ?? Int.min),
                     let ageRange = AgeRange(rawValue: ((entries[UserInfoEditType.age.rawValue] as? NSNumber))?.intValue ?? Int.min) else {
-                        return .fail(err: .other(msg: "Fetch user failed"))
+                        return .fail(err: .service(msg: "Fetch user failed"))
                 }
                 let userInfo = (email, username, gender, ageRange)
                 return .success(resp: userInfo)
@@ -187,6 +187,62 @@ extension BMIService {
                 return .success(resp: ())
             })
             .catchError({ (error) -> Observable<BMIService.Response<Void>> in
+                return Observable.just(.fail(err: handleError(error)))
+            })
+    }
+
+    static func upadateUserPortrait(fromURL url: URL) -> Observable<Response<Void>> {
+        guard let user = Auth.auth().currentUser else {
+            return Observable.just(.fail(err: .unauthenticated))
+        }
+        let storageRef = Storage.storage().reference().child("/portraits/\(user.uid).jpg")
+        return storageRef.rx.putFile(from: url)
+            .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
+            .map({ (metadata) -> BMIService.Response<Void> in
+                return .success(resp: ())
+            })
+            .catchError({ (error) -> Observable<BMIService.Response<Void>> in
+                return Observable.just(.fail(err: handleError(error)))
+            })
+
+    }
+
+    static func upadateUserPortrait(fromImage image: UIImage) -> Observable<Response<Void>> {
+
+        guard let data = UIImageJPEGRepresentation(image, 0.8) else {
+            return Observable.just(.fail(err: .service(msg: "Invalid image content")))
+        }
+        guard let user = Auth.auth().currentUser else {
+            return Observable.just(.fail(err: .unauthenticated))
+        }
+        let storageRef = Storage.storage().reference().child("/portraits/\(user.uid).jpg")
+        return storageRef
+            .rx
+            .putData(data)
+            .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
+            .map({ (metadata) -> BMIService.Response<Void> in
+
+                return .success(resp: ())
+            })
+            .catchError({ (error) -> Observable<BMIService.Response<Void>> in
+                return Observable.just(.fail(err: handleError(error)))
+            })
+    }
+
+    static func fetchUserPortrait() -> Observable<Response<URL>> {
+
+        guard let user = Auth.auth().currentUser else {
+            return Observable.just(.fail(err: .unauthenticated))
+        }
+        let storageRef = Storage.storage().reference().child("/portraits/\(user.uid).jpg")
+        return storageRef
+            .rx
+            .downloadURL()
+            .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
+            .map({ (url) -> Response<URL> in
+                return .success(resp: url)
+            })
+            .catchError({ (error) -> Observable<Response<URL>> in
                 return Observable.just(.fail(err: handleError(error)))
             })
     }
@@ -273,7 +329,10 @@ fileprivate extension BMIService {
         if error._domain == "com.google.GIDSignIn", let code = GIDSignInErrorCode(rawValue: error._code) {
             return .gAuth(code: code, msg: error.localizedDescription)
         }
-        return .other(msg: error.localizedDescription)
+        if error._domain == "FIRStorageErrorDomain", let code = StorageErrorCode(rawValue: error._code) {
+            return .storage(code: code, msg: error.localizedDescription)
+        }
+        return .service(msg: error.localizedDescription)
     }
 }
 

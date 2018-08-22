@@ -47,7 +47,7 @@ class BMIViewModel {
 
         profileInitStateDrv = loggedInDrv
             .asObservable()
-            .takeWhile { $0 }
+            .skipWhile { !$0 }
             .flatMap({ _ -> Observable<Bool> in
                 return BMIService.initializeProfile()
                     .map({ (response) -> Bool in

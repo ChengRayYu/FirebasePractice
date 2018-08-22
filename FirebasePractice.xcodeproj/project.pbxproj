@@ -17,6 +17,7 @@
 		7157E1A6210D16C500F78C4D /* BMIService+Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7157E1A5210D16C500F78C4D /* BMIService+Response.swift */; };
 		7157E1A8210D27A600F78C4D /* BMIService+Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7157E1A7210D27A600F78C4D /* BMIService+Enum.swift */; };
 		715847131FCC5E8D009162C3 /* BMIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715847121FCC5E8D009162C3 /* BMIViewModel.swift */; };
+		715ABE44212B6F8300C992E2 /* FirebaseStorage+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715ABE43212B6F8300C992E2 /* FirebaseStorage+Rx.swift */; };
 		716217161FB501A300CF9C3F /* BMIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716217151FB501A300CF9C3F /* BMIController.swift */; };
 		717786091FBF526900E2485B /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 717786081FBF526800E2485B /* ActivityIndicator.swift */; };
 		7177860B1FBF7E5C00E2485B /* WelcomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7177860A1FBF7E5C00E2485B /* WelcomeViewModel.swift */; };
@@ -53,6 +54,7 @@
 		7157E1A5210D16C500F78C4D /* BMIService+Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BMIService+Response.swift"; sourceTree = "<group>"; };
 		7157E1A7210D27A600F78C4D /* BMIService+Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BMIService+Enum.swift"; sourceTree = "<group>"; };
 		715847121FCC5E8D009162C3 /* BMIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BMIViewModel.swift; sourceTree = "<group>"; };
+		715ABE43212B6F8300C992E2 /* FirebaseStorage+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FirebaseStorage+Rx.swift"; sourceTree = "<group>"; };
 		716217151FB501A300CF9C3F /* BMIController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BMIController.swift; sourceTree = "<group>"; };
 		717786081FBF526800E2485B /* ActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		7177860A1FBF7E5C00E2485B /* WelcomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewModel.swift; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 				7177860C1FBF8CB400E2485B /* GoogleSignInDelegateProxy.swift */,
 				714AEEDB1FB75B760071FBF9 /* FirebaseAuth+Rx.swift */,
 				719F09B820F51AB300861108 /* FirebaseDatabase+Rx.swift */,
+				715ABE43212B6F8300C992E2 /* FirebaseStorage+Rx.swift */,
 			);
 			path = RxFirebase;
 			sourceTree = "<group>";
@@ -398,6 +401,7 @@
 				7157E1A8210D27A600F78C4D /* BMIService+Enum.swift in Sources */,
 				717786091FBF526900E2485B /* ActivityIndicator.swift in Sources */,
 				7177860B1FBF7E5C00E2485B /* WelcomeViewModel.swift in Sources */,
+				715ABE44212B6F8300C992E2 /* FirebaseStorage+Rx.swift in Sources */,
 				7185E4B91FB61E5600A83692 /* EmailAuthController.swift in Sources */,
 				71839516210243BD00627AB3 /* UserInfoEditViewModel.swift in Sources */,
 				712C7AEA211507C000F03C44 /* UIViewController+Common.swift in Sources */,

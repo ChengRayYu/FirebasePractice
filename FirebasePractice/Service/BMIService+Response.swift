@@ -9,6 +9,7 @@
 import Foundation
 import FirebaseAuth
 import GoogleSignIn
+import FirebaseStorage
 
 extension BMIService {
 
@@ -22,7 +23,8 @@ extension BMIService {
         case unauthenticated
         case auth(code: AuthErrorCode, msg: String)
         case gAuth(code: GIDSignInErrorCode, msg: String)
-        case other(msg: String)
+        case storage(code: StorageErrorCode, msg: String)
+        case service(msg: String)
 
         var description: String {
             switch self {
@@ -30,7 +32,8 @@ extension BMIService {
             case .unauthenticated:      return "Invalid user"
             case let .auth(_, msg):     return msg
             case let .gAuth(_, msg):    return msg
-            case let .other(msg):       return msg
+            case let .storage(_, msg):  return msg
+            case let .service(msg):     return msg
             }
         }
     }
