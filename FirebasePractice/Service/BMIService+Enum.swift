@@ -53,13 +53,14 @@ extension BMIService {
         case username = "displayName"
         case gender = "gender"
         case age = "age"
+        case portrait = "portrait"
 
         var description : String {
             switch self {
-            case .email:    return "Email"
-            case .username: return "Username"
-            case .gender:   return "Gender"
-            case .age:      return "Age"
+            case .username:     return "Username"
+            case .gender:       return "Gender"
+            case .age:          return "Age"
+            default:            return ""
             }
         }
 
@@ -84,6 +85,6 @@ extension BMIService {
         }
     }
 
-    typealias UserInfo = (email: String, name: String, gender: Gender, age: AgeRange)
+    typealias UserInfo = (email: String, name: String, gender: Gender, age: AgeRange, portrait: String)
     typealias Record = (timestamp: String, height: Double, weight: Double)
 }

@@ -117,19 +117,39 @@ extension BMIService {
             return Observable.just(.fail(err: .unauthenticated))
         }
         let usersRef = Database.database().reference().child("users")
-        return usersRef.rx.observeSingleEvent(.value)
+        return usersRef
+            .rx
+            .observeSingleEvent(.value)
             .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
-            .map({ (snapshot) -> Response<Void> in
-                if !snapshot.hasChild(user.uid) {
-                    usersRef.child(user.uid).setValue([UserInfoEditType.email.rawValue: user.email ?? "",
-                                                       UserInfoEditType.username.rawValue: user.displayName ?? "",
-                                                       UserInfoEditType.gender.rawValue: -1,
-                                                       UserInfoEditType.age.rawValue: -1])
-                }
-                return .success(resp: ())
+            .map({ (snapshot) -> Bool in
+                return snapshot.hasChild(user.uid)
             })
-            .catchError({ (error) -> Observable<Response<Void>> in
-                return Observable.just(.fail(err: handleError(error)))
+            .skipWhile { $0 }
+            .flatMap({ (userInfoResp) -> Observable<URL?> in
+                guard let photoURL = user.photoURL else {
+                    return Observable.just(nil)
+                }
+                return updateUserPortrait(fromURL: photoURL)
+                    .map({ (resp) -> URL? in
+                        switch resp {
+                        case .success(let resp):     return resp
+                        case .fail:                  return nil
+                        }
+                    })
+            })
+            .flatMap({ (url) -> Observable<Response<Void>> in
+                return usersRef.child(user.uid).rx
+                    .setValue([UserInfoEditType.email.rawValue: user.email ?? "",
+                               UserInfoEditType.username.rawValue: user.displayName ?? "",
+                               UserInfoEditType.gender.rawValue: -1,
+                               UserInfoEditType.age.rawValue: -1,
+                               UserInfoEditType.portrait.rawValue: url?.absoluteString ?? ""])
+                    .map({ (ref) -> Response<Void> in
+                        return .success(resp: ())
+                    })
+                    .catchError({ (error) -> Observable<BMIService.Response<Void>> in
+                        return Observable.just(.fail(err: handleError(error)))
+                    })
             })
     }
 
@@ -146,10 +166,11 @@ extension BMIService {
                     let email = entries[UserInfoEditType.email.rawValue] as? String,
                     let username = entries[UserInfoEditType.username.rawValue] as? String,
                     let gender = Gender(rawValue: ((entries[UserInfoEditType.gender.rawValue] as? NSNumber))?.intValue ?? Int.min),
-                    let ageRange = AgeRange(rawValue: ((entries[UserInfoEditType.age.rawValue] as? NSNumber))?.intValue ?? Int.min) else {
+                    let ageRange = AgeRange(rawValue: ((entries[UserInfoEditType.age.rawValue] as? NSNumber))?.intValue ?? Int.min),
+                    let portrait = entries[UserInfoEditType.portrait.rawValue] as? String else {
                         return .fail(err: .service(msg: "Fetch user failed"))
                 }
-                let userInfo = (email, username, gender, ageRange)
+                let userInfo = (email, username, gender, ageRange, portrait)
                 return .success(resp: userInfo)
             })
             .catchError({ (error) -> Observable<Response<UserInfo>> in
@@ -162,7 +183,6 @@ extension BMIService {
             return Observable.just(.fail(err: .unauthenticated))
         }
         let userInfoRef = Database.database().reference().child("users/\(user.uid)/\(type.rawValue)")
-
         return userInfoRef.rx
             .observeSingleEvent(.value)
             .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
@@ -186,29 +206,44 @@ extension BMIService {
             .map({ (ref) -> Response<Void> in
                 return .success(resp: ())
             })
-            .catchError({ (error) -> Observable<BMIService.Response<Void>> in
+            .catchError({ (error) -> Observable<Response<Void>> in
                 return Observable.just(.fail(err: handleError(error)))
             })
     }
 
-    static func upadateUserPortrait(fromURL url: URL) -> Observable<Response<Void>> {
+    static func updateUserPortrait(fromURL url: URL) -> Observable<Response<URL>> {
         guard let user = Auth.auth().currentUser else {
             return Observable.just(.fail(err: .unauthenticated))
         }
-        let storageRef = Storage.storage().reference().child("/portraits/\(user.uid).jpg")
-        return storageRef.rx.putFile(from: url)
-            .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
-            .map({ (metadata) -> BMIService.Response<Void> in
-                return .success(resp: ())
+        return URLSession.shared.rx.response(request: URLRequest(url: url))
+            .map({ (response, data) -> Data? in
+                if 200 ..< 300 ~= response.statusCode {
+                    return data
+                }
+                return nil
             })
-            .catchError({ (error) -> Observable<BMIService.Response<Void>> in
-                return Observable.just(.fail(err: handleError(error)))
+            .catchError({ (error) -> Observable<Data?> in
+                return Observable.just(nil)
             })
-
+            .observeOn(MainScheduler.instance)
+            .flatMap({ (portraitData) -> Observable<Response<URL>> in
+                guard let portrait = portraitData else {
+                    return Observable.just(.fail(err: .service(msg: "Invalid image source")))
+                }
+                let storageRef = Storage.storage().reference().child("/portraits/\(user.uid).jpg")
+                return storageRef
+                    .rx
+                    .putData(portrait)
+                    .flatMap({ (metadata) -> Observable<Response<URL>> in
+                        return fetchUserPortraitURL()
+                    })
+                    .catchError({ (error) -> Observable<BMIService.Response<URL>> in
+                        return Observable.just(.fail(err: handleError(error)))
+                    })
+            })
     }
 
-    static func upadateUserPortrait(fromImage image: UIImage) -> Observable<Response<Void>> {
-
+    static func updateUserPortrait(fromImage image: UIImage) -> Observable<Response<URL>> {
         guard let data = UIImageJPEGRepresentation(image, 0.8) else {
             return Observable.just(.fail(err: .service(msg: "Invalid image content")))
         }
@@ -219,18 +254,16 @@ extension BMIService {
         return storageRef
             .rx
             .putData(data)
-            .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
-            .map({ (metadata) -> BMIService.Response<Void> in
-
-                return .success(resp: ())
+            .observeOn(MainScheduler.instance)
+            .flatMap({ (metadata) -> Observable<Response<URL>> in
+                return fetchUserPortraitURL()
             })
-            .catchError({ (error) -> Observable<BMIService.Response<Void>> in
+            .catchError({ (error) -> Observable<Response<URL>> in
                 return Observable.just(.fail(err: handleError(error)))
             })
     }
 
-    static func fetchUserPortrait() -> Observable<Response<URL>> {
-
+    static func fetchUserPortraitURL() -> Observable<Response<URL>> {
         guard let user = Auth.auth().currentUser else {
             return Observable.just(.fail(err: .unauthenticated))
         }

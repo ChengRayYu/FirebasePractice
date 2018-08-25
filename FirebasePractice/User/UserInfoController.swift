@@ -92,7 +92,7 @@ extension UserInfoController {
                 self.usernameLbl.text = (user.name.isEmpty) ? "n/a" : user.name
                 self.genderLbl.text = user.gender.description
                 self.ageLbl.text = user.age.description
-                //self.portraitBtn.setImage(user.portrait ?? UIImage(named: "ic_portrait"), for: .normal)
+                print(!user.portrait.isEmpty ? user.portrait : "NO PORTRAIT!")
             })
             .disposed(by: disposeBag)
 
