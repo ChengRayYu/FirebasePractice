@@ -15,6 +15,7 @@ target 'FirebasePractice' do
     pod 'Firebase/Database'
     pod 'Firebase/Messaging'
     pod 'Firebase/Storage'
+    pod 'Kingfisher', '~> 4.0'
     pod 'MBProgressHUD', '~> 1.1.0'
   
 end
