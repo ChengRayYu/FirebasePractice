@@ -9,6 +9,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import Kingfisher
 
 class UserInfoController: UITableViewController {
 
@@ -92,7 +93,11 @@ extension UserInfoController {
                 self.usernameLbl.text = (user.name.isEmpty) ? "n/a" : user.name
                 self.genderLbl.text = user.gender.description
                 self.ageLbl.text = user.age.description
-                print(!user.portrait.isEmpty ? user.portrait : "NO PORTRAIT!")
+                if user.portrait.isEmpty == false, let url = URL(string: user.portrait) {
+                    self.portraitBtn.kf.setImage(with: url, for: .normal, placeholder: UIImage(named: "ic_portrait"))
+                } else {
+                    self.portraitBtn.setImage(UIImage(named: "ic_portrait"), for: .normal)
+                }
             })
             .disposed(by: disposeBag)
 
@@ -134,7 +139,6 @@ extension UserInfoController {
                 self.dismiss(animated: true, completion: nil)
             })
             .disposed(by: disposeBag)
-        
     }
 }
 
