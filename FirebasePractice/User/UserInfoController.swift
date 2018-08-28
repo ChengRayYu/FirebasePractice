@@ -58,8 +58,6 @@ extension UserInfoController {
     }
 
     func maskPortrait() {
-
-        //portraitBtn.clipsToBounds = false
         let bounds = portraitBtn.bounds
         let maskLayer = CAShapeLayer()
         let maskPath = UIBezierPath(roundedRect: bounds, cornerRadius: bounds.width)
@@ -67,22 +65,9 @@ extension UserInfoController {
         maskLayer.path = maskPath.cgPath
         maskLayer.fillColor = UIColor.black.cgColor
         portraitBtn.layer.mask = maskLayer
-
-        /*
-        let rimLayer = CAShapeLayer()
-        let rimPath = UIBezierPath(roundedRect: bounds, cornerRadius: bounds.width)
-        let rimPath = UIBezierPath(roundedRect: CGRect(origin: CGPoint(x: bounds.origin.x - 2, y: bounds.origin.x - 2),
-                                                      size: CGSize(width: bounds.width + 4, height: bounds.height + 4)),
-                                   cornerRadius: bounds.width + 4)
-        rimLayer.path = rimPath.cgPath
-        rimLayer.fillColor = UIColor.clear.cgColor
-        rimLayer.strokeColor = UIColor.red.cgColor
-        rimLayer.lineWidth = 1.5
-        */
     }
 
     func rx() {
-
 
         closeBarBtn.rx.tap
             .asObservable()
@@ -160,7 +145,6 @@ extension UserInfoController {
         vm.userSignedOut
             .drive()
             .disposed(by: disposeBag)
-
     }
 }
 

@@ -71,7 +71,6 @@ class UserInfoViewModel {
                     .asDriver(onErrorJustReturn: ())
             })
 
-
         portraitDrv = Driver.of(userInfoDrv.map {_ in }, portraitUploaded).merge()
             .flatMap({ _ -> Driver<URL?> in
                 return BMIService.fetchUserPortraitURL()
@@ -81,23 +80,6 @@ class UserInfoViewModel {
                     })
                     .asDriver(onErrorJustReturn: nil)
             })
-
-        /*
-        portraitDrv = Driver.zip(userInfoDrv, portraitUploaded)//.combineLatest(userInfoDrv, portraitUploaded.startWith(()))
-            .flatMap({ _ -> Driver<URL?> in
-                return BMIService.fetchUserPortraitURL()
-                    .map({ (response) -> URL? in
-                        switch response {
-                        case .success(let resp):
-                            return resp
-                        case .fail(let err):
-                            errSubject.onNext(err.description)
-                            return nil
-                        }
-                    })
-                    .asDriver(onErrorJustReturn: nil)
-            })
-        */
         
         userSignedOut = input.signOutOnTap
             .flatMap({ _ -> Driver<Void> in
