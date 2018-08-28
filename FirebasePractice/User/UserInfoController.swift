@@ -9,10 +9,12 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import Kingfisher
 
 class UserInfoController: UITableViewController {
 
     @IBOutlet weak var closeBarBtn: UIBarButtonItem!
+    @IBOutlet weak var portraitBtn: UIButton!
     @IBOutlet weak var emailLbl: UILabel!
     @IBOutlet weak var usernameLbl: UILabel!
     @IBOutlet weak var genderLbl: UILabel!
@@ -25,6 +27,7 @@ class UserInfoController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupNavbar()
+        maskPortrait()
         rx()
     }
 
@@ -54,8 +57,41 @@ extension UserInfoController {
         navigationItem.backBarButtonItem = UIBarButtonItem(image: UIImage(named: "ic_arrowLeft"), style: .plain, target: nil, action: nil)
     }
 
+    func maskPortrait() {
+        let bounds = portraitBtn.bounds
+        let maskLayer = CAShapeLayer()
+        let maskPath = UIBezierPath(roundedRect: bounds, cornerRadius: bounds.width)
+
+        maskLayer.path = maskPath.cgPath
+        maskLayer.fillColor = UIColor.black.cgColor
+        portraitBtn.layer.mask = maskLayer
+    }
+
     func rx() {
+
+        closeBarBtn.rx.tap
+            .asObservable()
+            .subscribe(onNext: { _ in
+                self.dismiss(animated: true, completion: nil)
+            })
+            .disposed(by: disposeBag)
+
+        let portraitSelected = portraitBtn.rx.tap
+            .flatMapLatest { [weak self] _ in
+                return UIImagePickerController.rx.createWithParent(self) { picker in
+                    picker.sourceType = .photoLibrary
+                    picker.allowsEditing = true
+                    }
+                    .flatMap { $0.rx.didFinishPickingMediaWithInfo }
+                    .take(1)
+            }
+            .map { info in
+                return info[UIImagePickerControllerOriginalImage] as? UIImage
+            }
+            .asDriver(onErrorJustReturn: nil)
+
         let vm = UserInfoViewModel(input: (itemOnSelect: tableView.rx.itemSelected.asDriver(),
+                                           portraitSelected: portraitSelected,
                                            signOutOnTap: signOutBtn.rx.tap.asDriver()))
 
         vm.userInfoDrv
@@ -88,8 +124,7 @@ extension UserInfoController {
             .disposed(by: disposeBag)
 
         vm.editingTypeDrv
-            .asObservable()
-            .subscribe(onNext: { (editType) in
+            .drive(onNext: { (editType) in
                 guard let type = editType else { return }
                 self.performSegue(withIdentifier: "segue_userInfo_startEdit", sender: nil)
                 self.editController?.loadView()
@@ -97,15 +132,18 @@ extension UserInfoController {
             })
             .disposed(by: disposeBag)
 
+        vm.portraitDrv
+            .drive(onNext: { (url) in
+                guard let portrait = url else {
+                    self.portraitBtn.setImage(UIImage(named: "ic_portrait"), for: .normal)
+                    return
+                }
+                self.portraitBtn.kf.setImage(with: portrait, for: .normal, placeholder: UIImage(named: "ic_portrait"))
+            })
+        .disposed(by: disposeBag)
+
         vm.userSignedOut
             .drive()
-            .disposed(by: disposeBag)
-
-        closeBarBtn.rx.tap
-            .asObservable()
-            .subscribe(onNext: { _ in
-                self.dismiss(animated: true, completion: nil)
-            })
             .disposed(by: disposeBag)
     }
 }

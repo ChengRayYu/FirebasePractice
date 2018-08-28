@@ -56,10 +56,10 @@ extension BMIService {
 
         var description : String {
             switch self {
-            case .email:    return "Email"
-            case .username: return "Username"
-            case .gender:   return "Gender"
-            case .age:      return "Age"
+            case .username:     return "Username"
+            case .gender:       return "Gender"
+            case .age:          return "Age"
+            default:            return ""
             }
         }
 

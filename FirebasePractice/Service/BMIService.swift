@@ -11,6 +11,7 @@ import RxSwift
 import RxCocoa
 import FirebaseAuth
 import GoogleSignIn
+import FirebaseStorage
 import FirebaseDatabase
 
 class BMIService { }
@@ -116,19 +117,34 @@ extension BMIService {
             return Observable.just(.fail(err: .unauthenticated))
         }
         let usersRef = Database.database().reference().child("users")
-        return usersRef.rx.observeSingleEvent(.value)
+        return usersRef
+            .rx
+            .observeSingleEvent(.value)
             .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
-            .map({ (snapshot) -> Response<Void> in
-                if !snapshot.hasChild(user.uid) {
-                    usersRef.child(user.uid).setValue([UserInfoEditType.email.rawValue: user.email ?? "",
-                                                       UserInfoEditType.username.rawValue: user.displayName ?? "",
-                                                       UserInfoEditType.gender.rawValue: -1,
-                                                       UserInfoEditType.age.rawValue: -1])
-                }
-                return .success(resp: ())
+            .map({ (snapshot) -> Bool in
+                return snapshot.hasChild(user.uid)
             })
-            .catchError({ (error) -> Observable<Response<Void>> in
-                return Observable.just(.fail(err: handleError(error)))
+            .skipWhile { $0 }
+            .flatMap({ (userInfoResp) -> Observable<Void> in
+                guard let photoURL = user.photoURL else {
+                    return Observable.empty()
+                }
+                return updateUserPortrait(fromURL: photoURL)
+                    .map { _  in }
+            })
+            .flatMap({ (url) -> Observable<Response<Void>> in
+                return usersRef.child(user.uid).rx
+                    .setValue([UserInfoEditType.email.rawValue: user.email ?? "",
+                               UserInfoEditType.username.rawValue: user.displayName ?? "",
+                               UserInfoEditType.gender.rawValue: -1,
+                               UserInfoEditType.age.rawValue: -1])
+                               //UserInfoEditType.portrait.rawValue: url?.absoluteString ?? ""])
+                    .map({ (ref) -> Response<Void> in
+                        return .success(resp: ())
+                    })
+                    .catchError({ (error) -> Observable<BMIService.Response<Void>> in
+                        return Observable.just(.fail(err: handleError(error)))
+                    })
             })
     }
 
@@ -138,7 +154,6 @@ extension BMIService {
         }
         let userRef = Database.database().reference().child("users/\(user.uid)")
         return userRef.rx
-            //.observeSingleEvent(.value)
             .observeEvent(.value)
             .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
             .map({ (snapshot) -> Response<UserInfo> in
@@ -147,9 +162,10 @@ extension BMIService {
                     let username = entries[UserInfoEditType.username.rawValue] as? String,
                     let gender = Gender(rawValue: ((entries[UserInfoEditType.gender.rawValue] as? NSNumber))?.intValue ?? Int.min),
                     let ageRange = AgeRange(rawValue: ((entries[UserInfoEditType.age.rawValue] as? NSNumber))?.intValue ?? Int.min) else {
-                        return .fail(err: .other(msg: "Fetch user failed"))
+                    //let portrait = entries[UserInfoEditType.portrait.rawValue] as? String else {
+                        return .fail(err: .service(msg: "Fetch user info failed"))
                 }
-                let userInfo = (email, username, gender, ageRange)
+                let userInfo = (email, username, gender, ageRange)//, portrait)
                 return .success(resp: userInfo)
             })
             .catchError({ (error) -> Observable<Response<UserInfo>> in
@@ -162,7 +178,6 @@ extension BMIService {
             return Observable.just(.fail(err: .unauthenticated))
         }
         let userInfoRef = Database.database().reference().child("users/\(user.uid)/\(type.rawValue)")
-
         return userInfoRef.rx
             .observeSingleEvent(.value)
             .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
@@ -186,7 +201,76 @@ extension BMIService {
             .map({ (ref) -> Response<Void> in
                 return .success(resp: ())
             })
-            .catchError({ (error) -> Observable<BMIService.Response<Void>> in
+            .catchError({ (error) -> Observable<Response<Void>> in
+                return Observable.just(.fail(err: handleError(error)))
+            })
+    }
+
+    static func updateUserPortrait(fromURL url: URL) -> Observable<Response<Void>> {
+        guard let user = Auth.auth().currentUser else {
+            return Observable.just(.fail(err: .unauthenticated))
+        }
+        return URLSession.shared.rx.response(request: URLRequest(url: url))
+            .map({ (response, data) -> Data? in
+                if 200 ..< 300 ~= response.statusCode {
+                    return data
+                }
+                return nil
+            })
+            .catchError({ (error) -> Observable<Data?> in
+                return Observable.just(nil)
+            })
+            .observeOn(MainScheduler.instance)
+            .flatMap({ (portraitData) -> Observable<Response<Void>> in
+                guard let portrait = portraitData else {
+                    return Observable.just(.fail(err: .service(msg: "Invalid image source")))
+                }
+                let storageRef = Storage.storage().reference().child("/portraits/\(user.uid).jpg")
+                return storageRef
+                    .rx
+                    .putData(portrait)
+                    .map({ (metadata) -> Response<Void> in
+                        return .success(resp: ())
+                    })
+                    .catchError({ (error) -> Observable<BMIService.Response<Void>> in
+                        return Observable.just(.fail(err: handleError(error)))
+                    })
+            })
+    }
+
+    static func updateUserPortrait(fromImage image: UIImage) -> Observable<Response<Void>> {
+        guard let data = UIImageJPEGRepresentation(image, 0.8) else {
+            return Observable.just(.fail(err: .service(msg: "Invalid image content")))
+        }
+        guard let user = Auth.auth().currentUser else {
+            return Observable.just(.fail(err: .unauthenticated))
+        }
+        let storageRef = Storage.storage().reference().child("/portraits/\(user.uid).jpg")
+        return storageRef
+            .rx
+            .putData(data)
+            .observeOn(MainScheduler.instance)
+            .map({ (metadata) -> Response<Void> in
+                return .success(resp: ())
+            })
+            .catchError({ (error) -> Observable<Response<Void>> in
+                return Observable.just(.fail(err: handleError(error)))
+            })
+    }
+
+    static func fetchUserPortraitURL() -> Observable<Response<URL>> {
+        guard let user = Auth.auth().currentUser else {
+            return Observable.just(.fail(err: .unauthenticated))
+        }
+        let storageRef = Storage.storage().reference().child("/portraits/\(user.uid).jpg")
+        return storageRef
+            .rx
+            .downloadURL()
+            .observeOn(ConcurrentDispatchQueueScheduler(qos: .utility))
+            .map({ (url) -> Response<URL> in
+                return .success(resp: url)
+            })
+            .catchError({ (error) -> Observable<Response<URL>> in
                 return Observable.just(.fail(err: handleError(error)))
             })
     }
@@ -273,7 +357,10 @@ fileprivate extension BMIService {
         if error._domain == "com.google.GIDSignIn", let code = GIDSignInErrorCode(rawValue: error._code) {
             return .gAuth(code: code, msg: error.localizedDescription)
         }
-        return .other(msg: error.localizedDescription)
+        if error._domain == "FIRStorageErrorDomain", let code = StorageErrorCode(rawValue: error._code) {
+            return .storage(code: code, msg: error.localizedDescription)
+        }
+        return .service(msg: error.localizedDescription)
     }
 }
 
