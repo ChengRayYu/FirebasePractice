@@ -125,25 +125,20 @@ extension BMIService {
                 return snapshot.hasChild(user.uid)
             })
             .skipWhile { $0 }
-            .flatMap({ (userInfoResp) -> Observable<URL?> in
+            .flatMap({ (userInfoResp) -> Observable<Void> in
                 guard let photoURL = user.photoURL else {
-                    return Observable.just(nil)
+                    return Observable.empty()
                 }
                 return updateUserPortrait(fromURL: photoURL)
-                    .map({ (resp) -> URL? in
-                        switch resp {
-                        case .success(let resp):     return resp
-                        case .fail:                  return nil
-                        }
-                    })
+                    .map { _  in }
             })
             .flatMap({ (url) -> Observable<Response<Void>> in
                 return usersRef.child(user.uid).rx
                     .setValue([UserInfoEditType.email.rawValue: user.email ?? "",
                                UserInfoEditType.username.rawValue: user.displayName ?? "",
                                UserInfoEditType.gender.rawValue: -1,
-                               UserInfoEditType.age.rawValue: -1,
-                               UserInfoEditType.portrait.rawValue: url?.absoluteString ?? ""])
+                               UserInfoEditType.age.rawValue: -1])
+                               //UserInfoEditType.portrait.rawValue: url?.absoluteString ?? ""])
                     .map({ (ref) -> Response<Void> in
                         return .success(resp: ())
                     })
@@ -166,11 +161,11 @@ extension BMIService {
                     let email = entries[UserInfoEditType.email.rawValue] as? String,
                     let username = entries[UserInfoEditType.username.rawValue] as? String,
                     let gender = Gender(rawValue: ((entries[UserInfoEditType.gender.rawValue] as? NSNumber))?.intValue ?? Int.min),
-                    let ageRange = AgeRange(rawValue: ((entries[UserInfoEditType.age.rawValue] as? NSNumber))?.intValue ?? Int.min),
-                    let portrait = entries[UserInfoEditType.portrait.rawValue] as? String else {
-                        return .fail(err: .service(msg: "Fetch user failed"))
+                    let ageRange = AgeRange(rawValue: ((entries[UserInfoEditType.age.rawValue] as? NSNumber))?.intValue ?? Int.min) else {
+                    //let portrait = entries[UserInfoEditType.portrait.rawValue] as? String else {
+                        return .fail(err: .service(msg: "Fetch user info failed"))
                 }
-                let userInfo = (email, username, gender, ageRange, portrait)
+                let userInfo = (email, username, gender, ageRange)//, portrait)
                 return .success(resp: userInfo)
             })
             .catchError({ (error) -> Observable<Response<UserInfo>> in
@@ -211,7 +206,7 @@ extension BMIService {
             })
     }
 
-    static func updateUserPortrait(fromURL url: URL) -> Observable<Response<URL>> {
+    static func updateUserPortrait(fromURL url: URL) -> Observable<Response<Void>> {
         guard let user = Auth.auth().currentUser else {
             return Observable.just(.fail(err: .unauthenticated))
         }
@@ -226,7 +221,7 @@ extension BMIService {
                 return Observable.just(nil)
             })
             .observeOn(MainScheduler.instance)
-            .flatMap({ (portraitData) -> Observable<Response<URL>> in
+            .flatMap({ (portraitData) -> Observable<Response<Void>> in
                 guard let portrait = portraitData else {
                     return Observable.just(.fail(err: .service(msg: "Invalid image source")))
                 }
@@ -234,16 +229,16 @@ extension BMIService {
                 return storageRef
                     .rx
                     .putData(portrait)
-                    .flatMap({ (metadata) -> Observable<Response<URL>> in
-                        return fetchUserPortraitURL()
+                    .map({ (metadata) -> Response<Void> in
+                        return .success(resp: ())
                     })
-                    .catchError({ (error) -> Observable<BMIService.Response<URL>> in
+                    .catchError({ (error) -> Observable<BMIService.Response<Void>> in
                         return Observable.just(.fail(err: handleError(error)))
                     })
             })
     }
 
-    static func updateUserPortrait(fromImage image: UIImage) -> Observable<Response<URL>> {
+    static func updateUserPortrait(fromImage image: UIImage) -> Observable<Response<Void>> {
         guard let data = UIImageJPEGRepresentation(image, 0.8) else {
             return Observable.just(.fail(err: .service(msg: "Invalid image content")))
         }
@@ -255,10 +250,10 @@ extension BMIService {
             .rx
             .putData(data)
             .observeOn(MainScheduler.instance)
-            .flatMap({ (metadata) -> Observable<Response<URL>> in
-                return fetchUserPortraitURL()
+            .map({ (metadata) -> Response<Void> in
+                return .success(resp: ())
             })
-            .catchError({ (error) -> Observable<Response<URL>> in
+            .catchError({ (error) -> Observable<Response<Void>> in
                 return Observable.just(.fail(err: handleError(error)))
             })
     }

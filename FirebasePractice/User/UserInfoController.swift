@@ -82,7 +82,31 @@ extension UserInfoController {
     }
 
     func rx() {
+
+
+        closeBarBtn.rx.tap
+            .asObservable()
+            .subscribe(onNext: { _ in
+                self.dismiss(animated: true, completion: nil)
+            })
+            .disposed(by: disposeBag)
+
+        let portraitSelected = portraitBtn.rx.tap
+            .flatMapLatest { [weak self] _ in
+                return UIImagePickerController.rx.createWithParent(self) { picker in
+                    picker.sourceType = .photoLibrary
+                    picker.allowsEditing = true
+                    }
+                    .flatMap { $0.rx.didFinishPickingMediaWithInfo }
+                    .take(1)
+            }
+            .map { info in
+                return info[UIImagePickerControllerOriginalImage] as? UIImage
+            }
+            .asDriver(onErrorJustReturn: nil)
+
         let vm = UserInfoViewModel(input: (itemOnSelect: tableView.rx.itemSelected.asDriver(),
+                                           portraitSelected: portraitSelected,
                                            signOutOnTap: signOutBtn.rx.tap.asDriver()))
 
         vm.userInfoDrv
@@ -93,11 +117,6 @@ extension UserInfoController {
                 self.usernameLbl.text = (user.name.isEmpty) ? "n/a" : user.name
                 self.genderLbl.text = user.gender.description
                 self.ageLbl.text = user.age.description
-                if user.portrait.isEmpty == false, let url = URL(string: user.portrait) {
-                    self.portraitBtn.kf.setImage(with: url, for: .normal, placeholder: UIImage(named: "ic_portrait"))
-                } else {
-                    self.portraitBtn.setImage(UIImage(named: "ic_portrait"), for: .normal)
-                }
             })
             .disposed(by: disposeBag)
 
@@ -120,8 +139,7 @@ extension UserInfoController {
             .disposed(by: disposeBag)
 
         vm.editingTypeDrv
-            .asObservable()
-            .subscribe(onNext: { (editType) in
+            .drive(onNext: { (editType) in
                 guard let type = editType else { return }
                 self.performSegue(withIdentifier: "segue_userInfo_startEdit", sender: nil)
                 self.editController?.loadView()
@@ -129,16 +147,20 @@ extension UserInfoController {
             })
             .disposed(by: disposeBag)
 
+        vm.portraitDrv
+            .drive(onNext: { (url) in
+                guard let portrait = url else {
+                    self.portraitBtn.setImage(UIImage(named: "ic_portrait"), for: .normal)
+                    return
+                }
+                self.portraitBtn.kf.setImage(with: portrait, for: .normal, placeholder: UIImage(named: "ic_portrait"))
+            })
+        .disposed(by: disposeBag)
+
         vm.userSignedOut
             .drive()
             .disposed(by: disposeBag)
 
-        closeBarBtn.rx.tap
-            .asObservable()
-            .subscribe(onNext: { _ in
-                self.dismiss(animated: true, completion: nil)
-            })
-            .disposed(by: disposeBag)
     }
 }
 

@@ -19,6 +19,8 @@
 		715847131FCC5E8D009162C3 /* BMIViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715847121FCC5E8D009162C3 /* BMIViewModel.swift */; };
 		715ABE44212B6F8300C992E2 /* FirebaseStorage+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715ABE43212B6F8300C992E2 /* FirebaseStorage+Rx.swift */; };
 		716217161FB501A300CF9C3F /* BMIController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716217151FB501A300CF9C3F /* BMIController.swift */; };
+		716547E92132FF2E00632C62 /* UIImagePickerController+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716547E82132FF2E00632C62 /* UIImagePickerController+Rx.swift */; };
+		716547EB2133057C00632C62 /* RxImagePickerDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716547EA2133057C00632C62 /* RxImagePickerDelegateProxy.swift */; };
 		717786091FBF526900E2485B /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 717786081FBF526800E2485B /* ActivityIndicator.swift */; };
 		7177860B1FBF7E5C00E2485B /* WelcomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7177860A1FBF7E5C00E2485B /* WelcomeViewModel.swift */; };
 		7177860D1FBF8CB400E2485B /* GoogleSignInDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7177860C1FBF8CB400E2485B /* GoogleSignInDelegateProxy.swift */; };
@@ -56,6 +58,8 @@
 		715847121FCC5E8D009162C3 /* BMIViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BMIViewModel.swift; sourceTree = "<group>"; };
 		715ABE43212B6F8300C992E2 /* FirebaseStorage+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FirebaseStorage+Rx.swift"; sourceTree = "<group>"; };
 		716217151FB501A300CF9C3F /* BMIController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BMIController.swift; sourceTree = "<group>"; };
+		716547E82132FF2E00632C62 /* UIImagePickerController+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImagePickerController+Rx.swift"; sourceTree = "<group>"; };
+		716547EA2133057C00632C62 /* RxImagePickerDelegateProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RxImagePickerDelegateProxy.swift; sourceTree = "<group>"; };
 		717786081FBF526800E2485B /* ActivityIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		7177860A1FBF7E5C00E2485B /* WelcomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewModel.swift; sourceTree = "<group>"; };
 		7177860C1FBF8CB400E2485B /* GoogleSignInDelegateProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleSignInDelegateProxy.swift; sourceTree = "<group>"; };
@@ -101,6 +105,7 @@
 		714AEEDA1FB75B340071FBF9 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				716547E72132F95800632C62 /* RxUIImagePickerController */,
 				719F09B720F51A5800861108 /* RxFirebase */,
 				712C7AE9211507C000F03C44 /* UIViewController+Common.swift */,
 				7130B8B5207065F20054125F /* UIView+Extension.swift */,
@@ -121,6 +126,15 @@
 				71D1675220FCF59B00B4277E /* CreateBMIViewModel.swift */,
 			);
 			path = BMI;
+			sourceTree = "<group>";
+		};
+		716547E72132F95800632C62 /* RxUIImagePickerController */ = {
+			isa = PBXGroup;
+			children = (
+				716547EA2133057C00632C62 /* RxImagePickerDelegateProxy.swift */,
+				716547E82132FF2E00632C62 /* UIImagePickerController+Rx.swift */,
+			);
+			path = RxUIImagePickerController;
 			sourceTree = "<group>";
 		};
 		717AD6DE1FB4D7240060DAB6 /* Auth */ = {
@@ -385,6 +399,8 @@
 			files = (
 				718395142102438800627AB3 /* UserInfoEditController.swift in Sources */,
 				71E6F7761FB2245E0030AA0C /* WelcomeController.swift in Sources */,
+				716547EB2133057C00632C62 /* RxImagePickerDelegateProxy.swift in Sources */,
+				716547E92132FF2E00632C62 /* UIImagePickerController+Rx.swift in Sources */,
 				718395122102434800627AB3 /* UserInfoViewModel.swift in Sources */,
 				716217161FB501A300CF9C3F /* BMIController.swift in Sources */,
 				7130B8B6207065F20054125F /* UIView+Extension.swift in Sources */,

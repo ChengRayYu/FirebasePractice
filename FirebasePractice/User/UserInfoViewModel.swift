@@ -10,16 +10,20 @@ import UIKit
 import RxSwift
 import RxCocoa
 import FirebaseAuth
+import Kingfisher
 
 class UserInfoViewModel {
 
     let userInfoDrv: Driver<BMIService.UserInfo?>
     let editingTypeDrv: Driver<BMIService.UserInfoEditType?>
     let userInfoErrDrv: Driver<String>
+    let portraitDrv: Driver<URL?>
     let progressingDrv: Driver<Bool>
     let userSignedOut: Driver<Void>
 
-    init(input: (itemOnSelect: Driver<IndexPath>, signOutOnTap: Driver<Void>)) {
+    private static let optimizedPortraitSize = CGSize(width: 96.0, height: 96.0)
+
+    init(input: (itemOnSelect: Driver<IndexPath>, portraitSelected: Driver<UIImage?>, signOutOnTap: Driver<Void>)) {
 
         let activityIndicator = ActivityIndicator()
         progressingDrv = activityIndicator.asDriver()
@@ -31,7 +35,7 @@ class UserInfoViewModel {
                 switch response {
                 case .success(let resp):
                     return resp
-                case.fail(let err):
+                case .fail(let err):
                     errSubject.onNext(err.description)
                     return nil
                 }
@@ -52,6 +56,49 @@ class UserInfoViewModel {
                 }
             })
 
+        let portraitUploaded =  input.portraitSelected
+            .flatMap({ (image) -> Driver<Void> in
+                guard let portrait = image else {
+                    return Driver.empty()
+                }
+                let optimizedPortrait = portrait.kf.resize(to: UserInfoViewModel.optimizedPortraitSize)
+                return BMIService.updateUserPortrait(fromImage: optimizedPortrait)
+                    .map({ (response) in
+                        guard case .fail(let err) = response else { return }
+                        errSubject.onNext(err.description)
+                        return
+                    })
+                    .asDriver(onErrorJustReturn: ())
+            })
+
+
+        portraitDrv = Driver.of(userInfoDrv.map {_ in }, portraitUploaded).merge()
+            .flatMap({ _ -> Driver<URL?> in
+                return BMIService.fetchUserPortraitURL()
+                    .map({ (response) -> URL? in
+                        guard case .success(let resp) = response else { return nil }
+                        return resp
+                    })
+                    .asDriver(onErrorJustReturn: nil)
+            })
+
+        /*
+        portraitDrv = Driver.zip(userInfoDrv, portraitUploaded)//.combineLatest(userInfoDrv, portraitUploaded.startWith(()))
+            .flatMap({ _ -> Driver<URL?> in
+                return BMIService.fetchUserPortraitURL()
+                    .map({ (response) -> URL? in
+                        switch response {
+                        case .success(let resp):
+                            return resp
+                        case .fail(let err):
+                            errSubject.onNext(err.description)
+                            return nil
+                        }
+                    })
+                    .asDriver(onErrorJustReturn: nil)
+            })
+        */
+        
         userSignedOut = input.signOutOnTap
             .flatMap({ _ -> Driver<Void> in
                 return BMIService.signOut()

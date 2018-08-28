@@ -53,7 +53,6 @@ extension BMIService {
         case username = "displayName"
         case gender = "gender"
         case age = "age"
-        case portrait = "portrait"
 
         var description : String {
             switch self {
@@ -85,6 +84,6 @@ extension BMIService {
         }
     }
 
-    typealias UserInfo = (email: String, name: String, gender: Gender, age: AgeRange, portrait: String)
+    typealias UserInfo = (email: String, name: String, gender: Gender, age: AgeRange)
     typealias Record = (timestamp: String, height: Double, weight: Double)
 }
