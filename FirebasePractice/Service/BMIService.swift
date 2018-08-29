@@ -127,7 +127,7 @@ extension BMIService {
             .skipWhile { $0 }
             .flatMap({ (userInfoResp) -> Observable<Void> in
                 guard let photoURL = user.photoURL else {
-                    return Observable.empty()
+                    return Observable.just(())
                 }
                 return updateUserPortrait(fromURL: photoURL)
                     .map { _  in }
@@ -138,7 +138,6 @@ extension BMIService {
                                UserInfoEditType.username.rawValue: user.displayName ?? "",
                                UserInfoEditType.gender.rawValue: -1,
                                UserInfoEditType.age.rawValue: -1])
-                               //UserInfoEditType.portrait.rawValue: url?.absoluteString ?? ""])
                     .map({ (ref) -> Response<Void> in
                         return .success(resp: ())
                     })
