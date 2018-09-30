@@ -56,7 +56,7 @@ extension UserInfoEditController: UIPickerViewDelegate {
 
         vm.editTypeDrv
             .map { $0 == .username }
-            .map({ (flag) -> (UITextFieldViewMode, UIColor) in
+            .map({ (flag) -> (UITextField.ViewMode, UIColor) in
                 return (flag ? .whileEditing : .never, flag ? UIColor(named: "Grey500")! : UIColor.clear)
             })
             .drive(onNext: { (result) in

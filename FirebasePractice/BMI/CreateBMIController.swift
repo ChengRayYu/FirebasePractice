@@ -56,11 +56,11 @@ extension CreateBMIController {
         vm.submissionErrDrv
             .map({ (err) -> NSAttributedString? in
                 guard !err.isEmpty else { return nil }
-                let prefixAttr = [NSAttributedStringKey.foregroundColor: UIColor(named: "Grey800")!,
-                                  NSAttributedStringKey.font: UIFont(name: "AvenirNext-DemiBold", size: 14.0)!]
-                let lineAttr = [NSAttributedStringKey.font: UIFont(name: "AvenirNext-Regular", size: 6.0)!]
-                let errorAttr = [NSAttributedStringKey.foregroundColor: UIColor(named: "Warning")!,
-                               NSAttributedStringKey.font: UIFont(name: "AvenirNext-Medium", size: 12.0)!]
+                let prefixAttr = [NSAttributedString.Key.foregroundColor: UIColor(named: "Grey800")!,
+                                  NSAttributedString.Key.font: UIFont(name: "AvenirNext-DemiBold", size: 14.0)!]
+                let lineAttr = [NSAttributedString.Key.font: UIFont(name: "AvenirNext-Regular", size: 6.0)!]
+                let errorAttr = [NSAttributedString.Key.foregroundColor: UIColor(named: "Warning")!,
+                                 NSAttributedString.Key.font: UIFont(name: "AvenirNext-Medium", size: 12.0)!]
                 let prefix = NSMutableAttributedString(string: "Oops! Creating entry failed –\n", attributes: prefixAttr)
                 let line = NSMutableAttributedString(string: "\n", attributes: lineAttr)
                 let error = NSMutableAttributedString(string: err, attributes: errorAttr)

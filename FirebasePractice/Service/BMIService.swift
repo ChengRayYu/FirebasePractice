@@ -238,7 +238,7 @@ extension BMIService {
     }
 
     static func updateUserPortrait(fromImage image: UIImage) -> Observable<Response<Void>> {
-        guard let data = UIImageJPEGRepresentation(image, 0.8) else {
+        guard let data = image.jpegData(compressionQuality: 0.8) else {
             return Observable.just(.fail(err: .service(msg: "Invalid image content")))
         }
         guard let user = Auth.auth().currentUser else {
