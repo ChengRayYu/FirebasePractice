@@ -61,11 +61,11 @@ class BMIRecordCell: UICollectionViewCell {
                     delegate.simultaneousRecognitionPolicy = .custom({ (gesture, otherGesture) -> Bool in
                         guard let scrollPan = otherGesture as? UIPanGestureRecognizer else { return true }
                         let velocity = scrollPan.velocity(in: self)
-                        return fabs(velocity.y) > fabs(velocity.x)
+                        return abs(velocity.y) > abs(velocity.x)
                     })
                     delegate.beginPolicy = .custom({ gesture -> Bool in
                         guard let pan = gesture as? UIPanGestureRecognizer else { return true }
-                        return fabs(pan.translation(in: pan.view).y) <= 0
+                        return abs(pan.translation(in: pan.view).y) <= 0
                     })
                 })
             )
@@ -118,8 +118,8 @@ extension Reactive where Base: BMIRecordCell {
 
             let gap = BMIRecordCell.ControlState.transforming.offsetThreshold
             let durationRatio = (cell.gestureOffset > BMIRecordCell.ControlState.delete.offsetThreshold) ?
-                fabs(cell.gestureOffset - gap - BMIRecordCell.ControlState.delete.snapPoint) / BMIRecordCell.ControlState.delete.snapPoint :
-                fabs(cell.gestureOffset - gap) / BMIRecordCell.ControlState.delete.snapPoint
+                abs(cell.gestureOffset - gap - BMIRecordCell.ControlState.delete.snapPoint) / BMIRecordCell.ControlState.delete.snapPoint :
+                abs(cell.gestureOffset - gap) / BMIRecordCell.ControlState.delete.snapPoint
             let duration = BMIRecordCell.SnapAnimationLength * Double(min(durationRatio, 1.0))
 
             UIView.animate(withDuration: duration, delay: 0, options: .curveEaseOut, animations: {

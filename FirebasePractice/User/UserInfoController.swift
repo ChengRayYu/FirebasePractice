@@ -86,7 +86,7 @@ extension UserInfoController {
                     .take(1)
             }
             .map { info in
-                return info[UIImagePickerControllerOriginalImage] as? UIImage
+                return info[.originalImage] as? UIImage
             }
             .asDriver(onErrorJustReturn: nil)
 

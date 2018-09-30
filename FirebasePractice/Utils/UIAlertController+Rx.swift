@@ -13,7 +13,7 @@ extension UIAlertController {
 
     struct AlertAction {
         fileprivate let title: String?
-        fileprivate let style: UIAlertActionStyle
+        fileprivate let style: UIAlertAction.Style
 
         static func cancel(title: String?) -> AlertAction {
             return AlertAction(title: title, style: .cancel)
@@ -27,7 +27,7 @@ extension UIAlertController {
     static func present(in viewController: UIViewController,
                         title: String?,
                         message: String?,
-                        style: UIAlertControllerStyle,
+                        style: UIAlertController.Style,
                         actions: [AlertAction]) -> Observable<Int> {
 
         return Observable.create { observer in

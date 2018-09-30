@@ -103,7 +103,7 @@ extension BMIController {
             configureSupplementaryView: { (dataSrc, cv, kind, indexPath) -> UICollectionReusableView in
                 (cv.collectionViewLayout as? UICollectionViewFlowLayout)?.sectionHeadersPinToVisibleBounds = true
                 switch kind {
-                case UICollectionElementKindSectionHeader:
+                case UICollectionView.elementKindSectionHeader:
                     let header = cv.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "BMIHeader", for: indexPath) as! BMIHeader
                     vm.newEntryEnabledDrv
                         .drive(header.createBtn.rx.isEnabled)
