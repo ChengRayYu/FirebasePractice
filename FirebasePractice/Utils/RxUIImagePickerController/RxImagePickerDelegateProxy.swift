@@ -16,11 +16,11 @@ extension Reactive where Base: UIImagePickerController {
         return RxImagePickerDelegateProxy.proxy(for: base)
     }
 
-    var didFinishPickingMediaWithInfo: Observable<[String : AnyObject]> {
+    var didFinishPickingMediaWithInfo: Observable<[UIImagePickerController.InfoKey : AnyObject]> {
         return pickerDelegate
             .methodInvoked(#selector(UIImagePickerControllerDelegate.imagePickerController(_:didFinishPickingMediaWithInfo:)))
             .map({ (a) in
-                return try self.castOrThrow(Dictionary<String, AnyObject>.self, a[1])
+                return try self.castOrThrow(Dictionary<UIImagePickerController.InfoKey, AnyObject>.self, a[1])
             })
     }
 
